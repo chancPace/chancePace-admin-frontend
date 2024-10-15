@@ -33,8 +33,14 @@ const SideBar = () => {
       label: `대쉬보드 관리`,
     },
     {
-      key: "/asd",
-      label: `관리 목록 추가`,
+      key: "/user",
+      label: "회원관리",
+      children: [
+        {
+          key: "/user/userlist",
+          label: "회원리스트",
+        },
+      ],
     },
   ]);
 
