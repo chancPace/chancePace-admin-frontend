@@ -6,6 +6,6 @@
  */
 
 const User = () => {
-  return <>asd</>;
+  return <>유저</>;
 };
 export default User;

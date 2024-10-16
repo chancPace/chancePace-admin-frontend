@@ -40,6 +40,24 @@ const SideBar = () => {
           key: "/user/userlist",
           label: "회원리스트",
         },
+        {
+          key: "/user/useradd",
+          label: "회원추가",
+        },
+      ],
+    },
+    {
+      key: "/host",
+      label: "업체관리",
+      children: [
+        {
+          key: "/host/hostlist",
+          label: "업체리스트",
+        },
+        {
+          key: "/host/hostadd",
+          label: "업체추가",
+        },
       ],
     },
   ]);
