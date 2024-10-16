@@ -30,7 +30,7 @@ export default function App({ Component, pageProps }: AppProps) {
   return (
     <>
       <Head>
-        <title>ChancePaceAdmin</title>
+        <title>🛠ChancePaceAdmin</title>
       </Head>
       <GlobalStyled />
       {notPc ? (
