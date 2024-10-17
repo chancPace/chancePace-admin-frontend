@@ -1,4 +1,6 @@
+import UserListPage from '@/features/UserListPage';
+
 const UserList = () => {
-  return <>회원 리스트페이지</>;
+  return <UserListPage />;
 };
 export default UserList;

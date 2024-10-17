@@ -6,6 +6,7 @@ import Head from 'next/head';
 import { useEffect, useState } from 'react';
 import { ThemeProvider } from 'styled-components';
 import Theme from '@/styles/theme';
+import Header from '@/features/Header';
 
 export default function App({ Component, pageProps }: AppProps) {
   const [notPc, setNotPc] = useState(false);
@@ -38,9 +39,12 @@ export default function App({ Component, pageProps }: AppProps) {
         {notPc ? (
           <NotPc />
         ) : (
-          <Template>
-            <Component {...pageProps} />
-          </Template>
+          <>
+            <Header></Header>
+            <Template>
+              <Component {...pageProps} />
+            </Template>
+          </>
         )}
       </ThemeProvider>
       <GlobalStyled />

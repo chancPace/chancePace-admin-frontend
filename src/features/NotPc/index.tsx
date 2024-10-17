@@ -1,4 +1,4 @@
-import { NotPcStyled } from './styled';
+import { NotPcStyled } from './style';
 import React from 'react';
 import { CloseCircleOutlined } from '@ant-design/icons';
 import { Result, Typography } from 'antd';

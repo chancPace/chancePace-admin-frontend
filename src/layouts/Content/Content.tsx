@@ -2,7 +2,7 @@ import { ReactNode } from 'react';
 
 import { useRouter } from 'next/router';
 
-import { ContentStyled } from './styled';
+import { ContentStyled } from './style';
 
 import clsx from 'clsx';
 import { AnimatePresence, motion } from 'framer-motion';

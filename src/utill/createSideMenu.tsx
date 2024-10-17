@@ -96,6 +96,7 @@ const SideBar = () => {
 
   return (
     <Menu
+      theme="dark"
       mode="inline"
       items={sidebarMenus}
       selectedKeys={[router.pathname]}

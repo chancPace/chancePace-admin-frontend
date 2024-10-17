@@ -4,6 +4,8 @@
     // Unexpected any. Specify a different type 문구 제거
     "@typescript-eslint/no-explicit-any": "off",
     // 사용하지 않는 프로퍼티 경고 문구 제거
-    "@typescript-eslint/no-unused-vars": "off"
+    "@typescript-eslint/no-unused-vars": "off",
+    //  Image 컴포넌트 사용 경고 문구 제거
+    "@next/next/no-img-element": "off"
   }
 }
