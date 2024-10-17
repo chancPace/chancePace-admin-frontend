@@ -1,4 +1,4 @@
 const UserAdd = () => {
-  return <>유저추가</>;
+  return <>회원 등록</>;
 };
 export default UserAdd;
