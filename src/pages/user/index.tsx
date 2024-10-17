@@ -6,6 +6,6 @@
  */
 
 const User = () => {
-  return <>유저</>;
+  return <>회원</>;
 };
 export default User;

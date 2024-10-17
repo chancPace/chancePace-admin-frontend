@@ -1,4 +1,4 @@
 const UserList = () => {
-  return <>유저 리스트페이지</>;
+  return <>회원 리스트페이지</>;
 };
 export default UserList;
