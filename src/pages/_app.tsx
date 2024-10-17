@@ -4,6 +4,8 @@ import { GlobalStyled } from '@/styles/global';
 import type { AppProps } from 'next/app';
 import Head from 'next/head';
 import { useEffect, useState } from 'react';
+import { ThemeProvider } from 'styled-components';
+import Theme from '@/styles/theme';
 
 export default function App({ Component, pageProps }: AppProps) {
   const [notPc, setNotPc] = useState(false);
@@ -32,14 +34,16 @@ export default function App({ Component, pageProps }: AppProps) {
       <Head>
         <title>🛠ChancePaceAdmin</title>
       </Head>
+      <ThemeProvider theme={Theme}>
+        {notPc ? (
+          <NotPc />
+        ) : (
+          <Template>
+            <Component {...pageProps} />
+          </Template>
+        )}
+      </ThemeProvider>
       <GlobalStyled />
-      {notPc ? (
-        <NotPc />
-      ) : (
-        <Template>
-          <Component {...pageProps} />
-        </Template>
-      )}
     </>
   );
 }

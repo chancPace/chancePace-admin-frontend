@@ -1,8 +1,13 @@
-import { createGlobalStyle } from "styled-components";
+import { createGlobalStyle } from 'styled-components';
 
 export const GlobalStyled = createGlobalStyle`
 
- 
+ @font-face {
+    font-family: 'GmarketSansMedium';
+    src: url('https://fastly.jsdelivr.net/gh/projectnoonnu/noonfonts_2001@1.1/GmarketSansMedium.woff') format('woff');
+    font-weight: normal;
+    font-style: normal;
+}
 
 * {
   box-sizing: border-box;
@@ -15,7 +20,9 @@ html,
 body {
   max-width: 100vw;
   overflow-x: hidden;
+  font-family: 'GmarketSansMedium';
 }
+
 
 
 
