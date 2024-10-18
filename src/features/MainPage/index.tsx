@@ -27,7 +27,7 @@ const MainPage = () => {
         <div>10</div>
         <div>문의 내역</div>
       </div>
-      <Charts></Charts>
+      <Charts />
     </MainStyled>
   );
 };
