@@ -1,4 +1,6 @@
+import UserAddPage from '@/features/UserAddPage';
+
 const UserAdd = () => {
-  return <>회원 등록</>;
+  return <UserAddPage />;
 };
 export default UserAdd;
