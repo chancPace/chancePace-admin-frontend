@@ -5,7 +5,7 @@ import type { AppProps } from 'next/app';
 import Head from 'next/head';
 import { useEffect, useState } from 'react';
 import { ThemeProvider } from 'styled-components';
-import Theme from '@/styles/theme';
+import { theme } from '@/styles/theme';
 import Header from '@/features/Header';
 
 export default function App({ Component, pageProps }: AppProps) {
@@ -35,7 +35,7 @@ export default function App({ Component, pageProps }: AppProps) {
       <Head>
         <title>🛠ChancePaceAdmin</title>
       </Head>
-      <ThemeProvider theme={Theme}>
+      <ThemeProvider theme={theme}>
         {notPc ? (
           <NotPc />
         ) : (
