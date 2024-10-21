@@ -75,12 +75,56 @@ const UserInfo = () => {
     },
   ];
 
+  const columns = [
+    {
+      title: '주문상태',
+      dataIndex: 'orderstatus',
+      key: 'orderstatus',
+    },
+    {
+      title: '공간명',
+      dataIndex: 'spacename',
+      key: 'spacename',
+    },
+    {
+      title: '주문번호',
+      dataIndex: 'ordernum',
+      key: 'ordernum',
+    },
+    {
+      title: '이용일자',
+      dataIndex: 'useday',
+      key: 'useday',
+    },
+    {
+      title: '결제일',
+      key: 'payday',
+      dataIndex: 'payday',
+    },
+    {
+      title: '결제 금액',
+      key: 'price',
+      dataIndex: 'price',
+    },
+  ];
+  const [dataSource, setData] = useState([
+    {
+      key: '1',
+      orderstatus: '이용완료',
+      spacename: '코딩온',
+      ordernum: '123466704837',
+      useday: '2024-10-21',
+      payday: '2024-10-01',
+      price: '123,400',
+    },
+  ]);
+
   return (
     <>
       <p>회원 정보</p>
       <Descriptions bordered items={items} extra={<Button type="primary">Edit</Button>} />
       <p>통합 주문 내역</p>
-      <Tables />
+      <Tables columns={columns} dataSource={dataSource} />
     </>
   );
 };
