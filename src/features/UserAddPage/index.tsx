@@ -1,7 +1,6 @@
 import React from 'react';
 import type { FormProps } from 'antd';
 import { Button, Form, Input } from 'antd';
-import { p } from 'framer-motion/client';
 
 type FieldType = {
   username?: string;
