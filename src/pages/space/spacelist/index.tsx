@@ -1,5 +1,7 @@
+import SpaceListPage from '@/features/SpaceListPage';
+
 const SpaceList = () => {
-  return <>공간 리스트</>;
+  return <SpaceListPage />;
 };
 
 export default SpaceList;
