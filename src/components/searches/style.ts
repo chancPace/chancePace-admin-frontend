@@ -3,7 +3,8 @@ import styled from 'styled-components';
 const SearchStyle = styled.div`
   padding: ${({ theme }) => `${theme.spacing.lg} ${theme.spacing.xl}`};
   margin-bottom: ${({ theme }) => theme.spacing.lg};
-  background-color: #f5f5f5;
+  /* background-color: #f5f5f5; */
+  background-color: #d9d9d9;
 
   .wrap {
     display: flex;

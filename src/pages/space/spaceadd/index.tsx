@@ -1,4 +1,6 @@
+import SpaceAddPage from '@/features/SpaceAddPage';
+
 const SpaceAdd = () => {
-  return <>공간 등록</>;
+  return <SpaceAddPage />;
 };
 export default SpaceAdd;

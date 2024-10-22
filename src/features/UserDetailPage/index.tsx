@@ -2,9 +2,9 @@ import { useRouter } from 'next/router';
 import { Badge, Button, Descriptions, Space, Switch } from 'antd';
 import type { DescriptionsProps } from 'antd';
 import { useState } from 'react';
-import Tables from '@/components/tables';
+import TableComponent from '@/components/tables';
 
-const UserInfo = () => {
+const UserDetail = () => {
   const router = useRouter();
   const { id } = router.query;
 
@@ -124,9 +124,9 @@ const UserInfo = () => {
       <p>회원 정보</p>
       <Descriptions bordered items={items} extra={<Button type="primary">Edit</Button>} />
       <p>통합 주문 내역</p>
-      <Tables columns={columns} dataSource={dataSource} />
+      <TableComponent columns={columns} dataSource={dataSource} />
     </>
   );
 };
 
-export default UserInfo;
+export default UserDetail;

@@ -1,5 +1,5 @@
-import Search from '@/components/search';
-import Tables from '@/components/tables';
+import SearchComponent from '@/components/searches';
+import TableComponent from '@/components/tables';
 import { Space, Tag } from 'antd';
 import type { TableProps } from 'antd';
 
@@ -95,8 +95,8 @@ const UserListPage = () => {
 
   return (
     <>
-      <Search labelList={LabelList} />
-      <Tables columns={columns} dataSource={dataSource} />
+      <SearchComponent labelList={LabelList} />
+      <TableComponent columns={columns} dataSource={dataSource} />
     </>
   );
 };

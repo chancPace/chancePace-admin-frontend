@@ -1,14 +1,14 @@
 import { Button } from 'antd';
 import { useFormik } from 'formik';
-import SelectComponent from '../select';
+import SelectComponent from '../selects';
 import SearchStyle from './style';
-import InputComponent from '../input';
+import InputComponent from '../inputs';
 
 interface SearchProps {
   labelList?: any;
 }
 
-const Search = ({ labelList }: SearchProps) => {
+const SearchComponent = ({ labelList }: SearchProps) => {
   const formik = useFormik({
     initialValues: { result: [] },
     onSubmit: (values) => {
@@ -51,4 +51,4 @@ const Search = ({ labelList }: SearchProps) => {
   );
 };
 
-export default Search;
+export default SearchComponent;

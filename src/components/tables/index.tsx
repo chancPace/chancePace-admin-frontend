@@ -14,7 +14,7 @@ interface TableColumnProps {
   dataSource?: any;
 }
 
-const Tables = ({ columns, dataSource }: TableColumnProps) => {
+const TableComponent = ({ columns, dataSource }: TableColumnProps) => {
   const router = useRouter();
 
   return (
@@ -25,7 +25,7 @@ const Tables = ({ columns, dataSource }: TableColumnProps) => {
         return {
           onClick: (e) => {
             e.preventDefault();
-            router.push('/user/userlist/userinfo/1');
+            router.push('/user/userlist/userdetail/1');
           },
         };
       }}
@@ -33,4 +33,4 @@ const Tables = ({ columns, dataSource }: TableColumnProps) => {
   );
 };
 
-export default Tables;
+export default TableComponent;

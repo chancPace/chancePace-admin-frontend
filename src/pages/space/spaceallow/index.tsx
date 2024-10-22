@@ -1,5 +1,7 @@
+import SpaceAllowPage from '@/features/SpaceAllowPage';
+
 const SpaceAllow = () => {
-  return <>공간 승인</>;
+  return <SpaceAllowPage />;
 };
 
 export default SpaceAllow;
