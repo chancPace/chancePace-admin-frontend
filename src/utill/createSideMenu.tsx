@@ -92,6 +92,20 @@ const SideBar = () => {
       key: '/statistics',
       label: '이용 통계',
     },
+    {
+      key: '/website',
+      label: '사이트 관리',
+      children: [
+        {
+          key: '/website/spacecategory',
+          label: '공간 카테고리',
+        },
+        {
+          key: '/website/image',
+          label: '이미지',
+        },
+      ],
+    },
   ]);
 
   return (
