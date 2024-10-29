@@ -1,19 +1,18 @@
-import SearchComponent from '@/components/searches';
 import TableComponent from '@/components/tables';
 import { Space, Tag } from 'antd';
 import type { TableProps } from 'antd';
 
 interface DataType {
-  key: string;
-  name: string;
-  email: string;
-  phone: string;
-  address: string;
-  tags: string[];
+  key?: string;
+  name?: string;
+  email?: string;
+  phone?: string;
+  address?: string;
+  tags?: string[];
+  ranking?: string;
 }
 
 const UserListPage = () => {
-  const LabelList = ['회원 등급', '성별', '지역'];
   const columns: TableProps<DataType>['columns'] = [
     {
       title: '성함',
@@ -36,12 +35,17 @@ const UserListPage = () => {
       key: 'ranking',
     },
     {
+      title: '주소',
+      dataIndex: 'address',
+      key: 'address',
+    },
+    {
       title: '권한',
       key: 'tags',
       dataIndex: 'tags',
       render: (_, { tags }) => (
         <>
-          {tags.map((tag) => {
+          {tags?.map((tag) => {
             let color = tag.length > 5 ? 'geekblue' : 'green';
             if (tag === 'loser') {
               color = 'volcano';
@@ -74,6 +78,7 @@ const UserListPage = () => {
       phone: '010-1234-5678',
       address: 'New York No. 1 Lake Park',
       tags: ['nice', 'developer'],
+      ranking: 'vip',
     },
     {
       key: '2',
@@ -82,6 +87,7 @@ const UserListPage = () => {
       phone: '010-4567-8910',
       address: 'London No. 1 Lake Park',
       tags: ['loser'],
+      ranking: 'vip',
     },
     {
       key: '3',
@@ -90,12 +96,12 @@ const UserListPage = () => {
       phone: '010-9876-5432',
       address: 'Sydney No. 1 Lake Park',
       tags: ['cool', 'teacher'],
+      ranking: 'vip',
     },
   ];
 
   return (
     <>
-      <SearchComponent labelList={LabelList} />
       <TableComponent columns={columns} dataSource={dataSource} />
     </>
   );

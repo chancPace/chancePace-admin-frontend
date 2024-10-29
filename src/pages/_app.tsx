@@ -10,6 +10,7 @@ import Header from '@/features/Header';
 
 export default function App({ Component, pageProps }: AppProps) {
   const [notPc, setNotPc] = useState(false);
+
   useEffect(() => {
     const handleResize = () => {
       if (window.innerWidth <= 1000) {
