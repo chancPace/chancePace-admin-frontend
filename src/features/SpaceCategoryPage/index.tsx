@@ -1,33 +1,213 @@
-import { AddCategory } from '@/pages/api/spaceAPI';
-import { Button, Form, Input } from 'antd';
-import { AxiosError } from 'axios';
+import React, { useEffect, useState } from 'react';
+import { Button, Modal, Table } from 'antd';
+import { ExclamationCircleFilled } from '@ant-design/icons';
+import { getCategory, removeCategory } from '@/pages/api/spaceAPI';
+import CategoryCreate from '../Modals/CategoryCreate';
+
+import CategoryStyle from './style';
 
 const SpaceCategoryPage = () => {
-  const handleCategory = async (values: any) => {
-    const { categoryName } = values;
+  // 전체 카테고리 데이터
+  const [alldata, setAllData] = useState([]);
+
+  // 요청 카테고리 데이터
+  const [maindata, setMainData] = useState([]);
+
+  // 선택한 카테고리 ID
+  const [selectID, setSelectID] = useState(0);
+  // select 옵션 설정
+  const [options, setOptions] = useState<any>();
+
+  // 선택된 카테고리 데이터
+  const [selectData, setSelectData] = useState<any>();
+  // 모달 열기
+  const [isModalOpen, setIsModalOpen] = useState(false);
+
+  // DB에 있는 데이터 가져오기
+  const fetchCategories = async () => {
     try {
-      const response = await AddCategory({ categoryName });
+      const response = await getCategory();
+      const categories = response?.data?.data;
+      const mainCategory = categories.filter((x: any) => x.pId === null);
+      const alldataWithKeys = categories.map((item: any) => ({ ...item, key: item.id }));
+      const maindataWithKeys = mainCategory.map((item: any) => ({ ...item, key: item.id }));
+      setMainData(maindataWithKeys);
+      setAllData(alldataWithKeys);
     } catch (error) {
-      const axiosError = error as AxiosError;
+      console.error('Failed to fetch categories:', error);
     }
   };
 
+  useEffect(() => {
+    fetchCategories();
+  }, [isModalOpen]);
+
+  // select Option 설정
+  useEffect(() => {
+    const result = maindata?.map((item: any) => ({
+      value: String(item.id),
+      label: item.categoryName,
+    }));
+    const option = [{ value: null, label: '없음' }, ...result];
+    setOptions(option);
+  }, [maindata]);
+
+  // 선택한 카테고리 데이터
+  useEffect(() => {
+    const _data = alldata?.find((item: any) => item?.id === selectID);
+    setSelectData(_data);
+  }, [selectID]);
+
+  useEffect(() => {
+    if (isModalOpen === false) {
+      setSelectID(0);
+    }
+  }, [isModalOpen]);
+
+  const handleOk = () => {
+    setIsModalOpen(false);
+  };
+
+  const handleCancel = () => {
+    setIsModalOpen(false);
+  };
+
+  const showDeleteConfirm = (target: string) => {
+    Modal.confirm({
+      title: '카테고리 삭제',
+      icon: <ExclamationCircleFilled />,
+      content: '삭제하시겠습니까?',
+      okText: '네',
+      okType: 'danger',
+      cancelText: '아니요',
+      onOk() {
+        removeCategory(Number(target))
+          .then((response) => {
+            console.log('삭제 성공:', response.data);
+            fetchCategories();
+          })
+          .catch((error) => {
+            console.error('삭제 실패:', error);
+          });
+      },
+      onCancel() {
+        setIsModalOpen(false);
+      },
+    });
+  };
+
+  const columns = [
+    {
+      title: '카테고리명',
+      dataIndex: 'categoryName',
+      key: 'categoryName',
+    },
+    {
+      title: '수정',
+      render: (data: any) => {
+        return (
+          <Button
+            onClick={() => {
+              setSelectID(data?.id);
+              setIsModalOpen(true);
+            }}
+          >
+            수정
+          </Button>
+        );
+      },
+    },
+    {
+      title: '삭제',
+      render: (data: any) => {
+        return (
+          <Button
+            onClick={() => {
+              setSelectID(data?.id);
+              showDeleteConfirm(data?.id);
+            }}
+          >
+            삭제
+          </Button>
+        );
+      },
+    },
+  ];
+
   return (
-    <Form
-      name="categoryName"
-      onFinish={handleCategory} // onFinish 이벤트 핸들러 등록
-    >
-      <Form.Item
-        name="categoryName" // name과 일치해야 함
-        label="카테고리"
-        rules={[{ required: true, message: '카테고리를 입력하세요!' }]} // 유효성 검사
+    <>
+      <Button
+        type="primary"
+        onClick={() => {
+          setSelectID(0);
+          setIsModalOpen(true);
+        }}
       >
-        <Input />
-      </Form.Item>
-      <Button type="primary" htmlType="submit">
-        등록
+        추가
       </Button>
-    </Form>
+      <Modal
+        width={400}
+        title="카테고리"
+        open={isModalOpen}
+        onOk={() => handleOk}
+        onCancel={() => setIsModalOpen(false)}
+        footer={false}
+      >
+        <CategoryCreate
+          options={options}
+          selectID={selectID}
+          selectData={selectData}
+          isModalOpen={isModalOpen}
+          setIsModalOpen={setIsModalOpen}
+        />
+      </Modal>
+      <Table
+        columns={columns}
+        dataSource={maindata}
+        expandable={{
+          expandedRowRender: (record: any) => {
+            const subCategory = alldata?.filter((x: any) => x.pId == record.id);
+            const result = subCategory.map((item: any) => ({ ...item, key: item.id }));
+            // return <Table columns={columns} dataSource={result} pagination={false} className="child" />;
+            return (
+              <CategoryStyle>
+                {result.length > 0 ? (
+                  <ul>
+                    {result.map((item: any, i: number) => (
+                      <div key={item.key} className="list">
+                        <li>{item.categoryName}</li>
+                        <li>
+                          <Button
+                            onClick={() => {
+                              setSelectID(item?.id);
+                              setIsModalOpen(true);
+                            }}
+                          >
+                            수정
+                          </Button>
+                        </li>
+                        <li>
+                          <Button
+                            onClick={() => {
+                              setSelectID(item?.id);
+                              showDeleteConfirm(item?.id);
+                            }}
+                          >
+                            삭제
+                          </Button>
+                        </li>
+                      </div>
+                    ))}
+                  </ul>
+                ) : (
+                  <></>
+                )}
+              </CategoryStyle>
+            );
+          },
+        }}
+      />
+    </>
   );
 };
 

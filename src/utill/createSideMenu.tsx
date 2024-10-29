@@ -98,7 +98,7 @@ const SideBar = () => {
       children: [
         {
           key: '/website/spacecategory',
-          label: '공간 카테고리',
+          label: '공간카테고리',
         },
         {
           key: '/website/image',
