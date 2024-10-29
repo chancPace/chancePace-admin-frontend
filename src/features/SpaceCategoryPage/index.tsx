@@ -3,7 +3,6 @@ import { Button, Modal, Table } from 'antd';
 import { ExclamationCircleFilled } from '@ant-design/icons';
 import { getCategory, removeCategory } from '@/pages/api/spaceAPI';
 import CategoryCreate from '../Modals/CategoryCreate';
-
 import CategoryStyle from './style';
 
 const SpaceCategoryPage = () => {
@@ -73,6 +72,10 @@ const SpaceCategoryPage = () => {
   };
 
   const showDeleteConfirm = (target: string) => {
+    const targetCategory: any = alldata?.find((item: any) => item.id === Number(target));
+    const isBig = targetCategory?.pId === null ? true : false;
+    const content = isBig ? '소분류가 존재시 함께 삭제됩니다. 정말로 삭제하시겠습니까?' : '정말로 삭제하시겠습니까?';
+
     Modal.confirm({
       title: '카테고리 삭제',
       icon: <ExclamationCircleFilled />,
@@ -81,14 +84,27 @@ const SpaceCategoryPage = () => {
       okType: 'danger',
       cancelText: '아니요',
       onOk() {
-        removeCategory(Number(target))
-          .then((response) => {
-            console.log('삭제 성공:', response.data);
-            fetchCategories();
-          })
-          .catch((error) => {
-            console.error('삭제 실패:', error);
-          });
+        Modal.confirm({
+          title: `삭제 재확인`,
+          icon: <ExclamationCircleFilled />,
+          content: content,
+          okText: '네',
+          okType: 'danger',
+          cancelText: '아니요',
+          onOk() {
+            removeCategory(Number(target))
+              .then((response) => {
+                // console.log('삭제 성공:', response.data);
+                fetchCategories();
+              })
+              .catch((error) => {
+                console.error('삭제 실패:', error);
+              });
+          },
+          onCancel() {
+            setIsModalOpen(false);
+          },
+        });
       },
       onCancel() {
         setIsModalOpen(false);
@@ -168,7 +184,6 @@ const SpaceCategoryPage = () => {
           expandedRowRender: (record: any) => {
             const subCategory = alldata?.filter((x: any) => x.pId == record.id);
             const result = subCategory.map((item: any) => ({ ...item, key: item.id }));
-            // return <Table columns={columns} dataSource={result} pagination={false} className="child" />;
             return (
               <CategoryStyle>
                 {result.length > 0 ? (
