@@ -23,6 +23,10 @@ body {
   font-family: 'GmarketSansMedium';
 }
 
+a{
+  color: black;
+  text-decoration: none;
+}
 
 
 

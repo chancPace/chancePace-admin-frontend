@@ -1,12 +1,14 @@
 import NotPc from '@/features/NotPc';
-import Template from '@/layouts/Template';
 import { GlobalStyled } from '@/styles/global';
 import type { AppProps } from 'next/app';
 import Head from 'next/head';
 import { useEffect, useState } from 'react';
 import { ThemeProvider } from 'styled-components';
 import { theme } from '@/styles/theme';
-import Header from '@/features/Header';
+import { Provider } from 'react-redux';
+import { persistor, store } from '@/utill/redux/store';
+import { PersistGate } from 'redux-persist/integration/react';
+import AppWrapper from '@/layouts/AppWrapper';
 
 export default function App({ Component, pageProps }: AppProps) {
   const [notPc, setNotPc] = useState(false);
@@ -37,16 +39,11 @@ export default function App({ Component, pageProps }: AppProps) {
         <title>🛠ChancePaceAdmin</title>
       </Head>
       <ThemeProvider theme={theme}>
-        {notPc ? (
-          <NotPc />
-        ) : (
-          <>
-            <Header></Header>
-            <Template>
-              <Component {...pageProps} />
-            </Template>
-          </>
-        )}
+        <Provider store={store}>
+          <PersistGate loading={null} persistor={persistor}>
+            {notPc ? <NotPc /> : <AppWrapper Component={Component} pageProps={pageProps} />}
+          </PersistGate>
+        </Provider>
       </ThemeProvider>
       <GlobalStyled />
     </>
