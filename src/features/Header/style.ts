@@ -16,5 +16,8 @@ export const HeaderStyled = styled.div`
     span {
       padding: 0 10px;
     }
+    .useBar {
+      cursor: pointer;
+    }
   }
 `;
