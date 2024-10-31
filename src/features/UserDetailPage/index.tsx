@@ -9,11 +9,11 @@ const UserDetail = () => {
   const { id } = router.query;
 
   const [show, setShow] = useState(true);
-  const items: DescriptionsProps['items'] = [
+  const items = [
     {
       key: '1',
       label: '이름',
-      children: '홍길동',
+      children: '',
     },
     {
       key: '2',
@@ -123,8 +123,8 @@ const UserDetail = () => {
     <>
       <p>회원 정보</p>
       <Descriptions bordered items={items} extra={<Button type="primary">Edit</Button>} />
-      <p>통합 주문 내역</p>
-      <TableComponent columns={columns} dataSource={dataSource} />
+      {/* <p>통합 주문 내역</p>
+      <TableComponent columns={columns} dataSource={dataSource} /> */}
     </>
   );
 };

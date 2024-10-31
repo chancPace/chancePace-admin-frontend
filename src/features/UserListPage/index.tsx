@@ -1,108 +1,132 @@
 import TableComponent from '@/components/tables';
-import { Space, Tag } from 'antd';
-import type { TableProps } from 'antd';
-
-interface DataType {
-  key?: string;
-  name?: string;
-  email?: string;
-  phone?: string;
-  address?: string;
-  tags?: string[];
-  ranking?: string;
-}
+import { getAllUser } from '@/pages/api/userApi';
+import { CloseCircleOutlined, MinusCircleOutlined, SyncOutlined } from '@ant-design/icons';
+import { Button, Space, Table, Tag } from 'antd';
+import router from 'next/router';
+import { useEffect, useState } from 'react';
 
 const UserListPage = () => {
-  const columns: TableProps<DataType>['columns'] = [
+  const [data, setData] = useState();
+
+  const fetchUsers = async () => {
+    try {
+      const response = await getAllUser();
+      const result = response.data.data;
+      result.map((x: any, i: number) => {
+        x.lastLogin = x?.lastLogin.split('T')[0];
+        x.createdAt = x?.createdAt.split('T')[0];
+      });
+
+      setData(result);
+    } catch (error) {
+      console.error('오류!!:', error);
+    }
+  };
+  useEffect(() => {
+    fetchUsers();
+  }, []);
+
+  const columns = [
     {
       title: '성함',
-      dataIndex: 'name',
-      key: 'name',
+      dataIndex: 'userName',
+      key: 'userName',
     },
     {
-      title: '아이디',
+      title: '성별',
+      dataIndex: 'gender',
+      key: 'gender',
+      render: (gender: string) => (gender === 'MALE' ? '남성' : '여성'),
+    },
+    {
+      title: '이메일',
       dataIndex: 'email',
       key: 'email',
     },
     {
       title: '전화번호',
-      dataIndex: 'phone',
-      key: 'phone',
+      dataIndex: 'phoneNumber',
+      key: 'phoneNumber',
     },
+    // {
+    //   title: '계좌번호',
+    //   dataIndex: 'hostBankAccount',
+    //   key: 'hostBankAccount',
+    // },
+    // {
+    //   title: '등급',
+    //   dataIndex: 'ranking',
+    //   key: 'ranking',
+    // },
     {
-      title: '등급',
-      dataIndex: 'ranking',
-      key: 'ranking',
-    },
-    {
-      title: '주소',
-      dataIndex: 'address',
-      key: 'address',
+      title: '계정상태',
+      dataIndex: 'accountStatus',
+      key: 'accountStatus',
+      render: (status: string) =>
+        status === 'ACTIVE' ? (
+          <Tag icon={<SyncOutlined spin />} color="processing">
+            활성
+          </Tag>
+        ) : status === 'BLACKLISTED' ? (
+          <Tag icon={<MinusCircleOutlined />} color="default">
+            블랙리스트
+          </Tag>
+        ) : (
+          <Tag icon={<CloseCircleOutlined />} color="error">
+            탈퇴
+          </Tag>
+        ),
     },
     {
       title: '권한',
-      key: 'tags',
-      dataIndex: 'tags',
-      render: (_, { tags }) => (
-        <>
-          {tags?.map((tag) => {
-            let color = tag.length > 5 ? 'geekblue' : 'green';
-            if (tag === 'loser') {
-              color = 'volcano';
-            }
-            return (
-              <Tag color={color} key={tag}>
-                {tag.toUpperCase()}
-              </Tag>
-            );
-          })}
-        </>
-      ),
+      dataIndex: 'role',
+      key: 'role',
+      render: (role: string) =>
+        role === 'USER' ? (
+          <Tag color="orange">사용자</Tag>
+        ) : role === 'HOST' ? (
+          <Tag color="green">호스트</Tag>
+        ) : (
+          <Tag color="purple">관리자</Tag>
+        ),
     },
     {
-      title: 'Action',
-      key: 'action',
-      render: (_, record) => (
-        <Space size="middle">
-          <a>호스트 전환</a>
-          <a>탈퇴</a>
-        </Space>
-      ),
-    },
-  ];
-  const dataSource: DataType[] = [
-    {
-      key: '1',
-      name: 'John Brown',
-      email: 'test1@gmail.com',
-      phone: '010-1234-5678',
-      address: 'New York No. 1 Lake Park',
-      tags: ['nice', 'developer'],
-      ranking: 'vip',
+      title: '마케팅동의',
+      dataIndex: 'isMarketingAgreed',
+      key: 'isMarketingAgreed',
+      render: (agree: boolean) => (agree ? <Tag color="blue">동의</Tag> : <Tag color="red">미동의</Tag>),
     },
     {
-      key: '2',
-      name: 'Jim Green',
-      email: 'test2@gmail.com',
-      phone: '010-4567-8910',
-      address: 'London No. 1 Lake Park',
-      tags: ['loser'],
-      ranking: 'vip',
+      title: '최근 로그인',
+      dataIndex: 'lastLogin',
+      key: 'lastLogin',
     },
     {
-      key: '3',
-      name: 'Joe Black',
-      email: 'test3@gmail.com',
-      phone: '010-9876-5432',
-      address: 'Sydney No. 1 Lake Park',
-      tags: ['cool', 'teacher'],
-      ranking: 'vip',
+      title: '가입일',
+      dataIndex: 'createdAt',
+      key: 'createdAt',
     },
   ];
 
   return (
     <>
-      <TableComponent columns={columns} dataSource={dataSource} />
+      <p>회원 조회</p>
+      <Button type="primary">등록</Button>
+
+      <Table
+        columns={columns}
+        dataSource={data}
+        onRow={(record: any, rowIndex) => {
+          return {
+            onClick: (e) => {
+              e.preventDefault();
+              console.log(record.userName, 'record');
+              console.log(rowIndex, 'id');
+              router.push(`/user/userlist/userdetail/${record.userName}`);
+            },
+          };
+        }}
+      />
     </>
   );
 };

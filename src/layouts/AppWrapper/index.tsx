@@ -42,33 +42,6 @@ const AppWrapper = ({ Component, pageProps }: { Component: any; pageProps: any }
     fetchUserData();
   }, [dispatch, router]);
 
-  // return (
-  //   <>
-  //     {isLoggedIn ? (
-  //       <>
-  //         <Header />
-  //         <Template>
-  //           <Component {...pageProps} />
-  //         </Template>
-  //       </>
-  //     ) : (
-  //       <>
-  //         <Header />
-  //         <Component {...pageProps} />
-  //       </>
-  //     )}
-  //   </>
-  // );
-
-  // return (
-  //   <>
-  //     <Header />
-  //     <Template>
-  //       <Component {...pageProps} />
-  //     </Template>
-  //   </>
-  // );
-
   if (!isLoggedIn) {
     return (
       <>
@@ -86,26 +59,5 @@ const AppWrapper = ({ Component, pageProps }: { Component: any; pageProps: any }
       </>
     );
   }
-
-  //   return (
-  //     <>
-  //       <Header />
-  //       {isLoginPage ? (
-  //         <Component {...pageProps} />
-  //       ) : (
-  //         router.push('/login') // 로그인 페이지로 리다이렉트
-  //       )}
-  //     </>
-  //   );
-  // }
-
-  // return (
-  //   <>
-  //     <Header />
-  //     <Template>
-  //       <Component {...pageProps} />
-  //     </Template>
-  //   </>
-  // );
 };
 export default AppWrapper;
