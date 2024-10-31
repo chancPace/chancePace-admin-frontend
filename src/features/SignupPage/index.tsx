@@ -33,6 +33,12 @@ const SignupPage = () => {
       checked: false,
       required: true,
     },
+    {
+      value: 'check3',
+      children: '마케팅 정보 수신 동의 (선택)',
+      checked: false,
+      required: false,
+    },
   ]);
 
   //모든 체크박스가 선택되었는지
@@ -91,7 +97,7 @@ const SignupPage = () => {
     const isOptionalChecked = smallCheckBoxs
       .filter((checkbox) => !checkbox.required)
       .some((checkbox) => checkbox.checked);
-    const agreed = allChecked || isOptionalChecked;
+    const agreed = isOptionalChecked;
     const role = 'admin';
     try {
       const response = await postSignup({

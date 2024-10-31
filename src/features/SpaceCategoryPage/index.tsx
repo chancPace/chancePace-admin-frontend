@@ -152,6 +152,7 @@ const SpaceCategoryPage = () => {
 
   return (
     <>
+      <p>카테고리 조회</p>
       <Button
         type="primary"
         onClick={() => {
@@ -159,7 +160,7 @@ const SpaceCategoryPage = () => {
           setIsModalOpen(true);
         }}
       >
-        추가
+        등록
       </Button>
       <Modal
         width={400}
