@@ -1,15 +1,32 @@
 export interface SignupData {
   email: string;
   password: string;
-  role: string;
+  role?: string;
   agreed: boolean;
-  adminSecretKey: string;
+  adminSecretKey?: string;
 }
 
 export interface LoginData {
   email: string;
   password: string;
-  adminSecretKey: string;
+}
+
+export interface oneUserData {
+  userId: number;
+}
+
+export interface AddUserData {
+  userName: string;
+  email: string;
+  password: string;
+  gender?: string;
+  phoneNumber?: string;
+  bankAccountName?: string;
+  bankAccountOwner?: string;
+  bankAccountNumber?: string;
+  role: string;
+  agreed?: boolean;
+  adminSecretKey?: string;
 }
 
 export interface HostMainImg {

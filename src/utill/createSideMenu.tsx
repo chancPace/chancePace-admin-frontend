@@ -38,10 +38,6 @@ const SideBar = () => {
           key: '/user/userlist',
           label: '회원 조회',
         },
-        {
-          key: '/user/useradd',
-          label: '회원 등록',
-        },
       ],
     },
     {

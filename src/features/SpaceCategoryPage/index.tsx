@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { Button, Modal, Table } from 'antd';
 import { ExclamationCircleFilled } from '@ant-design/icons';
-import { getCategory, removeCategory } from '@/pages/api/spaceAPI';
+import { getCategory, removeCategory } from '@/pages/api/categoryApi';
 import CategoryCreate from '../Modals/CategoryCreate';
 import CategoryStyle from './style';
 

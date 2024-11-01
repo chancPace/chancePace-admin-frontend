@@ -18,9 +18,9 @@ const LoginPage = () => {
   const [passwordError, setPasswordError] = useState<string | null>(null);
 
   const handleLogin = async (values: LoginData) => {
-    const { email, password, adminSecretKey } = values;
+    const { email, password } = values;
     try {
-      const response = await postLogin({ email, password, adminSecretKey });
+      const response = await postLogin({ email, password });
       // console.log(response, 'response');
       if (response.token) {
         setEmailError(null);
@@ -60,7 +60,6 @@ const LoginPage = () => {
         initialValues={{
           email: 'admin@daum.net', // 기본값으로 설정할 이메일
           password: 'password1234!', // 기본값으로 설정할 비밀번호
-          adminSecretKey: '1234',
         }}
       >
         <InputField
@@ -84,12 +83,7 @@ const LoginPage = () => {
           ]}
           isPassword
         ></InputField>
-        <InputField
-          name="adminSecretKey"
-          label="관리자키"
-          rules={[{ required: true, message: '관리자 키를 입력해주세요' }]}
-          isPassword
-        ></InputField>
+
         <Button htmlType="submit">로그인</Button>
         <div>
           <Link href="/signup" passHref>

@@ -13,32 +13,31 @@ const AppWrapper = ({ Component, pageProps }: { Component: any; pageProps: any }
   const router = useRouter();
   const { isLoggedIn } = useSelector((state: RootState) => state.user);
 
-  useEffect(() => {
-    const fetchUserData = async () => {
-      const adminToken = Cookies.get('adminToken');
-      if (adminToken) {
-        try {
-          const userData = await getUser(adminToken);
-
-          if (userData.result) {
-            dispatch(
-              setUser({
-                email: userData.data.email,
-                name: userData.data.name,
-                role: userData.data.role,
-                adminToken,
-              })
-            );
-          }
-        } catch (error: any) {
-          console.error('에러발생');
-          router.push('http://localhost:3002/login');
+  const fetchUserData = async () => {
+    const adminToken = Cookies.get('adminToken');
+    if (adminToken) {
+      try {
+        const userData = await getUser(adminToken);
+        if (userData.result) {
+          dispatch(
+            setUser({
+              email: userData.data.email,
+              name: userData.data.name,
+              role: userData.data.role,
+              adminToken,
+            })
+          );
         }
-      } else {
-        console.error('토큰이 없습니다');
+      } catch (error: any) {
+        console.error('에러발생');
         router.push('http://localhost:3002/login');
       }
-    };
+    } else {
+      console.error('토큰이 없습니다');
+      router.push('http://localhost:3002/login');
+    }
+  };
+  useEffect(() => {
     fetchUserData();
   }, [dispatch, router]);
 
