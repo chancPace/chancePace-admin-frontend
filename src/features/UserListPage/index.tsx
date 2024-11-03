@@ -1,4 +1,3 @@
-import TableComponent from '@/components/tables';
 import { getAllUser, postSignup, searchUser } from '@/pages/api/userApi';
 import { CloseCircleOutlined, MinusCircleOutlined, SyncOutlined } from '@ant-design/icons';
 import { Button, Input, Modal, Select, Space, Table, Tag } from 'antd';
@@ -16,7 +15,7 @@ const UserListPage = () => {
     try {
       const response = await getAllUser();
       const result = response.data.data;
-      result.map((x: any, i: number) => {
+      result?.map((x: any, i: number) => {
         x.lastLogin = x?.lastLogin?.split('T')[0];
         x.createdAt = x?.createdAt?.split('T')[0];
       });

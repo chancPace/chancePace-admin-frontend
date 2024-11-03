@@ -1,8 +1,6 @@
 import { useRouter } from 'next/router';
 import { Badge, Button, Descriptions, Modal, Space, Switch, Tag } from 'antd';
-import type { DescriptionsProps } from 'antd';
 import { useEffect, useState } from 'react';
-import TableComponent from '@/components/tables';
 import { getOneUser, updateOneUser } from '@/pages/api/userApi';
 import { CloseCircleOutlined, MinusCircleOutlined, SyncOutlined } from '@ant-design/icons';
 import UserDetailStyled from './style';

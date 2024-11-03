@@ -38,9 +38,11 @@ export const postSignup = async (userData: SignupData) => {
   try {
     //axios.post(): 첫번째-> url, 두번째 -> 보낼 데이터
     const response = await axios.post(`${API_URL}signup`, userData);
+    console.log('🚀 ~ postSignup ~ userData:', userData);
     return response.data;
   } catch (error) {
     const axiosError = error as AxiosError<ErrorResponseData>;
+    console.log(error);
 
     if (axiosError.response) {
       alert(`서버 오류 발생: ${axiosError.response.data.message}`);
@@ -69,7 +71,6 @@ export const postLogin = async (userData: LoginData) => {
 export const getAllUser = async () => {
   try {
     const response = await axios.get(`${API_URL}get-all-user`);
-    console.log('회원 조회');
     return response;
   } catch (error) {
     const axiosError = error as AxiosError;

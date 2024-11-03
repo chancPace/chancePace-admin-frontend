@@ -48,14 +48,6 @@ const SideBar = () => {
           key: '/space/spacelist',
           label: '공간 조회',
         },
-        {
-          key: '/space/spaceallow',
-          label: '공간 승인',
-        },
-        {
-          key: '/space/spaceadd',
-          label: '공간 등록',
-        },
       ],
     },
     {

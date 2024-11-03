@@ -25,8 +25,6 @@ export const AddCategory = async (categoryName: any) => {
 export const getCategory = async () => {
   try {
     const response = await axios.get(`${API_URL}get-category`);
-    // console.log('getcategory', response.data);
-
     return response;
   } catch (error) {
     const axiosError = error as AxiosError;

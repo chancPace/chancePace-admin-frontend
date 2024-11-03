@@ -57,18 +57,15 @@ const UserCreate = ({ isModalOpen, setIsModalOpen, data, type, fetchUserData, fe
       agreed: true,
     },
     onSubmit(values) {
-      console.log('🚀 ~ onSubmit ~ values:', values);
       const updatedData = { ...values, id: data?.id };
       if (type === 'register') {
         postSignup(values)
           .then((response) => {
-            console.log(response);
             fetchUsers();
             message.success('등록 성공');
           })
           .catch((error) => {
-            console.log('🚀 ~ onSubmit ~ error:', error);
-            message.error('등록 실패', error);
+            message.error('등록 실패');
           });
       } else {
         updateOneUser(updatedData)
@@ -209,6 +206,7 @@ const UserCreate = ({ isModalOpen, setIsModalOpen, data, type, fetchUserData, fe
           <div className="inputForm">
             <div>관리자 키</div>
             <Input
+              required
               placeholder="관리자 키 입력해 주세요."
               name="adminSecretKey"
               onChange={userInfo.handleChange}
