@@ -62,10 +62,6 @@ const SideBar = () => {
           key: '/coupon/couponlist',
           label: '쿠폰 조회',
         },
-        {
-          key: '/coupon/couponadd',
-          label: '쿠폰 등록',
-        },
       ],
     },
     {

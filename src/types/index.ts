@@ -73,3 +73,11 @@ export interface Category {
   categoryName?: string;
   pId?: number | null;
 }
+
+export interface CouponData {
+  couponname?: string;
+  couponCode?: string;
+  discountPrice?: number;
+  userId?: any;
+  expire?: any;
+}

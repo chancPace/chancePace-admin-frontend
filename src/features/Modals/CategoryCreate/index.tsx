@@ -1,9 +1,8 @@
 import { useFormik } from 'formik';
-import { CategoryCreateStyled } from './styled';
+import { CategoryCreateStyled } from './style';
 import { Button, Input, Modal, Select } from 'antd';
 import { useEffect, useState } from 'react';
 import { AddCategory, updateCategory } from '@/pages/api/categoryApi';
-import { log } from 'console';
 
 interface optionProps {
   options: any;

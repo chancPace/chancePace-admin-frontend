@@ -6,10 +6,15 @@ import router from 'next/router';
 import { useEffect, useState } from 'react';
 import UserListStyled from './style';
 import UserCreate from '../Modals/UserCreate';
+import CouponModal from '../Modals/Coupon';
 
 const UserListPage = () => {
   const [data, setData] = useState([]);
+  // const [allData, setAllData] = useState([]);
+  const [selectedRowKeys, setSelectedRowKeys] = useState([]);
+  const [options, setOptions] = useState<any>();
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [isCouponModalOpen, setIsCouponModalOpen] = useState(false);
 
   const fetchUsers = async () => {
     try {
@@ -19,7 +24,9 @@ const UserListPage = () => {
         x.lastLogin = x?.lastLogin?.split('T')[0];
         x.createdAt = x?.createdAt?.split('T')[0];
       });
-      setData(result);
+      const dataWithKeys = result.map((item: any) => ({ ...item, key: item.id }));
+      setData(dataWithKeys);
+      // setAllData(dataWithKeys);
     } catch (error) {
       console.error('오류!!:', error);
     }
@@ -140,41 +147,33 @@ const UserListPage = () => {
         x.lastLogin = x?.lastLogin?.split('T')[0];
         x.createdAt = x?.createdAt?.split('T')[0];
       });
-      console.log('🚀 ~ onSubmit ~ select:', select);
       setData(select);
     },
   });
-
-  // const addUser = useFormik({
-  //   initialValues: {
-  //     userName: '',
-  //     gender: '',
-  //     email: '',
-  //     password: '1234',
-  //     phoneNumber: '',
-  //     bankAccountName: '',
-  //     bankAccountOwner: '',
-  //     bankAccountNumber: '',
-  //     role: '',
-  //     adminSecretKey: '1234',
-  //     agreed: true,
-  //   },
-  //   onSubmit(values) {
-  //     postSignup(values)
-  //       .then((response) => {
-  //         console.log(response);
-  //       })
-  //       .catch((error) => {
-  //         console.error('등록 실패', error);
-  //       });
-  //   },
-  // });
+  const rowSelection = {
+    selectedRowKeys,
+    onChange: (selectedRowKeys: any) => {
+      setSelectedRowKeys(selectedRowKeys);
+      // 선택한 회원 담기
+      const selectedUsers = data
+        ?.filter((user: any) => selectedRowKeys.includes(user.key))
+        ?.map((user: any) => ({
+          value: user.id,
+          label: user.userName, // 회원 이름
+        }));
+      setOptions(selectedUsers);
+    },
+  };
+  console.log('🚀 ~ UserListPage ~ selectedUsers:', options);
 
   return (
     <UserListStyled>
       <p>회원 목록</p>
       <Button type="primary" className="register" onClick={() => setIsModalOpen(true)}>
         등록
+      </Button>
+      <Button type="primary" className="register" onClick={() => setIsCouponModalOpen(true)}>
+        쿠폰 전송
       </Button>
       <form onSubmit={user.handleSubmit} className="form_wrap">
         <Input placeholder="이름, 이메일, 전화번호로 검색해 주세요." name="search" onChange={user.handleChange} />
@@ -196,102 +195,23 @@ const UserListPage = () => {
           type={'register'}
           fetchUsers={fetchUsers}
         />
-        {/* <form onSubmit={addUser.handleSubmit}>
-          <div className="inputForm">
-            <div>이름</div>
-            <Input
-              required
-              placeholder="이름을 입력해 주세요."
-              name="userName"
-              onChange={addUser.handleChange}
-              value={addUser.values.userName}
-            />
-          </div>
-          <div className="inputForm">
-            <div>이메일</div>
-            <Input
-              required
-              placeholder="이메일 입력해 주세요."
-              name="email"
-              onChange={addUser.handleChange}
-              value={addUser.values.email}
-            />
-          </div>
-          <div className="selectForm">
-            <div className="gender">
-              <div className="genderLabel">성별</div>
-              <Select
-                style={{ width: 80 }}
-                options={genderOpt}
-                value={addUser.values.gender}
-                onChange={addUser.handleChange}
-              />
-            </div>
-            <div className="auth">
-              <div className="authLabel">권한</div>
-              <Select
-                style={{ width: 80 }}
-                options={authOpt}
-                value={addUser.values.role}
-                onChange={addUser.handleChange}
-              />
-            </div>
-          </div>
-          <div className="inputForm">
-            <div>전화번호</div>
-            <Input
-              placeholder="전화번호 입력해 주세요."
-              name="phoneNumber"
-              onChange={addUser.handleChange}
-              value={addUser.values.phoneNumber}
-            />
-          </div>
-          <div className="inputForm">
-            <div>은행명</div>
-            <Input
-              placeholder="은행명 입력해 주세요."
-              name="bankAccountName"
-              onChange={addUser.handleChange}
-              value={addUser.values.bankAccountName}
-            />
-          </div>
-          <div className="inputForm">
-            <div>계좌 소유주</div>
-            <Input
-              placeholder="계좌 소유주 입력해 주세요."
-              name="bankAccountOwner"
-              onChange={addUser.handleChange}
-              value={addUser.values.bankAccountOwner}
-            />
-          </div>
-          <div className="inputForm">
-            <div>계좌 번호</div>
-            <Input
-              placeholder="계좌 번호 입력해 주세요."
-              name="bankAccountNumber"
-              onChange={addUser.handleChange}
-              value={addUser.values.bankAccountNumber}
-            />
-          </div>
-          <div className="inputForm">
-            <div>관리자 키</div>
-            <Input
-              placeholder="관리자 키 입력해 주세요."
-              name="adminSecretKey"
-              onChange={addUser.handleChange}
-              value={addUser.values.adminSecretKey}
-            />
-          </div>
-
-          <div className="btn">
-            <Button htmlType="submit">등록하기</Button>
-          </div>
-        </form> */}
+      </Modal>
+      <Modal
+        width={400}
+        title="쿠폰 발급"
+        open={isCouponModalOpen}
+        onOk={() => setIsCouponModalOpen(false)}
+        onCancel={() => setIsCouponModalOpen(false)}
+        footer={false}
+        className="modal"
+      >
+        <CouponModal setIsModalOpen={setIsCouponModalOpen} type={'send'} data={data} options={options} />
       </Modal>
 
       <Table
         columns={columns}
         dataSource={data}
+        rowSelection={rowSelection}
         onRow={(record: any) => {
           return {
             onClick: (e) => {

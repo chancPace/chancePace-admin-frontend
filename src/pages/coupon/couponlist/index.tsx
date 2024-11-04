@@ -1,5 +1,7 @@
+import CouponListPage from '@/features/CouponListPage';
+
 const CouponList = () => {
-  return <>쿠폰 리스트</>;
+  return <CouponListPage />;
 };
 
 export default CouponList;
