@@ -80,4 +80,6 @@ export interface CouponData {
   discountPrice?: number;
   userId?: any;
   expire?: any;
+  createdAt?: string;
+  couponId?: number;
 }

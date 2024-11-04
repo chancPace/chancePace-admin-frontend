@@ -13,6 +13,7 @@ interface optionProps {
 }
 
 const UserCreate = ({ isModalOpen, setIsModalOpen, data, type, fetchUserData, fetchUsers }: optionProps) => {
+  console.log('🚀 ~ UserCreate ~ data:', data);
   //  선택한 옵션 저장
   const [isAdminSelect, setIsAdminSelect] = useState(false);
 
@@ -44,17 +45,17 @@ const UserCreate = ({ isModalOpen, setIsModalOpen, data, type, fetchUserData, fe
 
   const userInfo = useFormik({
     initialValues: {
-      userName: '',
-      gender: '',
-      email: '',
-      password: '',
-      phoneNumber: '',
-      bankAccountName: '',
-      bankAccountOwner: '',
-      bankAccountNumber: '',
-      role: '',
-      adminSecretKey: '',
-      agreed: true,
+      userName: data?.userName || '',
+      gender: data?.gender || '',
+      email: data?.email || '',
+      password: data?.password || '',
+      phoneNumber: data?.phoneNumber || '',
+      bankAccountName: data?.banckAccountName || '',
+      bankAccountOwner: data?.bankAccountOwner || '',
+      bankAccountNumber: data?.bankAccountNumber || '',
+      role: data?.role,
+      adminSecretKey: data?.adminSecretKey,
+      agreed: data?.agreed || true,
     },
     onSubmit(values) {
       const updatedData = { ...values, id: data?.id };
@@ -90,29 +91,6 @@ const UserCreate = ({ isModalOpen, setIsModalOpen, data, type, fetchUserData, fe
       setIsAdminSelect(false);
     }
   };
-
-  useEffect(() => {
-    if (type === 'register') {
-      userInfo.setFieldValue('userName', '');
-      userInfo.setFieldValue('gender', '');
-      userInfo.setFieldValue('email', '');
-      userInfo.setFieldValue('password', '');
-      userInfo.setFieldValue('phoneNumber', '');
-      userInfo.setFieldValue('bankAccountName', '');
-      userInfo.setFieldValue('bankAccountOwner', '');
-      userInfo.setFieldValue('bankAccountNumber', '');
-      userInfo.setFieldValue('role', '');
-    } else {
-      userInfo.setFieldValue('userName', data?.userName);
-      userInfo.setFieldValue('gender', data?.gender);
-      userInfo.setFieldValue('email', data?.email);
-      userInfo.setFieldValue('phoneNumber', data?.phoneNumber);
-      userInfo.setFieldValue('bankAccountName', data?.bankAccountName);
-      userInfo.setFieldValue('bankAccountOwner', data?.bankAccountOwner);
-      userInfo.setFieldValue('bankAccountNumber', data?.bankAccountNumber);
-      userInfo.setFieldValue('role', data?.role);
-    }
-  }, [isModalOpen, type]);
 
   return (
     <>
@@ -202,7 +180,7 @@ const UserCreate = ({ isModalOpen, setIsModalOpen, data, type, fetchUserData, fe
             value={userInfo.values.bankAccountNumber}
           />
         </div>
-        {isAdminSelect ? (
+        {data?.role === 'ADMIN' ? (
           <div className="inputForm">
             <div>관리자 키</div>
             <Input

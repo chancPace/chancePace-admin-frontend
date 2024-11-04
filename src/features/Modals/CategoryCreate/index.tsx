@@ -12,7 +12,7 @@ interface optionProps {
   setIsModalOpen: any;
 }
 
-const CategoryCreate = ({ options, selectID, selectData, isModalOpen, setIsModalOpen }: optionProps) => {
+const CategoryCreate = ({ options, selectID, selectData, setIsModalOpen }: optionProps) => {
   //  선택한 옵션 저장
   const [select, setSelect] = useState<any>();
   const category = useFormik({

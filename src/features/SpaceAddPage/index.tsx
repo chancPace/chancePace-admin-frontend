@@ -8,7 +8,7 @@ import dayjs from 'dayjs';
 import { AxiosError } from 'axios';
 import { useRouter } from 'next/router';
 import { getCategory } from '@/pages/api/categoryApi';
-import { addNewSpace } from '@/pages/api/spaceApi';
+import { addNewSpace } from '@/pages/api/spaceAPI';
 import { AddSpaceStyled } from './style';
 
 const SpaceAddPage = () => {

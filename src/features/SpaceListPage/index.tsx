@@ -3,7 +3,7 @@ import { Button, Input, Table, Tag } from 'antd';
 import { useFormik } from 'formik';
 import router from 'next/router';
 import { useEffect, useState } from 'react';
-import { getAllSpace, searchSpace } from '@/pages/api/spaceApi';
+import { getAllSpace, searchSpace } from '@/pages/api/spaceAPI';
 import SpaceListStyled from './style';
 import Link from 'next/link';
 

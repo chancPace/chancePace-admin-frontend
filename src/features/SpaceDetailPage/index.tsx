@@ -5,7 +5,7 @@ import { getOneUser, updateOneUser } from '@/pages/api/userApi';
 import { CloseCircleOutlined, MinusCircleOutlined, SyncOutlined } from '@ant-design/icons';
 import UserCreate from '../Modals/UserCreate';
 import SpaceDetailStyled from './style';
-import { getOneSpace, updateSpace } from '@/pages/api/spaceApi';
+import { getOneSpace, updateSpace } from '@/pages/api/spaceAPI';
 import SpaceEdit from '../Modals/SpaceEdit';
 
 const SpaceDetailPage = () => {

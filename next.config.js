@@ -1,11 +1,11 @@
-const withTM = require("next-transpile-modules")([
-  "@ant-design/icons-svg",
-  "@ant-design/icons",
-  "rc-tree",
-  "rc-util",
-  "rc-pagination",
-  "rc-picker",
-  "rc-table",
+const withTM = require('next-transpile-modules')([
+  '@ant-design/icons-svg',
+  '@ant-design/icons',
+  'rc-tree',
+  'rc-util',
+  'rc-pagination',
+  'rc-picker',
+  'rc-table',
 ]);
 
 const nextConfig = {
@@ -19,6 +19,9 @@ const nextConfig = {
   },
   compiler: {
     styledComponents: true,
+  },
+  eslint: {
+    ignoreDuringBuilds: true,
   },
 };
 

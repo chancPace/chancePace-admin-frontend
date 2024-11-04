@@ -77,6 +77,16 @@ const SideBar = () => {
       label: '이용 통계',
     },
     {
+      key: '/booking',
+      label: '예약 관리',
+      children: [
+        {
+          key: '/booking/bookinglist',
+          label: '예약 조회',
+        },
+      ],
+    },
+    {
       key: '/website',
       label: '사이트 관리',
       children: [

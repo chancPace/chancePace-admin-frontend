@@ -1,11 +1,10 @@
 import { useRouter } from 'next/router';
-import { Badge, Button, Descriptions, Modal, Space, Switch, Tag } from 'antd';
+import { Badge, Button, Descriptions, Modal } from 'antd';
 import { useEffect, useState } from 'react';
-import { getOneUser, updateOneUser } from '@/pages/api/userApi';
-import { CloseCircleOutlined, MinusCircleOutlined, SyncOutlined } from '@ant-design/icons';
+import { updateOneUser } from '@/pages/api/userApi';
 import CouponDetailStyled from './style';
 import CouponModal from '../Modals/Coupon';
-import { getOneCoupon } from '@/pages/api/couponApi';
+import { getOneCoupon, updateCoupon } from '@/pages/api/couponApi';
 
 const CouponDetailPage = () => {
   const router = useRouter();
@@ -13,7 +12,7 @@ const CouponDetailPage = () => {
   const couponId = Number(id);
   const [data, setData] = useState<any>();
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const [type, setType] = useState('');
+  // const [type, setType] = useState('');
 
   const fetchCouponData = async (couponId: number) => {
     try {
@@ -76,8 +75,8 @@ const CouponDetailPage = () => {
       <Button
         className="delete"
         onClick={() => {
-          const updatedData = { ...data, isActive: false }; // 원하는 상태 값으로 변경
-          updateOneUser(updatedData);
+          const updatedData = { couponId, isActive: false }; // 원하는 상태 값으로 변경
+          updateCoupon(updatedData);
           fetchCouponData(couponId);
         }}
       >

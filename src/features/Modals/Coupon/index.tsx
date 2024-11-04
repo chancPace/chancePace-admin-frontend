@@ -2,7 +2,7 @@ import { useFormik } from 'formik';
 import { Button, DatePicker, Input, Modal, Select } from 'antd';
 import { useEffect, useState } from 'react';
 import { CouponModalStyled } from './style';
-import { addCoupon, updateCoupon } from '@/pages/api/couponApi';
+import { addCoupon, getAllCoupon, sendCoupon, updateCoupon } from '@/pages/api/couponApi';
 import { useRouter } from 'next/router';
 import dayjs from 'dayjs';
 
@@ -16,7 +16,28 @@ interface CouponProps {
 }
 
 const CouponModal = ({ setIsModalOpen, type, data, options, fetchCoupons, couponId }: CouponProps) => {
+  const [coupons, setCoupons] = useState();
   const router = useRouter();
+
+  const fetchCouponList = async () => {
+    try {
+      const response = await getAllCoupon();
+      const result = response.data;
+      const options = result?.map((coupon: any) => ({
+        label: coupon.couponName, // 쿠폰 이름
+        value: coupon.couponId, // 쿠폰 ID
+      }));
+      setCoupons(options);
+    } catch (error) {
+      console.error('오류!!:', error);
+    }
+  };
+  useEffect(() => {
+    if (type === 'send') {
+      fetchCouponList();
+    }
+  }, [type]);
+
   const coupon = useFormik({
     initialValues: {
       couponName: data?.couponName || '',
@@ -32,23 +53,13 @@ const CouponModal = ({ setIsModalOpen, type, data, options, fetchCoupons, coupon
         cancelText: '취소',
         onOk: async () => {
           try {
-            {
-              type === 'add' ? (
-                addCoupon(values).then(() => {
-                  fetchCoupons();
-                })
-              ) : type === 'fix' ? (
-                () => {
-                  const updatedData = { ...values, couponId };
-                  updateCoupon(updatedData).then(() => {
-                    console.log('🚀 ~ onOk: ~ updatedData:', updatedData);
-
-                    fetchCoupons();
-                  });
-                }
-              ) : (
-                <></>
-              );
+            if (type === 'add') {
+              await addCoupon(values);
+              fetchCoupons();
+            } else if (type === 'fix') {
+              await updateCoupon({ ...values, couponId });
+              fetchCoupons();
+              router.reload(); // 여기에서 페이지를 새로 고침합니다.
             }
           } catch (error) {
             console.log('🚀 ~ onOk: ~ error:', error);
@@ -67,8 +78,7 @@ const CouponModal = ({ setIsModalOpen, type, data, options, fetchCoupons, coupon
             <div className="inputForm">
               <div>쿠폰명</div>
               <Select
-                options={options}
-                defaultValue={options}
+                options={coupons}
                 value={coupon.values.couponName}
                 onChange={(value) => coupon.setFieldValue('couponName', value)}
               />

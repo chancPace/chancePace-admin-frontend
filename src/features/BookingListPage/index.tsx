@@ -2,20 +2,22 @@ import { Button, Input, Modal, Table, Tag } from 'antd';
 import { useFormik } from 'formik';
 import router from 'next/router';
 import { useEffect, useState } from 'react';
-import CouponListStyled from './style';
 import CouponModal from '../Modals/Coupon';
-import { getAllCoupon, searchCoupon } from '@/pages/api/couponApi';
+import { searchCoupon } from '@/pages/api/couponApi';
 import { searchUser } from '@/pages/api/userApi';
 import { CouponData } from '@/types';
+import BookingListStyled from './style';
+import { getBooking } from '@/pages/api/bookingApi';
 
-const CouponListPage = () => {
+const BookingListPage = () => {
   const [data, setData] = useState([]);
   const [isModalOpen, setIsModalOpen] = useState(false);
 
   const fetchCoupons = async () => {
     try {
-      const response = await getAllCoupon();
+      const response = await getBooking();
       const result = response.data;
+
       result?.map((x: CouponData, i: number) => {
         x.createdAt = x?.createdAt?.split('T')[0];
       });
@@ -30,45 +32,38 @@ const CouponListPage = () => {
 
   const columns = [
     {
-      title: '쿠폰명',
+      title: '예약 공간명',
       dataIndex: 'couponName',
       key: 'couponName',
     },
     {
-      title: '쿠폰코드',
+      title: '예약자명',
       dataIndex: 'couponCode',
       key: 'couponCode',
-      // filters: [
-      //   { text: '남성', value: 'MALE' },
-      //   { text: '여성', value: 'FEMALE' },
-      // ],
-      // filterSearch: true,
-      // onFilter: (value: any, record: any) => record.gender === value,
-      // render: (gender: string) => (gender === 'MALE' ? '남성' : gender === 'FEMALE' ? '여성' : ''),
     },
     {
-      title: '할인 가격',
+      title: '예약 일',
+      dataIndex: 'startDate',
+      key: 'startDate',
+      sorter: (a?: any, b?: any) => a?.startDate - b?.startDate,
+    },
+    {
+      title: '체크인 시간',
+      dataIndex: 'startTime',
+      key: 'startTime',
+      sorter: (a?: any, b?: any) => a?.startTime - b?.startTime,
+    },
+    {
+      title: '체크아웃 시간',
+      dataIndex: 'endTime',
+      key: 'endTime',
+      sorter: (a?: any, b?: any) => a?.endTime - b?.endTime,
+    },
+    {
+      title: '인원',
       dataIndex: 'discountPrice',
       key: 'discountPrice',
       sorter: (a?: any, b?: any) => a?.discountPrice - b?.discountPrice,
-    },
-    {
-      title: '상태',
-      dataIndex: 'isActive',
-      key: 'isActive',
-      filters: [
-        { text: '활성', value: true },
-        { text: '비활성', value: false },
-      ],
-      filterSearch: true,
-      onFilter: (value: any, record: any) => record.isActive === value,
-      render: (active: boolean) => (active ? <Tag color="blue">활성</Tag> : <Tag color="red">비활성</Tag>),
-    },
-    {
-      title: '생성일',
-      dataIndex: 'createdAt',
-      key: 'createdAt',
-      sorter: (a?: any, b?: any) => Number(a.createdAt.replace(/-/g, '')) - Number(b.createdAt.replace(/-/g, '')),
     },
   ];
 
@@ -87,11 +82,8 @@ const CouponListPage = () => {
   });
 
   return (
-    <CouponListStyled>
-      <p>쿠폰 목록</p>
-      <Button type="primary" className="register" onClick={() => setIsModalOpen(true)}>
-        등록
-      </Button>
+    <BookingListStyled>
+      <p>예약 목록</p>
       <form onSubmit={coupon.handleSubmit} className="form_wrap">
         <Input placeholder="쿠폰 명, 쿠폰 코드로 검색해 주세요." name="search" onChange={coupon.handleChange} />
         <Button htmlType="submit">조회</Button>
@@ -121,7 +113,7 @@ const CouponListPage = () => {
           };
         }}
       />
-    </CouponListStyled>
+    </BookingListStyled>
   );
 };
-export default CouponListPage;
+export default BookingListPage;
