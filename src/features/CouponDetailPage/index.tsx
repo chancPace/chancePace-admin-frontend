@@ -1,18 +1,17 @@
 import { useRouter } from 'next/router';
 import { Badge, Button, Descriptions, Modal } from 'antd';
 import { useEffect, useState } from 'react';
-import { updateOneUser } from '@/pages/api/userApi';
 import CouponDetailStyled from './style';
 import CouponModal from '../Modals/Coupon';
 import { getOneCoupon, updateCoupon } from '@/pages/api/couponApi';
+import { CouponData } from '@/types';
 
 const CouponDetailPage = () => {
   const router = useRouter();
   const { id } = router.query;
   const couponId = Number(id);
-  const [data, setData] = useState<any>();
+  const [data, setData] = useState<CouponData>();
   const [isModalOpen, setIsModalOpen] = useState(false);
-  // const [type, setType] = useState('');
 
   const fetchCouponData = async (couponId: number) => {
     try {

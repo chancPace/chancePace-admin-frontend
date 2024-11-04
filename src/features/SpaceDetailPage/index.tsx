@@ -1,22 +1,20 @@
 import { useRouter } from 'next/router';
 import { Badge, Button, Descriptions, Modal, Tag } from 'antd';
 import { useEffect, useState } from 'react';
-import { getOneUser, updateOneUser } from '@/pages/api/userApi';
-import { CloseCircleOutlined, MinusCircleOutlined, SyncOutlined } from '@ant-design/icons';
-import UserCreate from '../Modals/UserCreate';
+import { CloseCircleOutlined, SyncOutlined } from '@ant-design/icons';
 import SpaceDetailStyled from './style';
 import { getOneSpace, updateSpace } from '@/pages/api/spaceAPI';
 import SpaceEdit from '../Modals/SpaceEdit';
+import { Space } from '@/types';
 
 const SpaceDetailPage = () => {
   const router = useRouter();
   const { id } = router.query;
   const spaceId = Number(id);
-  const [data, setData] = useState<any>();
+  const [data, setData] = useState<Space>();
   const [isModalOpen, setIsModalOpen] = useState(false);
 
   const fetchSpaceData = async (spaceId: number) => {
-    console.log('🚀 ~ fetchSpaceData ~ spaceId:', spaceId);
     try {
       const response = await getOneSpace(spaceId);
       const result = response.data.data;

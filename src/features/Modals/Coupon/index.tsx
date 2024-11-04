@@ -5,6 +5,7 @@ import { CouponModalStyled } from './style';
 import { addCoupon, getAllCoupon, sendCoupon, updateCoupon } from '@/pages/api/couponApi';
 import { useRouter } from 'next/router';
 import dayjs from 'dayjs';
+import { CouponData } from '@/types';
 
 interface CouponProps {
   setIsModalOpen: any;
@@ -23,11 +24,13 @@ const CouponModal = ({ setIsModalOpen, type, data, options, fetchCoupons, coupon
     try {
       const response = await getAllCoupon();
       const result = response.data;
-      const options = result?.map((coupon: any) => ({
-        label: coupon.couponName, // 쿠폰 이름
-        value: coupon.couponId, // 쿠폰 ID
-      }));
-      setCoupons(options);
+      const active = result
+        ?.filter((coupon: CouponData) => coupon.isActive)
+        .map((coupon: CouponData) => ({
+          label: coupon.couponName, // 쿠폰 이름
+          value: coupon.id, // 쿠폰 ID
+        }));
+      setCoupons(active);
     } catch (error) {
       console.error('오류!!:', error);
     }
@@ -42,9 +45,9 @@ const CouponModal = ({ setIsModalOpen, type, data, options, fetchCoupons, coupon
     initialValues: {
       couponName: data?.couponName || '',
       couponCode: data?.couponCode || '',
-      discountPrice: data?.discountPrice || '',
+      discountPrice: data?.discountPrice,
       userId: options ? options.map((option: any) => option.value) : [],
-      expire: '',
+      expirationDate: '',
     },
     onSubmit: (values) => {
       Modal.confirm({
@@ -57,9 +60,16 @@ const CouponModal = ({ setIsModalOpen, type, data, options, fetchCoupons, coupon
               await addCoupon(values);
               fetchCoupons();
             } else if (type === 'fix') {
-              await updateCoupon({ ...values, couponId });
+              await updateCoupon({ ...values, id: couponId });
               fetchCoupons();
               router.reload(); // 여기에서 페이지를 새로 고침합니다.
+            } else if (type === 'send') {
+              await sendCoupon({
+                couponId: values.couponName,
+                userId: values.userId, // 여러 회원 ID를 포함
+                expirationDate: values.expirationDate,
+              });
+              fetchCoupons(); // 쿠폰 목록 새로 고침
             }
           } catch (error) {
             console.log('🚀 ~ onOk: ~ error:', error);
@@ -100,9 +110,9 @@ const CouponModal = ({ setIsModalOpen, type, data, options, fetchCoupons, coupon
                 onChange={(value) => {
                   if (value) {
                     const formattedDate = dayjs(value).format('YYYY-MM-DD'); // 날짜를 'YYYY-MM-DD' 형식으로 포맷
-                    coupon.setFieldValue('expire', formattedDate); // 포맷된 날짜를 상태에 저장
+                    coupon.setFieldValue('expirationDate', formattedDate); // 포맷된 날짜를 상태에 저장
                   } else {
-                    coupon.setFieldValue('expire', ''); // 선택이 없을 경우 빈 문자열로 설정
+                    coupon.setFieldValue('expirationDate', ''); // 선택이 없을 경우 빈 문자열로 설정
                   }
                 }}
               />

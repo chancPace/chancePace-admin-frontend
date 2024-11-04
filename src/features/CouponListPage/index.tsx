@@ -5,7 +5,6 @@ import { useEffect, useState } from 'react';
 import CouponListStyled from './style';
 import CouponModal from '../Modals/Coupon';
 import { getAllCoupon, searchCoupon } from '@/pages/api/couponApi';
-import { searchUser } from '@/pages/api/userApi';
 import { CouponData } from '@/types';
 
 const CouponListPage = () => {

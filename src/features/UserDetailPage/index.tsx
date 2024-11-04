@@ -5,12 +5,13 @@ import { getOneUser, updateOneUser } from '@/pages/api/userApi';
 import { CloseCircleOutlined, MinusCircleOutlined, SyncOutlined } from '@ant-design/icons';
 import UserDetailStyled from './style';
 import UserCreate from '../Modals/UserCreate';
+import { User } from '@/types';
 
 const UserDetail = () => {
   const router = useRouter();
   const { id } = router.query;
   const userId = Number(id);
-  const [data, setData] = useState<any>();
+  const [data, setData] = useState<User>();
   const [isModalOpen, setIsModalOpen] = useState(false);
 
   const fetchUserData = async () => {
@@ -132,8 +133,8 @@ const UserDetail = () => {
       <Button
         className="delete"
         onClick={() => {
-          const updatedData = { ...data, accountStatus: 'WITHDRAWN' }; // 원하는 상태 값으로 변경
-          updateOneUser(updatedData);
+          // const updatedData = { ...data, accountStatus: 'WITHDRAWN' }; // 원하는 상태 값으로 변경
+          updateOneUser({ ...data, accountStatus: 'WITHDRAWN' });
           fetchUserData();
         }}
       >
@@ -142,8 +143,8 @@ const UserDetail = () => {
       <Button
         className="delete"
         onClick={() => {
-          const updatedData = { ...data, accountStatus: 'BLACKLISTED' }; // 원하는 상태 값으로 변경
-          updateOneUser(updatedData);
+          // const updatedData:any = { ...data, accountStatus: 'BLACKLISTED' }; // 원하는 상태 값으로 변경
+          updateOneUser({ ...data, accountStatus: 'BLACKLISTED' });
           fetchUserData();
         }}
       >

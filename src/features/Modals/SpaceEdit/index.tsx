@@ -1,8 +1,6 @@
 import { updateSpace } from '@/pages/api/spaceAPI';
-import { postSignup, updateOneUser } from '@/pages/api/userApi';
 import { Button, Input, message, Modal, Select } from 'antd';
 import { useFormik } from 'formik';
-import { useEffect, useState } from 'react';
 
 interface optionProps {
   setIsModalOpen: any;

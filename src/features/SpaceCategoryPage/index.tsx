@@ -4,6 +4,7 @@ import { ExclamationCircleFilled } from '@ant-design/icons';
 import { getCategory, removeCategory } from '@/pages/api/categoryApi';
 import CategoryCreate from '../Modals/CategoryCreate';
 import CategoryStyle from './style';
+import { Category } from '@/types';
 
 const SpaceCategoryPage = () => {
   // 전체 카테고리 데이터
@@ -18,7 +19,7 @@ const SpaceCategoryPage = () => {
   const [options, setOptions] = useState<any>();
 
   // 선택된 카테고리 데이터
-  const [selectData, setSelectData] = useState<any>();
+  const [selectData, setSelectData] = useState<Category>();
   // 모달 열기
   const [isModalOpen, setIsModalOpen] = useState(false);
 
@@ -27,9 +28,9 @@ const SpaceCategoryPage = () => {
     try {
       const response = await getCategory();
       const categories = response?.data?.data;
-      const mainCategory = categories.filter((x: any) => x.pId === null);
-      const alldataWithKeys = categories.map((item: any) => ({ ...item, key: item.id }));
-      const maindataWithKeys = mainCategory.map((item: any) => ({ ...item, key: item.id }));
+      const mainCategory = categories.filter((x: Category) => x.pId === null);
+      const alldataWithKeys = categories.map((item: Category) => ({ ...item, key: item.id }));
+      const maindataWithKeys = mainCategory.map((item: Category) => ({ ...item, key: item.id }));
       setMainData(maindataWithKeys);
       setAllData(alldataWithKeys);
     } catch (error) {
@@ -183,8 +184,8 @@ const SpaceCategoryPage = () => {
         dataSource={maindata}
         expandable={{
           expandedRowRender: (record: any) => {
-            const subCategory = alldata?.filter((x: any) => x.pId == record.id);
-            const result = subCategory.map((item: any) => ({ ...item, key: item.id }));
+            const subCategory = alldata?.filter((x: Category) => x.pId == record.id);
+            const result = subCategory.map((item: Category) => ({ ...item, key: item.id }));
             return (
               <CategoryStyle>
                 {result.length > 0 ? (

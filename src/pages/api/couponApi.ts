@@ -41,7 +41,7 @@ export const getAllCoupon = async () => {
   }
 };
 
-// 특정 쿠폰 데이터 조회 - 아직인듯?
+// 특정 쿠폰 데이터 조회
 export const getOneCoupon = async (couponId: number) => {
   try {
     const response = await axios.get(`${API_URL}get-one-coupon`, {
@@ -106,6 +106,7 @@ export const searchCoupon = async (search: string) => {
 
 // 쿠폰 발급
 export const sendCoupon = async (values: CouponData) => {
+  console.log('🚀 ~ sendCoupon ~ values:', values);
   try {
     const response = await axios.post(`${API_URL}send-coupon`, values);
     return response;

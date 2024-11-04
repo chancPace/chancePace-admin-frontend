@@ -6,6 +6,7 @@ import { useEffect, useState } from 'react';
 import { getAllSpace, searchSpace } from '@/pages/api/spaceAPI';
 import SpaceListStyled from './style';
 import Link from 'next/link';
+import { Space } from '@/types';
 
 const SpaceListPage = () => {
   const [data, setData] = useState([]);
@@ -15,7 +16,7 @@ const SpaceListPage = () => {
     try {
       const response = await getAllSpace();
       const result = response.data;
-      result?.map((x: any, i: number) => {
+      result?.map((x: Space, i: number) => {
         x.createdAt = x?.createdAt?.split('T')[0];
       });
       const dataWithKeys = result.map((item: any) => ({ ...item, key: item.id }));
@@ -99,7 +100,7 @@ const SpaceListPage = () => {
     async onSubmit(values) {
       const response = await searchSpace(values.search);
       const select = response.data.data;
-      select.map((x: any, i: number) => {
+      select.map((x: Space, i: number) => {
         x.createdAt = x?.createdAt?.split('T')[0];
       });
       setData(select);

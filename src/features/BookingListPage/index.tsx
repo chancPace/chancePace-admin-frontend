@@ -16,6 +16,7 @@ const BookingListPage = () => {
   const fetchCoupons = async () => {
     try {
       const response = await getBooking();
+      console.log('🚀 ~ fetchCoupons ~ response:', response);
       const result = response.data;
 
       result?.map((x: CouponData, i: number) => {

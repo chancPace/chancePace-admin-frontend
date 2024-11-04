@@ -6,6 +6,27 @@ export interface SignupData {
   adminSecretKey?: string;
 }
 
+export interface User {
+  id?: string;
+  userName?: string;
+  password?: string;
+  gender?: string;
+  email?: string;
+  phoneNumber?: string;
+  accountStatus?: string;
+  role?: string;
+  bankAccountName?: string;
+  bankAccountOwner?: string;
+  bankAccountNumber?: string;
+  isMarketingAgreed?: boolean;
+  membership?: boolean;
+  agreed?: boolean;
+  lastLogin?: string;
+  createdAt?: string;
+  adminSecretKey?: string;
+  key?: string; // Optional because it will be added later
+}
+
 export interface LoginData {
   email: string;
   password: string;
@@ -64,6 +85,13 @@ export interface Space {
   spaceImg?: { src?: string }[]; // 공간 이미지 배열
   businessStartTime?: number;
   businessEndTime?: number;
+  createdAt?: string;
+  spaceAdminName?: string;
+  spaceAdminPhoneNumber?: string;
+  addPrice?: number;
+  minGuests?: number;
+  maxGuests?: number;
+  spaceRating?: number;
 }
 
 export type CategoryType = string;
@@ -75,11 +103,13 @@ export interface Category {
 }
 
 export interface CouponData {
-  couponname?: string;
+  couponName?: string;
   couponCode?: string;
   discountPrice?: number;
-  userId?: any;
-  expire?: any;
+  userId?: number;
+  expirationDate?: any;
   createdAt?: string;
+  id?: number;
+  isActive?: boolean;
   couponId?: number;
 }

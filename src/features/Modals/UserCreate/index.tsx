@@ -1,19 +1,19 @@
 import { postSignup, updateOneUser } from '@/pages/api/userApi';
+import { User } from '@/types';
 import { Button, Input, message, Select } from 'antd';
 import { useFormik } from 'formik';
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 
 interface optionProps {
   isModalOpen: boolean;
   setIsModalOpen: any;
-  data?: any;
+  data?: User;
   type: string;
   fetchUserData?: any;
   fetchUsers?: any;
 }
 
 const UserCreate = ({ isModalOpen, setIsModalOpen, data, type, fetchUserData, fetchUsers }: optionProps) => {
-  console.log('🚀 ~ UserCreate ~ data:', data);
   //  선택한 옵션 저장
   const [isAdminSelect, setIsAdminSelect] = useState(false);
 
@@ -50,7 +50,7 @@ const UserCreate = ({ isModalOpen, setIsModalOpen, data, type, fetchUserData, fe
       email: data?.email || '',
       password: data?.password || '',
       phoneNumber: data?.phoneNumber || '',
-      bankAccountName: data?.banckAccountName || '',
+      bankAccountName: data?.bankAccountName || '',
       bankAccountOwner: data?.bankAccountOwner || '',
       bankAccountNumber: data?.bankAccountNumber || '',
       role: data?.role,
@@ -58,7 +58,7 @@ const UserCreate = ({ isModalOpen, setIsModalOpen, data, type, fetchUserData, fe
       agreed: data?.agreed || true,
     },
     onSubmit(values) {
-      const updatedData = { ...values, id: data?.id };
+      // const updatedData = { ...values, id: data?.id };
       if (type === 'register') {
         postSignup(values)
           .then((response) => {
@@ -69,7 +69,7 @@ const UserCreate = ({ isModalOpen, setIsModalOpen, data, type, fetchUserData, fe
             message.error('등록 실패');
           });
       } else {
-        updateOneUser(updatedData)
+        updateOneUser({ ...values, id: data?.id })
           .then((response) => {
             fetchUserData();
             message.success('수정 성공');
@@ -82,15 +82,6 @@ const UserCreate = ({ isModalOpen, setIsModalOpen, data, type, fetchUserData, fe
       setIsModalOpen(false);
     },
   });
-
-  const handleRoleChange = (value: string) => {
-    userInfo.setFieldValue('role', value);
-    if (value === 'ADMIN') {
-      setIsAdminSelect(true);
-    } else {
-      setIsAdminSelect(false);
-    }
-  };
 
   return (
     <>
@@ -141,7 +132,12 @@ const UserCreate = ({ isModalOpen, setIsModalOpen, data, type, fetchUserData, fe
           </div>
           <div className="auth">
             <div className="authLabel">권한</div>
-            <Select style={{ width: 80 }} options={authOpt} value={userInfo.values.role} onChange={handleRoleChange} />
+            <Select
+              style={{ width: 80 }}
+              options={authOpt}
+              value={userInfo.values.role}
+              onChange={(value) => userInfo.setFieldValue('role', value)}
+            />
           </div>
         </div>
         <div className="inputForm">
@@ -180,20 +176,6 @@ const UserCreate = ({ isModalOpen, setIsModalOpen, data, type, fetchUserData, fe
             value={userInfo.values.bankAccountNumber}
           />
         </div>
-        {data?.role === 'ADMIN' ? (
-          <div className="inputForm">
-            <div>관리자 키</div>
-            <Input
-              required
-              placeholder="관리자 키 입력해 주세요."
-              name="adminSecretKey"
-              onChange={userInfo.handleChange}
-              value={userInfo.values.adminSecretKey}
-            />
-          </div>
-        ) : (
-          <></>
-        )}
         <div className="btn">
           <Button htmlType="submit">{type === 'register' ? '등록' : '수정'}</Button>
         </div>

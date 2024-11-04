@@ -1,18 +1,18 @@
-import { getAllUser, postSignup, searchUser } from '@/pages/api/userApi';
+import { getAllUser, searchUser } from '@/pages/api/userApi';
 import { CloseCircleOutlined, MinusCircleOutlined, SyncOutlined } from '@ant-design/icons';
-import { Button, Input, Modal, Select, Space, Table, Tag } from 'antd';
+import { Button, Input, Modal, Table, Tag } from 'antd';
 import { useFormik } from 'formik';
 import router from 'next/router';
 import { useEffect, useState } from 'react';
 import UserListStyled from './style';
 import UserCreate from '../Modals/UserCreate';
 import CouponModal from '../Modals/Coupon';
+import { User } from '@/types';
 
 const UserListPage = () => {
   const [data, setData] = useState([]);
-  // const [allData, setAllData] = useState([]);
   const [selectedRowKeys, setSelectedRowKeys] = useState([]);
-  const [options, setOptions] = useState<any>();
+  const [options, setOptions] = useState<{ value: string; label: string }[]>([]);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isCouponModalOpen, setIsCouponModalOpen] = useState(false);
 
@@ -20,13 +20,12 @@ const UserListPage = () => {
     try {
       const response = await getAllUser();
       const result = response.data.data;
-      result?.map((x: any, i: number) => {
+      result?.map((x: User, i: number) => {
         x.lastLogin = x?.lastLogin?.split('T')[0];
         x.createdAt = x?.createdAt?.split('T')[0];
       });
-      const dataWithKeys = result.map((item: any) => ({ ...item, key: item.id }));
+      const dataWithKeys = result.map((item: User) => ({ ...item, key: item.id }));
       setData(dataWithKeys);
-      // setAllData(dataWithKeys);
     } catch (error) {
       console.error('오류!!:', error);
     }
@@ -143,7 +142,7 @@ const UserListPage = () => {
     async onSubmit(values) {
       const response = await searchUser(values.search);
       const select = response.data.data;
-      select.map((x: any, i: number) => {
+      select.map((x: User, i: number) => {
         x.lastLogin = x?.lastLogin?.split('T')[0];
         x.createdAt = x?.createdAt?.split('T')[0];
       });
@@ -156,15 +155,14 @@ const UserListPage = () => {
       setSelectedRowKeys(selectedRowKeys);
       // 선택한 회원 담기
       const selectedUsers = data
-        ?.filter((user: any) => selectedRowKeys.includes(user.key))
-        ?.map((user: any) => ({
-          value: user.id,
-          label: user.userName, // 회원 이름
+        ?.filter((user: User) => selectedRowKeys.includes(user.key))
+        ?.map((user: User) => ({
+          value: user.id || '',
+          label: user.userName || '', // 회원 이름
         }));
       setOptions(selectedUsers);
     },
   };
-  console.log('🚀 ~ UserListPage ~ selectedUsers:', options);
 
   return (
     <UserListStyled>
@@ -198,7 +196,7 @@ const UserListPage = () => {
       </Modal>
       <Modal
         width={400}
-        title="쿠폰 발급"
+        title="쿠폰 전송"
         open={isCouponModalOpen}
         onOk={() => setIsCouponModalOpen(false)}
         onCancel={() => setIsCouponModalOpen(false)}

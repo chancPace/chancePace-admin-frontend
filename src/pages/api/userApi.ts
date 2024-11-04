@@ -1,4 +1,4 @@
-import { AddUserData, LoginData, oneUserData, SignupData } from '@/types';
+import { AddUserData, LoginData, oneUserData, SignupData, User } from '@/types';
 import axios, { AxiosError } from 'axios';
 
 const API_URL = 'http://localhost:4000/api/user/';
@@ -126,7 +126,7 @@ export const getOneUser = async ({ userId }: oneUserData) => {
   }
 };
 
-export const updateOneUser = async (userData: AddUserData) => {
+export const updateOneUser = async (userData: User) => {
   console.log('🚀 ~ updateOneUser ~ userData:', userData);
 
   try {
