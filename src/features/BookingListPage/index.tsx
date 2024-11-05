@@ -1,64 +1,84 @@
-import { Button, Input, Modal, Table, Tag } from 'antd';
+import { Button, Input, Table } from 'antd';
 import { useFormik } from 'formik';
 import router from 'next/router';
 import { useEffect, useState } from 'react';
-import CouponModal from '../Modals/Coupon';
-import { searchCoupon } from '@/pages/api/couponApi';
-import { searchUser } from '@/pages/api/userApi';
 import { CouponData } from '@/types';
 import BookingListStyled from './style';
-import { getBooking } from '@/pages/api/bookingApi';
+import { getAllBooking, searchBooking } from '@/pages/api/bookingApi';
+import { getOneSpace } from '@/pages/api/spaceAPI';
 
 const BookingListPage = () => {
   const [data, setData] = useState([]);
-  const [isModalOpen, setIsModalOpen] = useState(false);
+  // const [isModalOpen, setIsModalOpen] = useState(false);
+  const [space, setSpace] = useState<any>();
 
-  const fetchCoupons = async () => {
+  const fetchBookings = async () => {
     try {
-      const response = await getBooking();
-      console.log('🚀 ~ fetchCoupons ~ response:', response);
+      const response = await getAllBooking();
       const result = response.data;
-
-      result?.map((x: CouponData, i: number) => {
-        x.createdAt = x?.createdAt?.split('T')[0];
-      });
       setData(result);
     } catch (error) {
       console.error('오류!!:', error);
     }
   };
   useEffect(() => {
-    fetchCoupons();
+    fetchBookings();
   }, []);
 
   const columns = [
     {
       title: '예약 공간명',
-      dataIndex: 'couponName',
-      key: 'couponName',
+      dataIndex: 'Space.spaceName',
+      key: 'Space.spaceName',
+      render: (text: any, record: any) => {
+        // 여기서 데이터를 변형하거나 추가적으로 처리할 수 있음
+        return `${record.Space.spaceName}`; // 예시로 변형된 값 반환
+      },
     },
     {
-      title: '예약자명',
-      dataIndex: 'couponCode',
-      key: 'couponCode',
+      title: '예약자 성함',
+      dataIndex: 'User.userName',
+      key: 'User.userName',
+      render: (text: any, record: any) => {
+        // 여기서 데이터를 변형하거나 추가적으로 처리할 수 있음
+        return `${record.User.userName}`; // 예시로 변형된 값 반환
+      },
     },
     {
       title: '예약 일',
       dataIndex: 'startDate',
       key: 'startDate',
-      sorter: (a?: any, b?: any) => a?.startDate - b?.startDate,
+      sorter: (a: any, b: any) => {
+        const dateA = new Date(a?.startDate); // 날짜 문자열을 Date 객체로 변환
+        const dateB = new Date(b?.startDate); // 날짜 문자열을 Date 객체로 변환
+        return dateA.getTime() - dateB.getTime(); // getTime()으로 타임스탬프를 비교
+      },
     },
     {
       title: '체크인 시간',
       dataIndex: 'startTime',
       key: 'startTime',
-      sorter: (a?: any, b?: any) => a?.startTime - b?.startTime,
+      // sorter: (a?: any, b?: any) => a?.startTime - b?.startTime,
+      render: (text: any) => {
+        // 숫자를 '0시', '1시', ..., '23시'로 변환
+        if (text !== undefined && text !== null) {
+          return `${text}시`; // 숫자 뒤에 '시'를 추가하여 출력
+        }
+        return ''; // 값이 없으면 빈 문자열 출력
+      },
     },
     {
       title: '체크아웃 시간',
       dataIndex: 'endTime',
       key: 'endTime',
-      sorter: (a?: any, b?: any) => a?.endTime - b?.endTime,
+      // sorter: (a?: any, b?: any) => a?.endTime - b?.endTime,
+      render: (text: any) => {
+        // 숫자를 '0시', '1시', ..., '23시'로 변환
+        if (text !== undefined && text !== null) {
+          return `${text}시`; // 숫자 뒤에 '시'를 추가하여 출력
+        }
+        return ''; // 값이 없으면 빈 문자열 출력
+      },
     },
     {
       title: '인원',
@@ -68,40 +88,25 @@ const BookingListPage = () => {
     },
   ];
 
-  const coupon = useFormik({
+  const booking = useFormik({
     initialValues: {
       search: '',
     },
     async onSubmit(values) {
-      const response = await searchCoupon(values.search);
-      const select = response.data;
-      select.map((x: any, i: number) => {
-        x.createdAt = x?.createdAt?.split('T')[0];
-      });
-      setData(select);
+      const response = await searchBooking(values.search);
+      console.log('🚀 ~ onSubmit ~ response:', response);
+      const search = response.data.data[0].Bookings;
+      setData(search);
     },
   });
 
   return (
     <BookingListStyled>
       <p>예약 목록</p>
-      <form onSubmit={coupon.handleSubmit} className="form_wrap">
-        <Input placeholder="쿠폰 명, 쿠폰 코드로 검색해 주세요." name="search" onChange={coupon.handleChange} />
+      <form onSubmit={booking.handleSubmit} className="form_wrap">
+        <Input placeholder="공간 명, 예약자 성항으로 검색해 주세요." name="search" onChange={booking.handleChange} />
         <Button htmlType="submit">조회</Button>
       </form>
-
-      <Modal
-        width={400}
-        title="쿠폰 등록"
-        open={isModalOpen}
-        onOk={() => setIsModalOpen(false)}
-        onCancel={() => setIsModalOpen(false)}
-        footer={false}
-        className="modal"
-      >
-        <CouponModal setIsModalOpen={setIsModalOpen} type="add" fetchCoupons={fetchCoupons} />
-      </Modal>
-
       <Table
         columns={columns}
         dataSource={data}
@@ -109,7 +114,7 @@ const BookingListPage = () => {
           return {
             onClick: (e) => {
               e.preventDefault();
-              router.push(`/coupon/couponlist/coupondetail/${record?.id}`);
+              router.push(`/booking/bookinglist/bookingdetail/${record?.id}`);
             },
           };
         }}

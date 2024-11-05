@@ -18,6 +18,7 @@ const UserDetail = () => {
     try {
       const response = await getOneUser({ userId });
       const result = response.data.data;
+      console.log('🚀 ~ fetchUserData ~ result:', result);
       if (result) {
         // lastLogin과 createdAt 변환
         result.lastLogin = result.lastLogin ? result.lastLogin.split('T')[0] : '';
@@ -114,7 +115,11 @@ const UserDetail = () => {
     {
       key: '11',
       label: '마케팅 수신여부',
-      children: data?.agreed ? <Badge status="processing" text="동의" /> : <Badge status="default" text="미동의" />,
+      children: data?.isMarketingAgreed ? (
+        <Badge status="processing" text="동의" />
+      ) : (
+        <Badge status="default" text="미동의" />
+      ),
     },
   ];
 

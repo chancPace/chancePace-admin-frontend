@@ -160,70 +160,75 @@ const SpaceDetailPage = () => {
   return (
     <SpaceDetailStyled>
       <p>공간 정보</p>
-      <Button
-        htmlType="submit"
-        className="edit"
-        onClick={() => {
-          setIsModalOpen(true);
-        }}
-      >
-        수정
-      </Button>
-      <Modal
-        width={400}
-        title="공간 정보 수정"
-        open={isModalOpen}
-        onOk={() => setIsModalOpen(false)}
-        onCancel={() => setIsModalOpen(false)}
-        footer={false}
-        className="modal"
-      >
-        <SpaceEdit setIsModalOpen={setIsModalOpen} data={data} spaceId={spaceId} fetchSpaceData={fetchSpaceData} />
-      </Modal>
+      <div className="buttonWrap">
+        <div className="left">
+          <Button
+            htmlType="submit"
+            className="edit"
+            onClick={() => {
+              setIsModalOpen(true);
+            }}
+          >
+            수정
+          </Button>
+          <Modal
+            width={400}
+            title="공간 정보 수정"
+            open={isModalOpen}
+            onOk={() => setIsModalOpen(false)}
+            onCancel={() => setIsModalOpen(false)}
+            footer={false}
+            className="modal"
+          >
+            <SpaceEdit setIsModalOpen={setIsModalOpen} data={data} spaceId={spaceId} fetchSpaceData={fetchSpaceData} />
+          </Modal>
 
-      <Button
-        className="delete"
-        onClick={() => {
-          Modal.confirm({
-            title: (
-              <>
-                공간을 삭제하시겠습니까?
-                <br />
-                삭제해도 데이터는 사라지지 않습니다.
-              </>
-            ),
-            okText: '확인',
-            cancelText: '취소',
-            onOk: async () => {
-              const updatedData = { spaceId, isOpen: false };
-              updateSpace(updatedData);
-              await fetchSpaceData(spaceId);
-              router.reload();
-            },
-          });
-        }}
-      >
-        삭제
-      </Button>
-      <Button
-        className="delete"
-        onClick={() => {
-          Modal.confirm({
-            title: '공간을 승인하겠습니까?',
-            okText: '확인',
-            cancelText: '취소',
-            onOk: async () => {
-              const updatedData = { spaceId, spaceStatus: 'AVAILABLE' };
-              updateSpace(updatedData);
-              await fetchSpaceData(spaceId);
-              router.reload();
-            },
-          });
-        }}
-      >
-        승인
-      </Button>
-
+          <Button
+            className="delete"
+            onClick={() => {
+              Modal.confirm({
+                title: (
+                  <>
+                    공간을 삭제하시겠습니까?
+                    <br />
+                    삭제해도 데이터는 사라지지 않습니다.
+                  </>
+                ),
+                okText: '확인',
+                cancelText: '취소',
+                onOk: async () => {
+                  const updatedData = { spaceId, isOpen: false };
+                  updateSpace(updatedData);
+                  await fetchSpaceData(spaceId);
+                  router.reload();
+                },
+              });
+            }}
+          >
+            삭제
+          </Button>
+        </div>
+        <div className="right">
+          <Button
+            className="delete"
+            onClick={() => {
+              Modal.confirm({
+                title: '공간을 승인하겠습니까?',
+                okText: '확인',
+                cancelText: '취소',
+                onOk: async () => {
+                  const updatedData = { spaceId, spaceStatus: 'AVAILABLE' };
+                  updateSpace(updatedData);
+                  await fetchSpaceData(spaceId);
+                  router.reload();
+                },
+              });
+            }}
+          >
+            승인
+          </Button>
+        </div>
+      </div>
       <Descriptions bordered items={items} />
     </SpaceDetailStyled>
   );

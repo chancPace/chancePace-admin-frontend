@@ -74,6 +74,23 @@ export const updateSpace = async (spaceData: Space) => {
   }
 };
 
+export const updatesSpace = async (spaceData: FormData, spaceId: string) => {
+  try {
+    const token = Cookies.get('token');
+    const response = await axios.patch(`${API_URL}/update-space?spaceId=${spaceId}`, spaceData, {
+      headers: {
+        // 'Content-Type': 'multipart/form-data',
+        Authorization: `Bearer ${token}`,
+      },
+    });
+    console.log(response, '리스펀스 api');
+    return response.data;
+  } catch (error) {
+    console.error('공간 수정 실패', error);
+    throw error;
+  }
+};
+
 // 공간 검색
 export const searchSpace = async (search: string) => {
   try {

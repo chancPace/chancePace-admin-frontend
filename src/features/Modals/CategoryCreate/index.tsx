@@ -67,15 +67,6 @@ const CategoryCreate = ({ options, selectID, selectData, setIsModalOpen }: optio
     <CategoryCreateStyled>
       <form onSubmit={category.handleSubmit}>
         <div className="inputForm">
-          <div>카테고리 이름</div>
-          <Input
-            placeholder="카테고리 이름을 입력해 주세요."
-            name="categoryName"
-            onChange={category.handleChange}
-            value={category.values.categoryName}
-          />
-        </div>
-        <div className="inputForm">
           <div>상위 선택</div>
           <Select
             options={options}
@@ -84,6 +75,15 @@ const CategoryCreate = ({ options, selectID, selectData, setIsModalOpen }: optio
             onChange={(value: string) => {
               setSelect(value);
             }}
+          />
+        </div>
+        <div className="inputForm">
+          <div>카테고리 이름</div>
+          <Input
+            placeholder="카테고리 이름을 입력해 주세요."
+            name="categoryName"
+            onChange={category.handleChange}
+            value={category.values.categoryName}
           />
         </div>
         <div className="btn">

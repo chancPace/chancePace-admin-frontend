@@ -65,18 +65,6 @@ const SideBar = () => {
       ],
     },
     {
-      key: '/inquiry',
-      label: '문의 내역',
-    },
-    {
-      key: '/membership',
-      label: '멤버쉽 관리',
-    },
-    {
-      key: '/statistics',
-      label: '이용 통계',
-    },
-    {
       key: '/booking',
       label: '예약 관리',
       children: [
@@ -100,6 +88,18 @@ const SideBar = () => {
         },
       ],
     },
+    // {
+    //   key: '/inquiry',
+    //   label: '문의 내역',
+    // },
+    // {
+    //   key: '/membership',
+    //   label: '멤버쉽 관리',
+    // },
+    // {
+    //   key: '/statistics',
+    //   label: '이용 통계',
+    // },
   ]);
 
   return (
