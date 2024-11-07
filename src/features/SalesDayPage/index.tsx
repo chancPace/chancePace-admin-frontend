@@ -1,4 +1,5 @@
 import { getAllPayment } from '@/pages/api/paymentApi';
+import { Button, DatePicker, Table } from 'antd';
 import { useEffect, useState } from 'react';
 import dayjs from 'dayjs';
 import { Chart } from 'react-chartjs-2';
@@ -15,7 +16,7 @@ import {
   ChartData,
   ChartOptions,
 } from 'chart.js';
-
+import router from 'next/router';
 ChartJS.register(CategoryScale, LinearScale, BarElement, LineElement, PointElement, Title, Tooltip, Legend);
 
 const SalesDayPage = () => {
@@ -58,6 +59,25 @@ const SalesDayPage = () => {
       count: dailySales[key].count || 0,
     }));
     setSales(salesData);
+  };
+
+  // 월을 선택했을 때 호출되는 함수
+  const onChange = (date: dayjs.Dayjs | null) => {
+    setSelectedDateTime(date);
+    if (date) {
+      setSelectedMonth((date.month() + 1).toString()); // 월 저장
+    } else {
+      setSelectedMonth(''); // 초기화
+    }
+  };
+
+  // 조회 버튼 클릭 시 호출되는 함수
+  const onSubmit = () => {
+    if (selectedDateTime) {
+      fetchPayments();
+    } else {
+      alert('월을 선택해 주세요');
+    }
   };
 
   // 월별 날짜를 일별로 나누는 함수 (윤년, 2월, 31일 등 고려)
@@ -159,9 +179,66 @@ const SalesDayPage = () => {
     },
   };
 
+  const columns = [
+    {
+      title: '결제일',
+      dataIndex: 'createdAt',
+      key: 'createdAt',
+      sorter: (a?: any, b?: any) => Number(a.createdAt.replace(/-/g, '')) - Number(b.createdAt.replace(/-/g, '')),
+      render: (data: any) => dayjs(data).format('YYYY-MM-DD'),
+    },
+    {
+      title: '결제 방식',
+      dataIndex: 'paymentMethod',
+      key: 'paymentMethod',
+    },
+    {
+      title: '결제금액',
+      dataIndex: 'paymentPrice',
+      key: 'paymentPrice',
+      render: (data: any) => data?.toLocaleString() + '원',
+    },
+    {
+      title: '쿠폰 사용금액',
+      dataIndex: 'couponPrice',
+      key: 'couponPrice',
+      render: (data: any) => data?.toLocaleString() + '원',
+    },
+    {
+      title: '실제 결제 금액',
+      dataIndex: 'couponPrice',
+      key: 'actualPaymentPrice',
+      render: (couponPrice: any, record: any) => (record?.paymentPrice - couponPrice).toLocaleString() + '원',
+    },
+  ];
+
   return (
     <>
+      <DatePicker
+        picker={'month'}
+        value={selectedDateTime}
+        onChange={onChange}
+        placeholder={'월을 선택하세요'}
+        style={{ width: '200px' }}
+      />
+      <br />
+      <Button type="primary" onClick={onSubmit} style={{ marginTop: 10 }}>
+        조회
+      </Button>
       <Chart data={chartData} options={chartOptions} type={'bar'} />
+      <p>매출 목록</p>
+      <Table
+        columns={columns}
+        dataSource={data}
+        onRow={(record: any) => {
+          return {
+            onClick: (e) => {
+              e.preventDefault();
+              router.push(`/sales/salesdetail/${record?.id}`);
+            },
+          };
+        }}
+      />
     </>
   );
 };

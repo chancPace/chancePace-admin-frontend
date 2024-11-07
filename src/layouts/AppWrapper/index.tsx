@@ -7,13 +7,14 @@ import { logout, setUser } from '@/utill/redux/slices/userSlice';
 import { getUser } from '@/pages/api/userApi';
 import Header from '@/features/Header';
 import { RootState } from '@/utill/redux/store';
+import LoginPage from '@/features/LoginPage';
+import NotAdmin from '@/features/NotAdmin';
 
 const AppWrapper = ({ Component, pageProps }: { Component: any; pageProps: any }) => {
   const dispatch = useDispatch();
   const router = useRouter();
-  const { isLoggedIn } = useSelector((state: RootState) => state.user);
+  const { isLoggedIn, userInfo } = useSelector((state: RootState) => state.user);
   const adminToken = Cookies.get('adminToken');
-
   const fetchUserData = async () => {
     if (adminToken) {
       try {
@@ -42,15 +43,23 @@ const AppWrapper = ({ Component, pageProps }: { Component: any; pageProps: any }
     fetchUserData();
   }, [dispatch, router]);
 
-  if (isLoggedIn || adminToken) {
-    return (
-      <>
-        <Header />
-        <Template>
-          <Component {...pageProps} />
-        </Template>
-      </>
-    );
+  if (isLoggedIn) {
+    if (userInfo?.role === 'ADMIN') {
+      return (
+        <>
+          <Header />
+          <Template>
+            <Component {...pageProps} />
+          </Template>
+        </>
+      );
+    } else {
+      return (
+        <>
+          <NotAdmin />
+        </>
+      );
+    }
   } else {
     return (
       <>

@@ -8,7 +8,7 @@ import { getAllBooking, searchBooking } from '@/pages/api/bookingApi';
 import { getOneSpace } from '@/pages/api/spaceAPI';
 
 const BookingListPage = () => {
-  const [data, setData] = useState([]);
+  const [data, setData] = useState<any>([]);
   // const [isModalOpen, setIsModalOpen] = useState(false);
   const [space, setSpace] = useState<any>();
 
@@ -28,20 +28,20 @@ const BookingListPage = () => {
   const columns = [
     {
       title: '예약 공간명',
-      dataIndex: 'Space.spaceName',
-      key: 'Space.spaceName',
+      dataIndex: 'space.spaceName',
+      key: 'space.spaceName',
       render: (text: any, record: any) => {
         // 여기서 데이터를 변형하거나 추가적으로 처리할 수 있음
-        return `${record.Space.spaceName}`; // 예시로 변형된 값 반환
+        return `${record?.space?.spaceName}`; // 예시로 변형된 값 반환
       },
     },
     {
       title: '예약자 성함',
-      dataIndex: 'User.userName',
-      key: 'User.userName',
+      dataIndex: 'user.userName',
+      key: 'user.userName',
       render: (text: any, record: any) => {
         // 여기서 데이터를 변형하거나 추가적으로 처리할 수 있음
-        return `${record.User.userName}`; // 예시로 변형된 값 반환
+        return `${record?.user?.userName}`; // 예시로 변형된 값 반환
       },
     },
     {
@@ -94,8 +94,8 @@ const BookingListPage = () => {
     },
     async onSubmit(values) {
       const response = await searchBooking(values.search);
-      console.log('🚀 ~ onSubmit ~ response:', response);
-      const search = response.data.data[0].Bookings;
+      const search = response.data.data;
+      console.log('🚀 ~ onSubmit ~ search:', search);
       setData(search);
     },
   });

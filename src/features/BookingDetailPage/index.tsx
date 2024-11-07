@@ -30,38 +30,38 @@ const BookingDeatilPage = () => {
     {
       key: '1',
       label: '예약자 성함',
-      children: data?.User?.userName,
+      children: data?.user?.userName,
     },
     {
       key: '2',
       label: '예약자 이메일',
-      children: data?.User?.email,
+      children: data?.user?.email,
     },
     {
       key: '3',
       label: '예약자 전화번호',
-      children: data?.User?.phoneNumber,
+      children: data?.user?.phoneNumber,
     },
     // 예약 공간
     {
       key: '4',
       label: '공간 명',
-      children: data?.Space?.spaceName,
+      children: data?.space?.spaceName,
     },
     {
       key: '3',
       label: '공간 관리자명',
-      children: data?.Space?.spaceAdminName,
+      children: data?.space?.spaceAdminName,
     },
     {
       key: '3',
       label: '공간 관리자 전화번호',
-      children: data?.Space?.spaceAdminPhoneNumber,
+      children: data?.space?.spaceAdminPhoneNumber,
     },
     {
       key: '3',
       label: '공간 주소',
-      children: data?.Space?.spaceLocation,
+      children: data?.space?.spaceLocation,
       span: 3,
     },
     {
@@ -82,35 +82,35 @@ const BookingDeatilPage = () => {
     {
       key: '7',
       label: '결제방식',
-      children: data?.Payment?.paymentMethod,
+      children: data?.payment?.paymentMethod,
     },
     {
       key: '7',
       label: '신용 / 체크',
-      children: data?.Payment?.cardType !== 'UNKNOWN' ? `${data?.Payment?.cardType}` : '-',
+      children: data?.payment?.cardType !== 'UNKNOWN' ? `${data?.payment?.cardType}` : '-',
     },
     {
       key: '7',
       label: '카드번호',
-      children: data?.Payment?.cardNumber !== 'UNKNOWN' ? `${data?.Payment?.cardNumber}` : '-',
+      children: data?.payment?.cardNumber !== 'UNKNOWN' ? `${data?.payment?.cardNumber}` : '-',
     },
     {
       key: '7',
       label: '원가',
       children:
-        data?.Payment?.couponPrice !== null
-          ? `${data?.Payment?.paymentPrice + data?.Payment?.couponPrice.toLocaleString()}`
-          : `${data?.Payment?.paymentPrice.toLocaleString()}`,
+        data?.payment?.couponPrice !== null
+          ? `${data?.payment?.paymentPrice + data?.payment?.couponPrice.toLocaleString()}`
+          : `${data?.payment?.paymentPrice.toLocaleString()}`,
     },
     {
       key: '7',
       label: '결제 금액',
-      children: data?.Payment?.paymentPrice.toLocaleString(),
+      children: data?.payment?.paymentPrice.toLocaleString(),
     },
     {
       key: '7',
       label: '쿠폰 사용 금액',
-      children: data?.Payment?.couponPrice === null ? '-' : `${data?.Payment?.couponPrice.toLocaleString()}`,
+      children: data?.payment?.couponPrice === null ? '-' : `${data?.payment?.couponPrice.toLocaleString()}`,
     },
   ];
 

@@ -60,7 +60,7 @@ const CouponModal = ({ setIsModalOpen, type, data, options, fetchCoupons, coupon
               await addCoupon(values);
               fetchCoupons();
             } else if (type === 'fix') {
-              await updateCoupon({ ...values, id: couponId });
+              await updateCoupon({ ...values, couponId });
               fetchCoupons();
               router.reload(); // 여기에서 페이지를 새로 고침합니다.
             } else if (type === 'send') {
