@@ -1,8 +1,9 @@
 import { Space } from '@/types';
+import { BACK_URL } from '@/utill/url';
 import axios, { AxiosError } from 'axios';
 import Cookies from 'js-cookie'; // 쿠키 라이브러리 추가
 
-const API_URL = 'http://localhost:4000/api/space/';
+const API_URL = `${BACK_URL}space/`;
 
 // 공간 등록
 export const addNewSpace = async (spaceData: FormData) => {

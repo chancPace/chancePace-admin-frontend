@@ -1,40 +1,38 @@
 import styled from 'styled-components';
 
 export const MainStyled = styled.div`
-  .wrap {
-    padding: 10px 20px;
+  .content_wrap {
     background-color: #f5f5f5;
-  }
-  .content {
-    padding: 20px 0;
+    padding: 20px 50px;
     display: flex;
     align-items: center;
     justify-content: space-between;
-  }
-  .top {
-    margin-bottom: 30px;
-    .topContent {
-      p {
-        width: 30%;
-      }
-    }
-  }
 
-  .bottom {
-    display: flex;
-    width: 100%;
-    height: 450px;
-    justify-content: space-between;
-    .bottomLeft {
+    .content {
       width: 200px;
-      height: 120px;
-
-      img {
-        width: 50px;
+      .title {
+        font-size: ${({ theme }) => theme.fontSizes.md};
+        padding-bottom: 10px;
+        border-bottom: 1px solid black;
+      }
+      .bottom {
+        padding: 0 20px;
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+        justify-content: space-between;
+        span {
+          font-size: ${({ theme }) => theme.fontSizes.sm};
+        }
+        .icon {
+          font-size: 30px;
+        }
       }
     }
-    .bottomRight {
-      width: calc(100% - 250px);
+
+    .title {
+      margin-bottom: 10px;
+      border-bottom: 1px solid black;
     }
   }
 `;

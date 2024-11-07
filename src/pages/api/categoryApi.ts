@@ -1,6 +1,7 @@
+import { BACK_URL } from '@/utill/url';
 import axios, { AxiosError } from 'axios';
 
-const API_URL = 'http://localhost:4000/api/category/';
+const API_URL = `${BACK_URL}category/`;
 
 // 카테고리 추가
 export const AddCategory = async (categoryName: any) => {

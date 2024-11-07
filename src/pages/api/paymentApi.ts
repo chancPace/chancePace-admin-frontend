@@ -1,7 +1,8 @@
 import { CouponData } from '@/types';
+import { BACK_URL } from '@/utill/url';
 import axios, { AxiosError } from 'axios';
 
-const API_URL = 'http://localhost:4000/api/payment/';
+const API_URL = `${BACK_URL}payment/`;
 
 // 전체 결제 조회
 export const getAllPayment = async () => {

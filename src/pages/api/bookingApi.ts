@@ -1,7 +1,8 @@
 import { CouponData } from '@/types';
+import { BACK_URL } from '@/utill/url';
 import axios, { AxiosError } from 'axios';
 
-const API_URL = 'http://localhost:4000/api/booking/';
+const API_URL = `${BACK_URL}booking/`;
 
 // 전체 예약 조회
 export const getAllBooking = async () => {

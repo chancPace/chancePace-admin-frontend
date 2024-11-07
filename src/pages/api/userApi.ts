@@ -1,7 +1,8 @@
 import { AddUserData, LoginData, oneUserData, SignupData, User } from '@/types';
+import { BACK_URL } from '@/utill/url';
 import axios, { AxiosError } from 'axios';
 
-const API_URL = 'http://localhost:4000/api/user/';
+const API_URL = `${BACK_URL}user/`;
 
 export const getUser = async (token: string) => {
   try {
