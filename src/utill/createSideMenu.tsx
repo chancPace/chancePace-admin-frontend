@@ -92,10 +92,6 @@ const SideBar = () => {
           key: '/website/spacecategory',
           label: '공간카테고리',
         },
-        {
-          key: '/website/image',
-          label: '이미지',
-        },
       ],
     },
     // {
