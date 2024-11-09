@@ -17,10 +17,6 @@ const UserCreate = ({ isModalOpen, setIsModalOpen, data, type, fetchUserData, fe
   //  선택한 옵션 저장
   const [isAdminSelect, setIsAdminSelect] = useState(false);
 
-  const genderOpt = [
-    { value: 'MALE', label: '남성' },
-    { value: 'FEMALE', label: '여성' },
-  ];
   const authOpt = [
     { value: 'USER', label: '사용자' },
     { value: 'HOST', label: '호스트' },
@@ -43,24 +39,66 @@ const UserCreate = ({ isModalOpen, setIsModalOpen, data, type, fetchUserData, fe
     { value: 'Jeju', label: '제주은행' },
   ];
 
+  // 유효성 검사 로직
+  const validate = (values: any) => {
+    const errors: { [key: string]: string } = {};
+
+    // 이름 검사
+    if (!values.userName) {
+      errors.userName = '이름은 필수 입력 항목입니다.';
+    } else if (values.userName.length < 2) {
+      errors.userName = '이름은 최소 2글자 이상이어야 합니다.';
+    } else if (/[a-zA-Z0-9]/.test(values.userName)) {
+      errors.userName = '숫자와 영어는 입력하실 수없습니다.';
+    }
+
+    // 이메일 검사
+    if (!values.email) {
+      errors.email = '이메일은 필수 입력 항목입니다.';
+    } else if (!/\S+@\S+\.\S+/.test(values.email)) {
+      errors.email = '유효한 이메일을 입력해 주세요.';
+    }
+
+    // 전화번호 검사 -> 필수는 x, 11자리 숫자
+    if (values.phoneNumber && values.phoneNumber.replace(/\D/g, '').length !== 11) {
+      errors.phoneNumber = '전화번호는 11자리 숫자만 입력 가능합니다.';
+    }
+    return errors;
+  };
+
+  const formatPhoneNumber = (phoneNumber: string) => {
+    const cleaned = phoneNumber.replace(/\D/g, ''); // 숫자만 남기기
+
+    if (cleaned.length === 11) {
+      return cleaned.replace(/^(\d{3})(\d{4})(\d{4})$/, '$1-$2-$3');
+    }
+
+    return phoneNumber; // 11자리 숫자가 아니면 원래 값을 반환
+  };
+
   const userInfo = useFormik({
     initialValues: {
       userName: data?.userName || '',
-      gender: data?.gender || '',
       email: data?.email || '',
-      password: data?.password || '',
+      password: data?.password || 'password1234!',
       phoneNumber: data?.phoneNumber || '',
       bankAccountName: data?.bankAccountName || '',
       bankAccountOwner: data?.bankAccountOwner || '',
       bankAccountNumber: data?.bankAccountNumber || '',
-      role: data?.role,
+      role: data?.role || 'USER',
       adminSecretKey: data?.adminSecretKey,
       agreed: data?.agreed || true,
     },
+    validate,
     onSubmit(values) {
+      const formattedPhoneNumber = formatPhoneNumber(values.phoneNumber);
+      const payload = {
+        ...values,
+        phoneNumber: formattedPhoneNumber,
+      };
       // const updatedData = { ...values, id: data?.id };
       if (type === 'register') {
-        postSignup(values)
+        postSignup(payload)
           .then((response) => {
             fetchUsers();
             message.success('등록 성공');
@@ -69,7 +107,7 @@ const UserCreate = ({ isModalOpen, setIsModalOpen, data, type, fetchUserData, fe
             message.error('등록 실패');
           });
       } else {
-        updateOneUser({ ...values, id: data?.id })
+        updateOneUser({ ...payload, id: data?.id })
           .then((response) => {
             fetchUserData();
             message.success('수정 성공');
@@ -89,23 +127,27 @@ const UserCreate = ({ isModalOpen, setIsModalOpen, data, type, fetchUserData, fe
         <div className="inputForm">
           <div>이름</div>
           <Input
-            required
             placeholder="이름을 입력해 주세요."
             name="userName"
             onChange={userInfo.handleChange}
             value={userInfo.values.userName}
           />
+          {userInfo.errors.userName && userInfo.touched.userName && (
+            <div style={{ color: 'red' }}>{userInfo.errors.userName}</div>
+          )}
         </div>
         {type === 'register' ? (
           <div className="inputForm">
             <div>이메일</div>
             <Input
-              required
               placeholder="이메일 입력해 주세요."
               name="email"
               onChange={userInfo.handleChange}
               value={userInfo.values.email}
             />
+            {userInfo.errors.email && userInfo.touched.email && (
+              <div style={{ color: 'red' }}>{userInfo.errors.email}</div>
+            )}
           </div>
         ) : (
           <></>
@@ -113,7 +155,6 @@ const UserCreate = ({ isModalOpen, setIsModalOpen, data, type, fetchUserData, fe
         <div className="inputForm">
           <div>비밀번호</div>
           <Input
-            required
             placeholder="비밀번호 입력해 주세요."
             name="password"
             onChange={userInfo.handleChange}
@@ -121,23 +162,18 @@ const UserCreate = ({ isModalOpen, setIsModalOpen, data, type, fetchUserData, fe
           />
         </div>
         <div className="selectForm">
-          <div className="gender">
-            <div className="genderLabel">성별</div>
-            <Select
-              style={{ width: 80 }}
-              options={genderOpt}
-              value={userInfo.values.gender}
-              onChange={(value) => userInfo.setFieldValue('gender', value)}
-            />
-          </div>
           <div className="auth">
             <div className="authLabel">권한</div>
             <Select
               style={{ width: 80 }}
               options={authOpt}
+              defaultValue={'USER'}
               value={userInfo.values.role}
               onChange={(value) => userInfo.setFieldValue('role', value)}
             />
+            {userInfo.errors.role && userInfo.touched.role && (
+              <div style={{ color: 'red' }}>{userInfo.errors.role}</div>
+            )}
           </div>
         </div>
         <div className="inputForm">
@@ -148,6 +184,9 @@ const UserCreate = ({ isModalOpen, setIsModalOpen, data, type, fetchUserData, fe
             onChange={userInfo.handleChange}
             value={userInfo.values.phoneNumber}
           />
+          {userInfo.errors.phoneNumber && userInfo.touched.phoneNumber && (
+            <div style={{ color: 'red' }}>{userInfo.errors.phoneNumber}</div>
+          )}
         </div>
         <div className="inputForm">
           <div>은행명</div>
