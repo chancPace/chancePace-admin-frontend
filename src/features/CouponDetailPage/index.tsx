@@ -39,23 +39,18 @@ const CouponDetailPage = () => {
     },
     {
       key: '2',
-      label: '쿠폰코드',
-      children: data?.couponCode,
+      label: '할인 가격',
+      children: `${data?.discountPrice?.toLocaleString()}원`,
     },
     {
       key: '3',
-      label: '할인 가격',
-      children: data?.discountPrice,
+      label: '생성일',
+      children: data?.createdAt,
     },
     {
       key: '4',
       label: '상태',
       children: data?.isActive ? <Badge status="processing" text="활성" /> : <Badge status="default" text="비활성" />,
-    },
-    {
-      key: '5',
-      label: '생성일',
-      children: data?.createdAt,
     },
   ];
 
@@ -90,7 +85,13 @@ const CouponDetailPage = () => {
         footer={false}
         className="modal"
       >
-        <CouponModal setIsModalOpen={setIsModalOpen} type={'fix'} data={data} couponId={couponId} />
+        <CouponModal
+          setIsModalOpen={setIsModalOpen}
+          type={'fix'}
+          data={data}
+          couponId={couponId}
+          fetchCoupons={fetchCouponData}
+        />
       </Modal>
       <Descriptions bordered items={items} />
     </CouponDetailStyled>

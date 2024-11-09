@@ -16,7 +16,8 @@ const BookingListPage = () => {
     try {
       const response = await getAllBooking();
       const result = response.data;
-      setData(result);
+      const dataWithKeys = result.map((item: any) => ({ ...item, key: item.id }));
+      setData(dataWithKeys);
     } catch (error) {
       console.error('오류!!:', error);
     }
@@ -24,6 +25,10 @@ const BookingListPage = () => {
   useEffect(() => {
     fetchBookings();
   }, []);
+
+  const detailPage = (data: number) => {
+    router.push(`/booking/bookinglist/bookingdetail/${data}`);
+  };
 
   const columns = [
     {
@@ -86,6 +91,12 @@ const BookingListPage = () => {
       key: 'discountPrice',
       sorter: (a?: any, b?: any) => a?.discountPrice - b?.discountPrice,
     },
+    {
+      title: '상세페이지',
+      dataIndex: 'action',
+      key: 'action',
+      render: (_: any, record: any) => <a onClick={() => detailPage(record.key)}>상세</a>,
+    },
   ];
 
   const booking = useFormik({
@@ -107,18 +118,7 @@ const BookingListPage = () => {
         <Input placeholder="공간 명, 예약자 성항으로 검색해 주세요." name="search" onChange={booking.handleChange} />
         <Button htmlType="submit">조회</Button>
       </form>
-      <Table
-        columns={columns}
-        dataSource={data}
-        onRow={(record: any) => {
-          return {
-            onClick: (e) => {
-              e.preventDefault();
-              router.push(`/booking/bookinglist/bookingdetail/${record?.id}`);
-            },
-          };
-        }}
-      />
+      <Table columns={columns} dataSource={data} />
     </BookingListStyled>
   );
 };

@@ -18,7 +18,8 @@ const CouponListPage = () => {
       result?.map((x: CouponData, i: number) => {
         x.createdAt = x?.createdAt?.split('T')[0];
       });
-      setData(result);
+      const dataWithKeys = result.map((item: CouponData) => ({ ...item, key: item.id }));
+      setData(dataWithKeys);
     } catch (error) {
       console.error('오류!!:', error);
     }
@@ -27,6 +28,10 @@ const CouponListPage = () => {
     fetchCoupons();
   }, []);
 
+  const detailPage = (data: number) => {
+    router.push(`/coupon/couponlist/coupondetail/${data}`);
+  };
+
   const columns = [
     {
       title: '쿠폰명',
@@ -34,22 +39,11 @@ const CouponListPage = () => {
       key: 'couponName',
     },
     {
-      title: '쿠폰코드',
-      dataIndex: 'couponCode',
-      key: 'couponCode',
-      // filters: [
-      //   { text: '남성', value: 'MALE' },
-      //   { text: '여성', value: 'FEMALE' },
-      // ],
-      // filterSearch: true,
-      // onFilter: (value: any, record: any) => record.gender === value,
-      // render: (gender: string) => (gender === 'MALE' ? '남성' : gender === 'FEMALE' ? '여성' : ''),
-    },
-    {
       title: '할인 가격',
       dataIndex: 'discountPrice',
       key: 'discountPrice',
       sorter: (a?: any, b?: any) => a?.discountPrice - b?.discountPrice,
+      render: (data: any) => data.toLocaleString() + '원',
     },
     {
       title: '상태',
@@ -68,6 +62,12 @@ const CouponListPage = () => {
       dataIndex: 'createdAt',
       key: 'createdAt',
       sorter: (a?: any, b?: any) => Number(a.createdAt.replace(/-/g, '')) - Number(b.createdAt.replace(/-/g, '')),
+    },
+    {
+      title: '상세페이지',
+      dataIndex: 'action',
+      key: 'action',
+      render: (_: any, record: any) => <a onClick={() => detailPage(record.key)}>상세</a>,
     },
   ];
 
@@ -92,7 +92,7 @@ const CouponListPage = () => {
         등록
       </Button>
       <form onSubmit={coupon.handleSubmit} className="form_wrap">
-        <Input placeholder="쿠폰 명, 쿠폰 코드로 검색해 주세요." name="search" onChange={coupon.handleChange} />
+        <Input placeholder="쿠폰 명으로 검색해 주세요." name="search" onChange={coupon.handleChange} />
         <Button htmlType="submit">조회</Button>
       </form>
 
@@ -108,18 +108,7 @@ const CouponListPage = () => {
         <CouponModal setIsModalOpen={setIsModalOpen} type="add" fetchCoupons={fetchCoupons} />
       </Modal>
 
-      <Table
-        columns={columns}
-        dataSource={data}
-        onRow={(record: any) => {
-          return {
-            onClick: (e) => {
-              e.preventDefault();
-              router.push(`/coupon/couponlist/coupondetail/${record?.id}`);
-            },
-          };
-        }}
-      />
+      <Table columns={columns} dataSource={data} />
     </CouponListStyled>
   );
 };

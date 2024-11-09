@@ -1,6 +1,6 @@
 import { getAllUser, searchUser } from '@/pages/api/userApi';
 import { CloseCircleOutlined, MinusCircleOutlined, SyncOutlined } from '@ant-design/icons';
-import { Button, Input, Modal, Table, Tag } from 'antd';
+import { Button, Input, Modal, Space, Table, Tag } from 'antd';
 import { useFormik } from 'formik';
 import router from 'next/router';
 import { useEffect, useState } from 'react';
@@ -34,23 +34,15 @@ const UserListPage = () => {
     fetchUsers();
   }, []);
 
+  const detailPage = (data: number) => {
+    router.push(`/user/userlist/userdetail/${data}`);
+  };
+
   const columns = [
     {
       title: '성함',
       dataIndex: 'userName',
       key: 'userName',
-    },
-    {
-      title: '성별',
-      dataIndex: 'gender',
-      key: 'gender',
-      filters: [
-        { text: '남성', value: 'MALE' },
-        { text: '여성', value: 'FEMALE' },
-      ],
-      filterSearch: true,
-      onFilter: (value: any, record: any) => record.gender === value,
-      render: (gender: string) => (gender === 'MALE' ? '남성' : gender === 'FEMALE' ? '여성' : ''),
     },
     {
       title: '이메일',
@@ -134,7 +126,14 @@ const UserListPage = () => {
       key: 'createdAt',
       sorter: (a?: any, b?: any) => Number(a.createdAt.replace(/-/g, '')) - Number(b.createdAt.replace(/-/g, '')),
     },
+    {
+      title: '상세페이지',
+      dataIndex: 'action',
+      key: 'action',
+      render: (_: any, record: any) => <a onClick={() => detailPage(record.key)}>상세</a>,
+    },
   ];
+
   const user = useFormik({
     initialValues: {
       search: '',
@@ -203,22 +202,16 @@ const UserListPage = () => {
         footer={false}
         className="modal"
       >
-        <CouponModal setIsModalOpen={setIsCouponModalOpen} type={'send'} data={data} options={options} />
+        <CouponModal
+          setIsModalOpen={setIsCouponModalOpen}
+          type={'send'}
+          data={data}
+          options={options}
+          // fetchCoupons={fetchCoupons}
+        />
       </Modal>
 
-      <Table
-        columns={columns}
-        dataSource={data}
-        rowSelection={rowSelection}
-        onRow={(record: any) => {
-          return {
-            onClick: (e) => {
-              e.preventDefault();
-              router.push(`/user/userlist/userdetail/${record?.id}`);
-            },
-          };
-        }}
-      />
+      <Table columns={columns} dataSource={data} rowSelection={rowSelection} />
     </UserListStyled>
   );
 };

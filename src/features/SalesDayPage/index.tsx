@@ -32,7 +32,8 @@ const SalesDayPage = () => {
     const result = response?.data?.filter((x: any, i: number) => {
       return dayjs(x.createdAt).format('YYYY-MM') === dayjs(selectedDateTime).format('YYYY-MM');
     });
-    setData(result);
+    const dataWithKeys = result.map((item: any) => ({ ...item, key: item.id }));
+    setData(dataWithKeys);
     const dailySales: { [date: string]: { totalPaymentPrice: number; count: number } } = {};
 
     // 결제 내역을 월별 또는 일별로 처리
@@ -97,6 +98,10 @@ const SalesDayPage = () => {
   useEffect(() => {
     fetchPayments();
   }, [selectedMonth]);
+
+  const detailPage = (data: number) => {
+    router.push(`/sales/salesdetail/${data}`);
+  };
 
   // // 차트에 표시할 데이터
   const formattedSales = sales.reduce((acc, item) => {
@@ -210,6 +215,12 @@ const SalesDayPage = () => {
       key: 'actualPaymentPrice',
       render: (couponPrice: any, record: any) => (record?.paymentPrice - couponPrice).toLocaleString() + '원',
     },
+    {
+      title: '상세페이지',
+      dataIndex: 'action',
+      key: 'action',
+      render: (_: any, record: any) => <a onClick={() => detailPage(record.key)}>상세</a>,
+    },
   ];
 
   return (
@@ -227,18 +238,7 @@ const SalesDayPage = () => {
       </Button>
       <Chart data={chartData} options={chartOptions} type={'bar'} />
       <p>매출 목록</p>
-      <Table
-        columns={columns}
-        dataSource={data}
-        onRow={(record: any) => {
-          return {
-            onClick: (e) => {
-              e.preventDefault();
-              router.push(`/sales/salesdetail/${record?.id}`);
-            },
-          };
-        }}
-      />
+      <Table columns={columns} dataSource={data} />
     </>
   );
 };

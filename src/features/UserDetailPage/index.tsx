@@ -50,11 +50,6 @@ const UserDetail = () => {
       children: data?.phoneNumber,
     },
     {
-      key: '4',
-      label: '성별',
-      children: data?.gender,
-    },
-    {
       key: '5',
       label: '계좌 정보',
       children: (

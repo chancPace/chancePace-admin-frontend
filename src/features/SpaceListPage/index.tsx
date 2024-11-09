@@ -29,6 +29,10 @@ const SpaceListPage = () => {
     fetchSpace();
   }, []);
 
+  const detailPage = (data: number) => {
+    router.push(`/space/spacelist/spacedetail/${data}`);
+  };
+
   const columns = [
     {
       title: '공간명',
@@ -91,6 +95,12 @@ const SpaceListPage = () => {
       key: 'createdAt',
       sorter: (a?: any, b?: any) => Number(a.createdAt.replace(/-/g, '')) - Number(b.createdAt.replace(/-/g, '')),
     },
+    {
+      title: '상세페이지',
+      dataIndex: 'action',
+      key: 'action',
+      render: (_: any, record: any) => <a onClick={() => detailPage(record.key)}>상세</a>,
+    },
   ];
 
   const space = useFormik({
@@ -127,19 +137,7 @@ const SpaceListPage = () => {
         <Input placeholder="공간명, 주소, 호스트 명으로 검색해 주세요." name="search" onChange={space.handleChange} />
         <Button htmlType="submit">조회</Button>
       </form>
-      <Table
-        columns={columns}
-        dataSource={data}
-        rowSelection={rowSelection}
-        onRow={(record: any) => {
-          return {
-            onClick: (e) => {
-              e.preventDefault();
-              router.push(`/space/spacelist/spacedetail/${record?.id}`);
-            },
-          };
-        }}
-      />
+      <Table columns={columns} dataSource={data} rowSelection={rowSelection} />
     </SpaceListStyled>
   );
 };

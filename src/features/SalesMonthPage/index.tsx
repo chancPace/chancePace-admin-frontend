@@ -32,7 +32,8 @@ const SalesMonthPage = () => {
     const result = response?.data?.filter((x: any, i: number) => {
       return dayjs(x.createdAt).format('YYYY') === selectedYear;
     });
-    setData(result);
+    const dataWithKeys = result.map((item: any) => ({ ...item, key: item.id }));
+    setData(dataWithKeys);
     const monthlySales: { [month: string]: { totalPaymentPrice: number; count: number } } = {};
 
     // 1월부터 12월까지 초기화
@@ -90,6 +91,10 @@ const SalesMonthPage = () => {
   useEffect(() => {
     fetchPayments();
   }, [selectedYear]);
+
+  const detailPage = (data: number) => {
+    router.push(`/sales/salesdetail/${data}`);
+  };
 
   const totalPaymentPrices = sales?.map((item) => item.totalPaymentPrice);
   const counts = sales?.map((item) => item.count);
@@ -197,6 +202,12 @@ const SalesMonthPage = () => {
       key: 'actualPaymentPrice',
       render: (couponPrice: any, record: any) => (record.paymentPrice - couponPrice).toLocaleString() + '원',
     },
+    {
+      title: '상세페이지',
+      dataIndex: 'action',
+      key: 'action',
+      render: (_: any, record: any) => <a onClick={() => detailPage(record.key)}>상세</a>,
+    },
   ];
   return (
     <>
@@ -213,18 +224,7 @@ const SalesMonthPage = () => {
       </Button>
       <Chart data={chartData} options={chartOptions} type={'bar'} />
       <p>매출 목록</p>
-      <Table
-        columns={columns}
-        dataSource={data}
-        onRow={(record: any) => {
-          return {
-            onClick: (e) => {
-              e.preventDefault();
-              router.push(`/sales/salesdetail/${record?.id}`);
-            },
-          };
-        }}
-      />
+      <Table columns={columns} dataSource={data} />
     </>
   );
 };
