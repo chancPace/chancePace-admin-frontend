@@ -1,5 +1,5 @@
 import { useFormik } from 'formik';
-import { Button, DatePicker, Input, Modal, Select } from 'antd';
+import { Button, DatePicker, Input, message, Modal, Select } from 'antd';
 import { useEffect, useState } from 'react';
 import { CouponModalStyled } from './style';
 import { addCoupon, getAllCoupon, sendCoupon, updateCoupon } from '@/pages/api/couponApi';
@@ -27,8 +27,8 @@ const CouponModal = ({ setIsModalOpen, type, data, options, fetchCoupons, coupon
       const active = result
         ?.filter((coupon: CouponData) => coupon.isActive)
         .map((coupon: CouponData) => ({
-          label: coupon.couponName, // 쿠폰 이름
-          value: coupon.id, // 쿠폰 ID
+          label: coupon.couponName,
+          value: coupon.id,
         }));
       setCoupons(active);
     } catch (error) {
@@ -44,9 +44,8 @@ const CouponModal = ({ setIsModalOpen, type, data, options, fetchCoupons, coupon
   const coupon = useFormik({
     initialValues: {
       couponName: data?.couponName || '',
-      couponCode: data?.couponCode || '',
       discountPrice: data?.discountPrice,
-      userId: options ? options.map((option: any) => option.value) : [],
+      userId: options,
       expirationDate: '',
     },
     onSubmit: (values) => {
@@ -58,21 +57,31 @@ const CouponModal = ({ setIsModalOpen, type, data, options, fetchCoupons, coupon
           try {
             if (type === 'add') {
               await addCoupon(values);
+              message.success('쿠폰 등록 성공!');
               fetchCoupons();
             } else if (type === 'fix') {
               await updateCoupon({ ...values, couponId });
-              fetchCoupons();
-              router.reload(); // 여기에서 페이지를 새로 고침합니다.
+              message.success('쿠폰 수정 성공!');
+              fetchCoupons(couponId);
             } else if (type === 'send') {
-              await sendCoupon({
-                couponId: values.couponName,
-                userId: values.userId, // 여러 회원 ID를 포함
-                expirationDate: values.expirationDate,
-              });
-              fetchCoupons(); // 쿠폰 목록 새로 고침
+              if (options.length === 0) {
+                message.info('회원을 선택해주세요');
+              } else if (values.couponName === undefined) {
+                message.info('쿠폰을 선택하세요');
+              } else if (values.expirationDate === '') {
+                message.info('만료기한을 설정하세요');
+              } else {
+                await sendCoupon({
+                  couponId: values.couponName,
+                  userId: options,
+                  expirationDate: values.expirationDate,
+                });
+                fetchCoupons();
+                message.success('쿠폰 발급 성공!');
+              }
             }
           } catch (error) {
-            console.log('🚀 ~ onOk: ~ error:', error);
+            message.error('처리 중 오류가 발생했습니다.');
           }
           setIsModalOpen(false);
         },
@@ -88,20 +97,10 @@ const CouponModal = ({ setIsModalOpen, type, data, options, fetchCoupons, coupon
             <div className="inputForm">
               <div>쿠폰명</div>
               <Select
+                allowClear
                 options={coupons}
                 value={coupon.values.couponName}
                 onChange={(value) => coupon.setFieldValue('couponName', value)}
-              />
-            </div>
-            <div className="inputForm">
-              <div>회원</div>
-              <Select
-                mode="multiple"
-                allowClear
-                options={options}
-                defaultValue={options}
-                value={coupon.values.userId}
-                onChange={(value) => coupon.setFieldValue('userId', value)}
               />
             </div>
             <div className="inputForm">
@@ -109,10 +108,10 @@ const CouponModal = ({ setIsModalOpen, type, data, options, fetchCoupons, coupon
               <DatePicker
                 onChange={(value) => {
                   if (value) {
-                    const formattedDate = dayjs(value).format('YYYY-MM-DD'); // 날짜를 'YYYY-MM-DD' 형식으로 포맷
-                    coupon.setFieldValue('expirationDate', formattedDate); // 포맷된 날짜를 상태에 저장
+                    const formattedDate = dayjs(value).format('YYYY-MM-DD');
+                    coupon.setFieldValue('expirationDate', formattedDate);
                   } else {
-                    coupon.setFieldValue('expirationDate', ''); // 선택이 없을 경우 빈 문자열로 설정
+                    coupon.setFieldValue('expirationDate', '');
                   }
                 }}
               />
@@ -129,19 +128,6 @@ const CouponModal = ({ setIsModalOpen, type, data, options, fetchCoupons, coupon
                 value={coupon.values.couponName}
               />
             </div>
-            {type === 'fix' ? (
-              <div className="inputForm">
-                <div>쿠폰 코드</div>
-                <Input
-                  placeholder="쿠폰 코드를 입력해 주세요."
-                  name="couponCode"
-                  onChange={coupon.handleChange}
-                  value={coupon.values.couponCode}
-                />
-              </div>
-            ) : (
-              <></>
-            )}
             <div className="inputForm">
               <div>할인 가격</div>
               <Input
@@ -153,7 +139,6 @@ const CouponModal = ({ setIsModalOpen, type, data, options, fetchCoupons, coupon
             </div>
           </>
         )}
-
         <div className="btn">
           <Button htmlType="submit">{type === 'add' ? '등록' : type === 'fix' ? '수정' : '발급'}</Button>
         </div>
