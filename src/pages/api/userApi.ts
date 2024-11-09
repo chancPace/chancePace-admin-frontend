@@ -39,7 +39,6 @@ export const postSignup = async (userData: SignupData) => {
   try {
     //axios.post(): 첫번째-> url, 두번째 -> 보낼 데이터
     const response = await axios.post(`${API_URL}signup`, userData);
-    console.log('🚀 ~ postSignup ~ userData:', userData);
     return response.data;
   } catch (error) {
     const axiosError = error as AxiosError<ErrorResponseData>;
@@ -60,7 +59,6 @@ export const postSignup = async (userData: SignupData) => {
 export const postLogin = async (userData: LoginData) => {
   try {
     const response = await axios.post(`${API_URL}login`, userData);
-    console.log('🚀 ~ postLogin ~ response:', response);
     return response.data;
   } catch (error) {
     const axiosError = error as AxiosError;
@@ -128,11 +126,8 @@ export const getOneUser = async ({ userId }: oneUserData) => {
 };
 
 export const updateOneUser = async (userData: User) => {
-  console.log('🚀 ~ updateOneUser ~ userData:', userData);
-
   try {
     const response = await axios.patch(`${API_URL}update-user`, userData);
-    console.log('🚀 ~ updateOneUser ~ response:', response);
     return response;
   } catch (error) {
     const axiosError = error as AxiosError;
@@ -149,11 +144,8 @@ export const updateOneUser = async (userData: User) => {
 };
 
 export const searchUser = async (search: string) => {
-  console.log('🚀 ~ searchUser ~ search:', search);
   try {
     const response = await axios.get(`${API_URL}get-search-user`, { params: { query: search } });
-
-    console.log('🚀 ~ searchUser ~ response:', response);
     return response;
   } catch (error) {
     const axiosError = error as AxiosError;
