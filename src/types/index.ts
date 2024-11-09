@@ -4,6 +4,7 @@ export interface SignupData {
   role?: string;
   agreed: boolean;
   adminSecretKey?: string;
+  phoneNumber?: string;
 }
 
 export interface User {
@@ -112,4 +113,9 @@ export interface CouponData {
   id?: number;
   isActive?: boolean;
   couponId?: number;
+}
+
+export interface OptionType {
+  label: string;
+  value: number;
 }
