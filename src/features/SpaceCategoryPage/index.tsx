@@ -1,10 +1,12 @@
 import React, { useEffect, useState } from 'react';
-import { Button, Modal, Table } from 'antd';
+import { Button, message, Modal, Table } from 'antd';
 import { ExclamationCircleFilled } from '@ant-design/icons';
 import { getCategory, removeCategory } from '@/pages/api/categoryApi';
 import CategoryCreate from '../Modals/CategoryCreate';
-import CategoryStyle from './style';
+
 import { Category } from '@/types';
+import { SpaceCategoryStyled, TableButtonStyle, CategoryStyle } from './style'; // style 추가
+import router from 'next/router';
 
 const SpaceCategoryPage = () => {
   // 전체 카테고리 데이터
@@ -95,11 +97,11 @@ const SpaceCategoryPage = () => {
           onOk() {
             removeCategory(Number(target))
               .then((response) => {
-                // console.log('삭제 성공:', response.data);
+                message.info('삭제 성공:', response.data);
                 fetchCategories();
               })
               .catch((error) => {
-                console.error('삭제 실패:', error);
+                message.error('삭제 실패:', error);
               });
           },
           onCancel() {
@@ -115,46 +117,43 @@ const SpaceCategoryPage = () => {
 
   const columns = [
     {
-      title: '카테고리명',
+      title: '대분류',
       dataIndex: 'categoryName',
       key: 'categoryName',
     },
     {
-      title: '수정',
+      title: '수정 및 삭제',
       render: (data: any) => {
         return (
-          <Button
-            onClick={() => {
-              setSelectID(data?.id);
-              setIsModalOpen(true);
-            }}
-          >
-            수정
-          </Button>
-        );
-      },
-    },
-    {
-      title: '삭제',
-      render: (data: any) => {
-        return (
-          <Button
-            onClick={() => {
-              setSelectID(data?.id);
-              showDeleteConfirm(data?.id);
-            }}
-          >
-            삭제
-          </Button>
+          <TableButtonStyle>
+            <Button
+              className="big_fix"
+              onClick={() => {
+                setSelectID(data?.id);
+                setIsModalOpen(true);
+              }}
+            >
+              수정
+            </Button>
+            <Button
+              onClick={() => {
+                setSelectID(data?.id);
+                showDeleteConfirm(data?.id);
+              }}
+            >
+              삭제
+            </Button>
+          </TableButtonStyle>
         );
       },
     },
   ];
 
   return (
-    <>
+    <SpaceCategoryStyled>
       <p>카테고리 조회</p>
       <Button
+        className="register"
         type="primary"
         onClick={() => {
           setSelectID(0);
@@ -191,10 +190,13 @@ const SpaceCategoryPage = () => {
                 {result.length > 0 ? (
                   <ul>
                     {result.map((item: any, i: number) => (
-                      <div key={item.key} className="list">
-                        <li>{item.categoryName}</li>
-                        <li>
+                      <div key={item.key} className="category-group">
+                        <div className="category-header">
+                          <span className="category-name">{item.categoryName}</span>
+                        </div>
+                        <div className="buttons">
                           <Button
+                            className="sub_fix"
                             onClick={() => {
                               setSelectID(item?.id);
                               setIsModalOpen(true);
@@ -202,8 +204,6 @@ const SpaceCategoryPage = () => {
                           >
                             수정
                           </Button>
-                        </li>
-                        <li>
                           <Button
                             onClick={() => {
                               setSelectID(item?.id);
@@ -212,7 +212,7 @@ const SpaceCategoryPage = () => {
                           >
                             삭제
                           </Button>
-                        </li>
+                        </div>
                       </div>
                     ))}
                   </ul>
@@ -224,7 +224,7 @@ const SpaceCategoryPage = () => {
           },
         }}
       />
-    </>
+    </SpaceCategoryStyled>
   );
 };
 

@@ -5,8 +5,13 @@ const CouponDetailStyled = styled.div`
     font-size: ${({ theme }) => theme.fontSizes.xl};
     font-weight: bold;
   }
+  .button_wrap {
+    display: flex;
+    justify-content: space-between;
+  }
   .edit {
-    margin: ${({ theme }) => theme.spacing.md} 0;
+    margin: ${({ theme }) => theme.spacing.md};
+    margin-left: 0;
   }
 `;
 

@@ -5,8 +5,14 @@ const UserDetailStyled = styled.div`
     font-size: ${({ theme }) => theme.fontSizes.xl};
     font-weight: bold;
   }
-  .edit {
-    margin: ${({ theme }) => theme.spacing.md} 0;
+  .button_wrap {
+    display: flex;
+    justify-content: space-between;
+
+    .edit {
+      margin: ${({ theme }) => theme.spacing.md};
+      margin-left: 0;
+    }
   }
 `;
 

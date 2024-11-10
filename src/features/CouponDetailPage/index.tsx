@@ -1,5 +1,5 @@
 import { useRouter } from 'next/router';
-import { Badge, Button, Descriptions, Modal } from 'antd';
+import { Badge, Button, Descriptions, message, Modal, Tag } from 'antd';
 import { useEffect, useState } from 'react';
 import CouponDetailStyled from './style';
 import CouponModal from '../Modals/Coupon';
@@ -50,32 +50,50 @@ const CouponDetailPage = () => {
     {
       key: '4',
       label: '상태',
-      children: data?.isActive ? <Badge status="processing" text="활성" /> : <Badge status="default" text="비활성" />,
+      children: data?.isActive ? <Tag color="blue">활성</Tag> : <Tag color="red">비활성</Tag>,
     },
   ];
 
   return (
     <CouponDetailStyled>
       <p>쿠폰 정보</p>
-      <Button
-        htmlType="submit"
-        className="edit"
-        onClick={() => {
-          setIsModalOpen(true);
-        }}
-      >
-        수정
-      </Button>
-      <Button
-        className="delete"
-        onClick={() => {
-          const updatedData = { couponId, isActive: false }; // 원하는 상태 값으로 변경
-          updateCoupon(updatedData);
-          fetchCouponData(couponId);
-        }}
-      >
-        삭제
-      </Button>
+      <div className="button_wrap">
+        <div className="left">
+          <Button
+            htmlType="submit"
+            className="edit"
+            onClick={() => {
+              setIsModalOpen(true);
+            }}
+          >
+            수정
+          </Button>
+        </div>
+        <div className="right">
+          {data?.isActive === true ? (
+            <Button
+              className="delete"
+              onClick={() => {
+                Modal.confirm({
+                  title: '쿠폰을 삭제하시겠습니까?',
+                  okText: '확인',
+                  cancelText: '취소',
+                  onOk: async () => {
+                    message.info('삭제되었습니다.');
+                    const updatedData = { couponId, isActive: false };
+                    updateCoupon(updatedData);
+                    router.push('/coupon/couponlist');
+                  },
+                });
+              }}
+            >
+              삭제
+            </Button>
+          ) : (
+            <></>
+          )}
+        </div>
+      </div>
       <Modal
         width={400}
         title="쿠폰 정보 수정"

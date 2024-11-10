@@ -10,7 +10,8 @@ const SpaceDetailStyled = styled.div`
     justify-content: space-between;
   }
   .edit {
-    margin: ${({ theme }) => theme.spacing.md} 0;
+    margin: ${({ theme }) => theme.spacing.md};
+    margin-left: 0;
   }
 `;
 

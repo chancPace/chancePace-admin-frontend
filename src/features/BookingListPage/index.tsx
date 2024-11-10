@@ -54,9 +54,9 @@ const BookingListPage = () => {
       dataIndex: 'startDate',
       key: 'startDate',
       sorter: (a: any, b: any) => {
-        const dateA = new Date(a?.startDate); // 날짜 문자열을 Date 객체로 변환
-        const dateB = new Date(b?.startDate); // 날짜 문자열을 Date 객체로 변환
-        return dateA.getTime() - dateB.getTime(); // getTime()으로 타임스탬프를 비교
+        const dateA = new Date(a?.startDate);
+        const dateB = new Date(b?.startDate);
+        return dateA.getTime() - dateB.getTime();
       },
     },
     {
@@ -65,11 +65,10 @@ const BookingListPage = () => {
       key: 'startTime',
       // sorter: (a?: any, b?: any) => a?.startTime - b?.startTime,
       render: (text: any) => {
-        // 숫자를 '0시', '1시', ..., '23시'로 변환
         if (text !== undefined && text !== null) {
-          return `${text}시`; // 숫자 뒤에 '시'를 추가하여 출력
+          return `${text}시`;
         }
-        return ''; // 값이 없으면 빈 문자열 출력
+        return '';
       },
     },
     {
@@ -78,19 +77,18 @@ const BookingListPage = () => {
       key: 'endTime',
       // sorter: (a?: any, b?: any) => a?.endTime - b?.endTime,
       render: (text: any) => {
-        // 숫자를 '0시', '1시', ..., '23시'로 변환
         if (text !== undefined && text !== null) {
-          return `${text}시`; // 숫자 뒤에 '시'를 추가하여 출력
+          return `${text}시`;
         }
-        return ''; // 값이 없으면 빈 문자열 출력
+        return '';
       },
     },
-    {
-      title: '인원',
-      dataIndex: 'discountPrice',
-      key: 'discountPrice',
-      sorter: (a?: any, b?: any) => a?.discountPrice - b?.discountPrice,
-    },
+    // {
+    //   title: '인원',
+    //   dataIndex: 'discountPrice',
+    //   key: 'discountPrice',
+    //   sorter: (a?: any, b?: any) => a?.discountPrice - b?.discountPrice,
+    // },
     {
       title: '상세페이지',
       dataIndex: 'action',

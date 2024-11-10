@@ -1,5 +1,5 @@
 import { useRouter } from 'next/router';
-import { Badge, Button, Descriptions, Modal, Space, Switch, Tag } from 'antd';
+import { Badge, Button, Descriptions, message, Modal, Space, Switch, Tag } from 'antd';
 import { useEffect, useState } from 'react';
 import { getOneUser, updateOneUser } from '@/pages/api/userApi';
 import { CloseCircleOutlined, MinusCircleOutlined, SyncOutlined } from '@ant-design/icons';
@@ -18,9 +18,7 @@ const UserDetail = () => {
     try {
       const response = await getOneUser({ userId });
       const result = response.data.data;
-      console.log('🚀 ~ fetchUserData ~ result:', result);
       if (result) {
-        // lastLogin과 createdAt 변환
         result.lastLogin = result.lastLogin ? result.lastLogin.split('T')[0] : '';
         result.createdAt = result.createdAt ? result.createdAt.split('T')[0] : '';
         setData(result);
@@ -31,7 +29,7 @@ const UserDetail = () => {
   };
   useEffect(() => {
     fetchUserData();
-  }, []);
+  }, [userId]);
 
   const items = [
     {
@@ -121,35 +119,57 @@ const UserDetail = () => {
   return (
     <UserDetailStyled>
       <p>회원 정보</p>
-      <Button
-        htmlType="submit"
-        className="edit"
-        onClick={() => {
-          setIsModalOpen(true);
-        }}
-      >
-        수정
-      </Button>
-      <Button
-        className="delete"
-        onClick={() => {
-          // const updatedData = { ...data, accountStatus: 'WITHDRAWN' }; // 원하는 상태 값으로 변경
-          updateOneUser({ ...data, accountStatus: 'WITHDRAWN' });
-          fetchUserData();
-        }}
-      >
-        삭제
-      </Button>
-      <Button
-        className="delete"
-        onClick={() => {
-          // const updatedData:any = { ...data, accountStatus: 'BLACKLISTED' }; // 원하는 상태 값으로 변경
-          updateOneUser({ ...data, accountStatus: 'BLACKLISTED' });
-          fetchUserData();
-        }}
-      >
-        블랙리스트
-      </Button>
+      <div className="button_wrap">
+        <div className="left">
+          <Button
+            htmlType="submit"
+            className="edit"
+            onClick={() => {
+              setIsModalOpen(true);
+            }}
+          >
+            수정
+          </Button>
+          <Button
+            className="delete"
+            onClick={() => {
+              updateOneUser({ ...data, accountStatus: 'BLACKLISTED' });
+              fetchUserData();
+            }}
+          >
+            블랙리스트
+          </Button>
+        </div>
+        <div className="right">
+          {data?.accountStatus !== 'WITHDRAWN' ? (
+            <Button
+              className="delete"
+              onClick={() => {
+                Modal.confirm({
+                  title: (
+                    <>
+                      회원을 삭제하시겠습니까?
+                      <br />
+                      삭제해도 데이터는 사라지지 않습니다.
+                    </>
+                  ),
+                  okText: '확인',
+                  cancelText: '취소',
+                  onOk: async () => {
+                    message.info('삭제되었습니다.');
+                    updateOneUser({ ...data, accountStatus: 'WITHDRAWN' });
+                    router.push('/user/userlist');
+                  },
+                });
+              }}
+            >
+              삭제
+            </Button>
+          ) : (
+            <></>
+          )}
+        </div>
+      </div>
       <Modal
         width={400}
         title="회원 정보 수정"

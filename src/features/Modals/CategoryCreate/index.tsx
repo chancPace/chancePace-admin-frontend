@@ -1,8 +1,9 @@
 import { useFormik } from 'formik';
 import { CategoryCreateStyled } from './style';
-import { Button, Input, Modal, Select } from 'antd';
+import { Button, Input, message, Modal, Select } from 'antd';
 import { useEffect, useState } from 'react';
 import { AddCategory, updateCategory } from '@/pages/api/categoryApi';
+import router from 'next/router';
 
 interface optionProps {
   options: any;
@@ -32,19 +33,18 @@ const CategoryCreate = ({ options, selectID, selectData, setIsModalOpen }: optio
                 categoryName: values.categoryName,
                 pId: select, // 선택한 상위 카테고리 ID
               });
-              console.log('카테고리 등록 완료');
+              message.info('카테고리 등록 완료');
             } else {
               // 카테고리 수정
               await updateCategory({
                 categoryName: values.categoryName,
                 pId: select, // 선택한 상위 카테고리 ID
               });
-              console.log('카테고리 수정 완료');
+              message.info('카테고리 수정 완료');
             }
-            // 모달 닫기
             setIsModalOpen(false);
-            // 폼 초기화
             category.resetForm();
+            router.reload();
           } catch (error) {
             console.error(error, '오류 발생');
           }

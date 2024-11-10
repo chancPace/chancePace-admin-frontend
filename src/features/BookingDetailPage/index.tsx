@@ -15,7 +15,6 @@ const BookingDeatilPage = () => {
     try {
       const response = await getOneBooking(bookingId);
       const result = response.data.data;
-      console.log('🚀 ~ fetchBookingData ~ result:', result);
       setData(result);
     } catch (error) {
       console.log('쿠폰 상세', error);

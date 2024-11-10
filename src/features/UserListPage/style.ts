@@ -6,7 +6,8 @@ const UserListStyled = styled.div`
     font-weight: bold;
   }
   .register {
-    margin: ${({ theme }) => theme.spacing.md} 0;
+    margin: ${({ theme }) => theme.spacing.md};
+    margin-left: 0;
   }
 
   .form_wrap {
