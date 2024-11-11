@@ -45,8 +45,6 @@ export const getCategory = async () => {
 export const updateCategory = async (req: any) => {
   try {
     const response = await axios.patch(`${API_URL}update-category`, req);
-    // console.log('getcategory', response.data);
-
     return response;
   } catch (error) {
     const axiosError = error as AxiosError;

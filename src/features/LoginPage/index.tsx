@@ -42,8 +42,10 @@ const LoginPage = () => {
 
       if (axiosError.response && axiosError.response.status === 404) {
         setEmailError('존재하지 않는 회원입니다.');
+        message.error('존해하지 않는 회원입니다.');
       } else if (axiosError.response && axiosError.response.status === 401) {
         setPasswordError('비밀번호가 틀렸습니다');
+        message.error('비밀번호를 확인해주세요.');
       } else {
         message.error('로그인에 실패했습니다.');
       }

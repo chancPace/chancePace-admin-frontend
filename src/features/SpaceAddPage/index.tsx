@@ -20,7 +20,8 @@ const SpaceAddPage = () => {
   const [fileError, setFileError] = useState<string | null>(null); // 파일 오류 메시지 상태 추가
   const [user, setUser] = useState<any>();
   const [userOption, setUserOption] = useState();
-
+  const [target, setTarget] = useState<any>();
+  console.log('🚀 ~ SpaceAddPage ~ target:', target);
   const isEditMode = !!spaceId;
 
   //00부터 24까지의 시간 생성(영업시간)
@@ -43,7 +44,6 @@ const SpaceAddPage = () => {
       try {
         const response = await getAllUser();
         setUser(response.data.data);
-        // console.log('🚀 ~ fetchUser ~ response:', response);
         const users = response?.data?.data?.map((x: any, i: number) => ({
           label: x.userName,
           value: x.userName,
@@ -141,6 +141,8 @@ const SpaceAddPage = () => {
           const id = Array.isArray(spaceId) ? spaceId[0] : spaceId; // spaceId가 배열일 경우 첫 번째 요소를 사용
           const response = await getOneSpace(id);
           const spaceData = response.data;
+          console.log('🚀 ~ fetchSpaceData ~ spaceData:', spaceData);
+          setTarget(spaceData);
           //FIXME -
           // 기존 이미지가 있는 경우 fileList에 추가
           const existingFiles =
@@ -150,7 +152,7 @@ const SpaceAddPage = () => {
             })) || [];
 
           form.setFieldsValue({
-            ...form.getFieldsValue(), // 기존 폼의 값들
+            // ...form.getFieldsValue(), // 기존 폼의 값들
             ...spaceData, // 서버에서 가져온 데이터로 덮어쓰기
           });
 
@@ -161,7 +163,7 @@ const SpaceAddPage = () => {
       }
     };
     fetchSpaceData();
-  }, [spaceId, form]);
+  }, [spaceId, categories, form]);
 
   const handleUser = (value: any) => {
     const targetUser = user?.find((x: any) => x.userName === value);
@@ -185,7 +187,8 @@ const SpaceAddPage = () => {
         onFinish={handleSubmit}
         initialValues={{
           spaceName: '공간 타이틀',
-          spaceLocation: '서울시 마포구',
+          spaceLocation: '서울시 마포구 월드컵북로 38길',
+          spaceLocationDetail: '101-1001',
           description: '설명입니다',
           spacePrice: 10000,
           discount: 2000,
@@ -228,8 +231,11 @@ const SpaceAddPage = () => {
         >
           <Input />
         </Form.Item>
+        <Form.Item label="상세주소" name="spaceLocationDetail">
+          <Input />
+        </Form.Item>
         <Form.Item label="카테고리" name="categoryId" rules={[{ required: true, message: '카테고리를 선택해주세요' }]}>
-          <Select placeholder="카테고리를 선택해주세요" options={categoryOption} />
+          <Select placeholder="카테고리를 선택해주세요" options={categoryOption} value={target?.data?.categoryId} />
         </Form.Item>
         <Form.Item
           label="공간 소개"

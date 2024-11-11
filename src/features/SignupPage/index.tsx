@@ -91,6 +91,7 @@ const SignupPage = () => {
     //필수 체크박스가 선택되지 않았을경우 에러 메세지
     if (!allChecked) {
       setErrorMessage('필수 항목을 동의해주세요');
+      message.error('필수 항목을 선택하세요.');
       return;
     }
     //선택인 체크박스 중 하나라도 선택된게 있는지 확인
@@ -107,31 +108,40 @@ const SignupPage = () => {
         agreed,
         adminSecretKey,
       });
-      console.log('Response:', response);
       router.push('/login');
-
-      message.success(response.message);
+      message.success('회원가입 성공!');
     } catch (error) {
       const axiosError = error as AxiosError;
       if (axiosError.response && axiosError.response.status === 400) {
         setDuplicateError('이미 존재하는 아이디입니다.');
+        message.error('이미 존재하는 아이디입니다.');
       } else {
         message.error('회원가입 실패');
       }
     }
   };
 
+  const onFinishFailed = (errorInfo: any) => {
+    // 유효성 검사 실패 시, message로 에러 메시지를 띄움
+    if (errorInfo.errorFields.length > 0) {
+      // message.error('유효성 검사를 통과하지 못했습니다. 필드를 확인하세요.');
+
+      // 각 필드별로도 오류 메시지를 표시할 수 있음
+      message.error(errorInfo.errorFields[0].errors[0]);
+    }
+  };
+
   return (
     <SignupFormStyled>
       <p className="formLogo">ChancePace</p>
-      {/* onFinish: 폼이 성공적으로 전송될때 */}
       <Form
         name="signup"
         className="form"
+        onFinishFailed={onFinishFailed}
         onFinish={handleSignup}
         initialValues={{
-          email: 'admin@daum.net', // 기본값으로 설정할 이메일
-          password: 'password1234!', // 기본값으로 설정할 비밀번호
+          email: 'admin@daum.net',
+          password: 'password1234!',
           confirm: 'password1234!',
           adminSecretKey: '1234',
         }}
@@ -139,7 +149,6 @@ const SignupPage = () => {
         <InputField
           name="email"
           label="이메일"
-          // 입력 검증 규칙 설정
           rules={[
             { required: true, message: '이메일을 입력해주세요' },
             {
@@ -160,10 +169,23 @@ const SignupPage = () => {
           name="password"
           label="비밀번호"
           rules={[
-            { required: true, message: '비밀번호를 입력해주세요' },
             {
-              pattern: /(?=.*[a-zA-Z])(?=.*\d)(?=.*[!@#$%^&*]).{10,15}/,
-              message: '영문자, 숫자, 특수문자를 포함시켜주세요',
+              validator: (_, value) => {
+                if (!value) return Promise.reject(new Error('비밀번호를 입력해주세요'));
+                if (value.length < 10 || value.length > 15) {
+                  return Promise.reject(new Error('비밀번호는 10자 이상 15자 이하로 설정해야 합니다.'));
+                }
+                if (!/[a-zA-Z]/.test(value)) {
+                  return Promise.reject(new Error('비밀번호에 영문자를 하나 이상 포함시켜야 합니다.'));
+                }
+                if (!/\d/.test(value)) {
+                  return Promise.reject(new Error('비밀번호에 숫자를 하나 이상 포함시켜야 합니다.'));
+                }
+                if (!/[!@#$%^&*]/.test(value)) {
+                  return Promise.reject(new Error('비밀번호에 특수문자를 하나 이상 포함시켜야 합니다.'));
+                }
+                return Promise.resolve();
+              },
             },
           ]}
           isPassword
@@ -174,9 +196,8 @@ const SignupPage = () => {
           // password필드의 값에 의존한다는 뜻
           dependencies={['password']}
           rules={[
-            { required: true, message: '비밀번호를 입력해주세요' }, // 비밀번호 확인이 비어 있을 때의 메시지
+            { required: true, message: '비밀번호 확인을 입력해주세요' },
             ({ getFieldValue }: { getFieldValue: FormInstance['getFieldValue'] }) => ({
-              // validator: 사용자 정의 검증 함수
               validator(_: RuleObject, value: string) {
                 if (!value || getFieldValue('password') === value) {
                   return Promise.resolve();

@@ -67,7 +67,7 @@ const CouponListPage = () => {
       title: '상세페이지',
       dataIndex: 'action',
       key: 'action',
-      render: (_: any, record: any) => <a onClick={() => detailPage(record.key)}>상세</a>,
+      render: (_: any, record: any) => <a onClick={() => detailPage(record.key)}>상세 보기</a>,
     },
   ];
 

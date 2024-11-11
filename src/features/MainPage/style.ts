@@ -10,6 +10,7 @@ export const MainStyled = styled.div`
 
     .content {
       width: 200px;
+      cursor: pointer;
       .title {
         font-size: ${({ theme }) => theme.fontSizes.md};
         padding-bottom: 10px;
@@ -28,6 +29,9 @@ export const MainStyled = styled.div`
           font-size: 30px;
         }
       }
+    }
+    .content:last-of-type {
+      cursor: default;
     }
 
     .title {

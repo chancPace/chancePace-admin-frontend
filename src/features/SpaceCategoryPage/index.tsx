@@ -94,15 +94,14 @@ const SpaceCategoryPage = () => {
           okText: '네',
           okType: 'danger',
           cancelText: '아니요',
-          onOk() {
-            removeCategory(Number(target))
-              .then((response) => {
-                message.info('삭제 성공:', response.data);
-                fetchCategories();
-              })
-              .catch((error) => {
-                message.error('삭제 실패:', error);
-              });
+          onOk: async () => {
+            try {
+              await removeCategory(Number(target));
+              message.info('삭제 성공');
+              fetchCategories();
+            } catch (error) {
+              message.error('삭제 실패');
+            }
           },
           onCancel() {
             setIsModalOpen(false);

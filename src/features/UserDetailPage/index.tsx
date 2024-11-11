@@ -148,22 +148,22 @@ const UserDetail = () => {
                 Modal.confirm({
                   title: (
                     <>
-                      회원을 삭제하시겠습니까?
+                      회원을 탈퇴시키겠습니까?
                       <br />
-                      삭제해도 데이터는 사라지지 않습니다.
+                      탈퇴시켜도 데이터는 사라지지 않습니다.
                     </>
                   ),
                   okText: '확인',
                   cancelText: '취소',
                   onOk: async () => {
-                    message.info('삭제되었습니다.');
+                    message.info('탈퇴되었습니다.');
                     updateOneUser({ ...data, accountStatus: 'WITHDRAWN' });
                     router.push('/user/userlist');
                   },
                 });
               }}
             >
-              삭제
+              탈퇴
             </Button>
           ) : (
             <></>

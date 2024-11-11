@@ -50,6 +50,16 @@ const SideBar = () => {
         },
       ],
     },
+    // {
+    //   key: '/review',
+    //   label: '리뷰 관리',
+    //   children: [
+    //     {
+    //       key: '/review/reviewlist',
+    //       label: '리뷰 조회',
+    //     },
+    //   ],
+    // },
     {
       key: '/sales',
       label: '매출 관리',
@@ -90,7 +100,7 @@ const SideBar = () => {
       children: [
         {
           key: '/website/spacecategory',
-          label: '공간카테고리',
+          label: '공간 카테고리',
         },
       ],
     },

@@ -28,7 +28,7 @@ export const getAllSpace = async () => {
     const response = await axios.get(`${API_URL}get-space`);
     return response.data;
   } catch (error: any) {
-    console.error('공간 등록 실패', error.response?.data || error.message);
+    console.error('공간 조회 실패', error.response?.data || error.message);
     throw error;
   }
 };

@@ -62,6 +62,7 @@ const CouponModal = ({ setIsModalOpen, type, data, options, fetchCoupons, coupon
             } else if (type === 'fix') {
               await updateCoupon({ ...values, couponId });
               message.success('쿠폰 수정 성공!');
+              router.push('/coupon/couponlist');
               fetchCoupons(couponId);
             } else if (type === 'send') {
               if (options.length === 0) {

@@ -51,7 +51,7 @@ const SpaceDetailPage = () => {
     {
       key: '3',
       label: '전화번호',
-      children: data?.spaceAdminPhoneNumber,
+      children: `${data?.spaceAdminPhoneNumber?.replace(/^(\d{3})(\d{4})(\d{4})$/, '$1-$2-$3')}`,
     },
     {
       key: '4',
@@ -100,34 +100,34 @@ const SpaceDetailPage = () => {
     {
       key: '9',
       label: '원가',
-      children: data?.spacePrice,
+      children: `${data?.spacePrice?.toLocaleString()}원`,
     },
     {
       key: '10',
       label: '할인가',
-      children: data?.discount,
+      children: `${data?.discount?.toLocaleString()}원`,
     },
     {
       key: '11',
       label: '인원 추가 금액',
-      children: data?.addPrice,
+      children: `${data?.addPrice?.toLocaleString()}원`,
     },
 
     {
       key: '12',
       label: '이용 가능 인원',
-      children: `${data?.minGuests} ~ ${data?.maxGuests}`,
+      children: `${data?.minGuests}명 ~ ${data?.maxGuests}명`,
     },
 
     {
       key: '13',
       label: '영업 시간',
-      children: `${data?.businessStartTime} ~ ${data?.businessEndTime}`,
+      children: `${data?.businessStartTime}시 ~ ${data?.businessEndTime}시`,
     },
     {
       key: '14',
       label: '청소시간',
-      children: data?.cleanTime,
+      children: `${data?.cleanTime}시간`,
     },
     {
       key: '15',
@@ -165,7 +165,11 @@ const SpaceDetailPage = () => {
             htmlType="submit"
             className="edit"
             onClick={() => {
-              setIsModalOpen(true);
+              router.push({
+                pathname: '/space/spaceadd',
+                query: { spaceId },
+              });
+              // setIsModalOpen(true);
             }}
           >
             수정
@@ -181,7 +185,7 @@ const SpaceDetailPage = () => {
                   const updatedData = { spaceId, spaceStatus: 'AVAILABLE' };
                   updateSpace(updatedData);
                   await fetchSpaceData(spaceId);
-                  router.reload();
+                  router.push('/space/spacelist');
                 },
               });
             }}

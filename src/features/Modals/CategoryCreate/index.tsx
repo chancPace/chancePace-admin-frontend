@@ -38,13 +38,13 @@ const CategoryCreate = ({ options, selectID, selectData, setIsModalOpen }: optio
               // 카테고리 수정
               await updateCategory({
                 categoryName: values.categoryName,
+                categoryId: selectID,
                 pId: select, // 선택한 상위 카테고리 ID
               });
               message.info('카테고리 수정 완료');
             }
             setIsModalOpen(false);
             category.resetForm();
-            router.reload();
           } catch (error) {
             console.error(error, '오류 발생');
           }
