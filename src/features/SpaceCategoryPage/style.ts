@@ -8,15 +8,21 @@ const TableButtonStyle = styled.div`
 `;
 
 const SpaceCategoryStyled = styled.div`
-  p {
-    font-size: ${({ theme }) => theme.fontSizes.xl};
-    font-weight: bold;
+  .top {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    margin-bottom: ${({ theme }) => theme.spacing.md};
+    p {
+      font-size: ${({ theme }) => theme.fontSizes.xl};
+      font-weight: bold;
+    }
   }
 
-  .register {
+  /* .register {
     margin: ${({ theme }) => theme.spacing.md};
     margin-left: 0;
-  }
+  } */
 
   /* table */
   .ant-table-thead > tr > th:last-of-type {

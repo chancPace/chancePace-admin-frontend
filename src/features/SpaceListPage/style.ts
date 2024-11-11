@@ -1,12 +1,15 @@
 import styled from 'styled-components';
 
 const SpaceListStyled = styled.div`
-  p {
-    font-size: ${({ theme }) => theme.fontSizes.xl};
-    font-weight: bold;
-  }
-  .register {
-    margin: ${({ theme }) => theme.spacing.md} 0;
+  .top {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    margin-bottom: ${({ theme }) => theme.spacing.md};
+    p {
+      font-size: ${({ theme }) => theme.fontSizes.xl};
+      font-weight: bold;
+    }
   }
 
   .form_wrap {

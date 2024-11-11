@@ -70,10 +70,10 @@ const MainPage = () => {
           </div>
         </div>
         <div className="content">
-          <p className="title">금일 접속자 수</p>
+          <p className="title">금일 로그인 이용자 수</p>
           <div className="bottom">
             <UserOutlined className="icon" />
-            <span>{todayPayment} 건</span>
+            <span>{visitor} 명</span>
           </div>
         </div>
       </div>

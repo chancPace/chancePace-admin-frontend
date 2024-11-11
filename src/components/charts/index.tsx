@@ -142,6 +142,7 @@ const SalesDayPage = () => {
           text: '매출건수', // 오른쪽 Y축 제목
         },
         ticks: {
+          stepSize: 1,
           callback: (value: any) => {
             return `${Math.floor(value)}`; // 숫자를 그대로 문자열로 반환
           },

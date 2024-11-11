@@ -130,7 +130,7 @@ const UserListPage = () => {
       title: '상세페이지',
       dataIndex: 'action',
       key: 'action',
-      render: (_: any, record: any) => <a onClick={() => detailPage(record.key)}>상세</a>,
+      render: (_: any, record: any) => <a onClick={() => detailPage(record.key)}>상세 보기</a>,
     },
   ];
 
@@ -165,16 +165,19 @@ const UserListPage = () => {
 
   return (
     <UserListStyled>
-      <p>회원 목록</p>
-      <Button type="primary" className="register" onClick={() => setIsModalOpen(true)}>
-        등록
-      </Button>
-      <Button type="primary" className="register" onClick={() => setIsCouponModalOpen(true)}>
-        쿠폰 전송
-      </Button>
+      <div className="top">
+        <p>회원 목록</p>
+        <div className="btn">
+          <Button type="primary" className="register" onClick={() => setIsModalOpen(true)}>
+            등록
+          </Button>
+          <Button type="primary" onClick={() => setIsCouponModalOpen(true)}>
+            쿠폰 전송
+          </Button>
+        </div>
+      </div>
       <form onSubmit={user.handleSubmit} className="form_wrap">
         <Input placeholder="이름, 이메일, 전화번호로 검색해 주세요." name="search" onChange={user.handleChange} />
-
         <Button htmlType="submit">조회</Button>
       </form>
       <Modal

@@ -21,7 +21,6 @@ const SpaceAddPage = () => {
   const [user, setUser] = useState<any>();
   const [userOption, setUserOption] = useState();
   const [target, setTarget] = useState<any>();
-  console.log('🚀 ~ SpaceAddPage ~ target:', target);
   const isEditMode = !!spaceId;
 
   //00부터 24까지의 시간 생성(영업시간)

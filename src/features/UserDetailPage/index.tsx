@@ -119,57 +119,62 @@ const UserDetail = () => {
   return (
     <UserDetailStyled>
       <p>회원 정보</p>
-      <div className="button_wrap">
-        <div className="left">
-          <Button
-            htmlType="submit"
-            className="edit"
-            onClick={() => {
-              setIsModalOpen(true);
-            }}
-          >
-            수정
-          </Button>
-          <Button
-            className="delete"
-            onClick={() => {
-              updateOneUser({ ...data, accountStatus: 'BLACKLISTED' });
-              fetchUserData();
-            }}
-          >
-            블랙리스트
-          </Button>
-        </div>
-        <div className="right">
-          {data?.accountStatus !== 'WITHDRAWN' ? (
-            <Button
-              className="delete"
-              onClick={() => {
-                Modal.confirm({
-                  title: (
-                    <>
-                      회원을 탈퇴시키겠습니까?
-                      <br />
-                      탈퇴시켜도 데이터는 사라지지 않습니다.
-                    </>
-                  ),
-                  okText: '확인',
-                  cancelText: '취소',
-                  onOk: async () => {
-                    message.info('탈퇴되었습니다.');
-                    updateOneUser({ ...data, accountStatus: 'WITHDRAWN' });
-                    router.push('/user/userlist');
-                  },
-                });
-              }}
-            >
-              탈퇴
-            </Button>
-          ) : (
-            <></>
-          )}
-        </div>
-      </div>
+      {data?.accountStatus === 'ACTIVE' ? (
+        <>
+          <div className="button_wrap">
+            <div>
+              <Button
+                htmlType="submit"
+                className="edit"
+                onClick={() => {
+                  setIsModalOpen(true);
+                }}
+              >
+                수정
+              </Button>
+            </div>
+            <div>
+              <Button
+                className="delete"
+                onClick={() => {
+                  updateOneUser({ ...data, accountStatus: 'BLACKLISTED' });
+                  fetchUserData();
+                }}
+              >
+                블랙리스트
+              </Button>
+            </div>
+            <div>
+              <Button
+                className="delete"
+                onClick={() => {
+                  Modal.confirm({
+                    title: (
+                      <>
+                        회원을 탈퇴시키겠습니까?
+                        <br />
+                        탈퇴시켜도 데이터는 사라지지 않습니다.
+                      </>
+                    ),
+                    okText: '확인',
+                    cancelText: '취소',
+                    onOk: async () => {
+                      message.info('탈퇴되었습니다.');
+                      updateOneUser({ ...data, accountStatus: 'WITHDRAWN' });
+                      router.push('/user/userlist');
+                    },
+                  });
+                }}
+              >
+                탈퇴
+              </Button>
+            </div>
+          </div>
+        </>
+      ) : (
+        <></>
+      )}
+
       <Modal
         width={400}
         title="회원 정보 수정"
@@ -187,7 +192,7 @@ const UserDetail = () => {
           fetchUserData={fetchUserData}
         />
       </Modal>
-      <Descriptions bordered items={items} />
+      <Descriptions className="detail" bordered items={items} />
     </UserDetailStyled>
   );
 };

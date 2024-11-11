@@ -127,12 +127,14 @@ const SpaceListPage = () => {
 
   return (
     <SpaceListStyled>
-      <p>공간 목록</p>
-      <Link href="spaceadd">
-        <Button type="primary" className="register">
-          등록
-        </Button>
-      </Link>
+      <div className="top">
+        <p>공간 목록</p>
+        <Link href="spaceadd">
+          <Button type="primary" className="register">
+            등록
+          </Button>
+        </Link>
+      </div>
       <form onSubmit={space.handleSubmit} className="form_wrap">
         <Input placeholder="공간명, 주소, 호스트 명으로 검색해 주세요." name="search" onChange={space.handleChange} />
         <Button htmlType="submit">조회</Button>

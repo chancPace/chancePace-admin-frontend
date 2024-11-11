@@ -2,6 +2,7 @@ import styled from 'styled-components';
 
 const BookingListStyled = styled.div`
   p {
+    margin-bottom: ${({ theme }) => theme.spacing.md};
     font-size: ${({ theme }) => theme.fontSizes.xl};
     font-weight: bold;
   }

@@ -56,39 +56,39 @@ const CouponDetailPage = () => {
 
   return (
     <CouponDetailStyled>
-      <p>쿠폰 정보</p>
-      <div className="button_wrap">
-        <div className="left">
-          <Button
-            htmlType="submit"
-            className="edit"
-            onClick={() => {
-              setIsModalOpen(true);
-            }}
-          >
-            수정
-          </Button>
-        </div>
-        <div className="right">
+      <div className="top">
+        <p>쿠폰 정보</p>
+        <div>
           {data?.isActive === true ? (
-            <Button
-              className="delete"
-              onClick={() => {
-                Modal.confirm({
-                  title: '쿠폰을 삭제하시겠습니까?',
-                  okText: '확인',
-                  cancelText: '취소',
-                  onOk: async () => {
-                    message.info('삭제되었습니다.');
-                    const updatedData = { couponId, isActive: false };
-                    updateCoupon(updatedData);
-                    router.push('/coupon/couponlist');
-                  },
-                });
-              }}
-            >
-              삭제
-            </Button>
+            <>
+              <Button
+                htmlType="submit"
+                className="edit"
+                onClick={() => {
+                  setIsModalOpen(true);
+                }}
+              >
+                수정
+              </Button>
+              <Button
+                className="delete"
+                onClick={() => {
+                  Modal.confirm({
+                    title: '쿠폰을 삭제하시겠습니까?',
+                    okText: '확인',
+                    cancelText: '취소',
+                    onOk: async () => {
+                      message.info('삭제되었습니다.');
+                      const updatedData = { couponId, isActive: false };
+                      updateCoupon(updatedData);
+                      router.push('/coupon/couponlist');
+                    },
+                  });
+                }}
+              >
+                삭제
+              </Button>
+            </>
           ) : (
             <></>
           )}

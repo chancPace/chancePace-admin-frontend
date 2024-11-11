@@ -1,5 +1,5 @@
 import { getAllPayment } from '@/pages/api/paymentApi';
-import { Button, DatePicker, Table } from 'antd';
+import { Button, DatePicker, message, Table } from 'antd';
 import { useEffect, useState } from 'react';
 import dayjs from 'dayjs';
 import { Chart } from 'react-chartjs-2';
@@ -17,13 +17,14 @@ import {
   ChartOptions,
 } from 'chart.js';
 import router from 'next/router';
+import ChartStyled from './style';
 ChartJS.register(CategoryScale, LinearScale, BarElement, LineElement, PointElement, Title, Tooltip, Legend);
 
 const SalesMonthPage = () => {
   const currentYear = dayjs().year().toString();
   const [sales, setSales] = useState<any[]>([]);
   const [data, setData] = useState();
-  const [selectedDateTime, setSelectedDateTime] = useState<dayjs.Dayjs | null>(null);
+  const [selectedDateTime, setSelectedDateTime] = useState<dayjs.Dayjs | null>(dayjs());
   const [selectedYear, setSelectedYear] = useState(currentYear);
 
   // 결제 내역을 가져오는 함수
@@ -84,7 +85,7 @@ const SalesMonthPage = () => {
     if (selectedDateTime) {
       fetchPayments();
     } else {
-      alert('연도를 선택해 주세요');
+      message.error('연도를 선택해 주세요');
     }
   };
 
@@ -155,6 +156,7 @@ const SalesMonthPage = () => {
           text: '매출건수', // 오른쪽 Y축 제목
         },
         ticks: {
+          stepSize: 1,
           callback: (value: any) => {
             return `${Math.floor(value)}`; // 숫자를 그대로 문자열로 반환
           },
@@ -206,26 +208,31 @@ const SalesMonthPage = () => {
       title: '상세페이지',
       dataIndex: 'action',
       key: 'action',
-      render: (_: any, record: any) => <a onClick={() => detailPage(record.key)}>상세</a>,
+      render: (_: any, record: any) => <a onClick={() => detailPage(record.key)}>상세 보기</a>,
     },
   ];
   return (
-    <>
-      <DatePicker
-        picker={'year'}
-        value={selectedDateTime}
-        onChange={onChange}
-        placeholder={'연도를 선택하세요'}
-        style={{ width: '200px' }}
-      />
-      <br />
-      <Button type="primary" onClick={onSubmit} style={{ marginTop: 10 }}>
-        조회
-      </Button>
+    <ChartStyled>
+      <div className="top">
+        <div>
+          <DatePicker
+            picker={'year'}
+            value={selectedDateTime}
+            onChange={onChange}
+            placeholder={'연도를 선택하세요'}
+            style={{ width: '200px' }}
+          />
+        </div>
+        <div>
+          <Button type="primary" onClick={onSubmit}>
+            조회
+          </Button>
+        </div>
+      </div>
       <Chart data={chartData} options={chartOptions} type={'bar'} />
-      <p>매출 목록</p>
+      <p className="title">매출 목록</p>
       <Table columns={columns} dataSource={data} />
-    </>
+    </ChartStyled>
   );
 };
 

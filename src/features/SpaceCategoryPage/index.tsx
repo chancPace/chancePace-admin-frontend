@@ -150,17 +150,21 @@ const SpaceCategoryPage = () => {
 
   return (
     <SpaceCategoryStyled>
-      <p>카테고리 조회</p>
-      <Button
-        className="register"
-        type="primary"
-        onClick={() => {
-          setSelectID(0);
-          setIsModalOpen(true);
-        }}
-      >
-        등록
-      </Button>
+      <div className="top">
+        <p>카테고리 조회</p>
+        <div>
+          <Button
+            className="register"
+            type="primary"
+            onClick={() => {
+              setSelectID(0);
+              setIsModalOpen(true);
+            }}
+          >
+            등록
+          </Button>
+        </div>
+      </div>
       <Modal
         width={400}
         title="카테고리"

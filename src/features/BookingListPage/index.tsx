@@ -93,7 +93,7 @@ const BookingListPage = () => {
       title: '상세페이지',
       dataIndex: 'action',
       key: 'action',
-      render: (_: any, record: any) => <a onClick={() => detailPage(record.key)}>상세</a>,
+      render: (_: any, record: any) => <a onClick={() => detailPage(record.key)}>상세 보기</a>,
     },
   ];
 
@@ -104,7 +104,6 @@ const BookingListPage = () => {
     async onSubmit(values) {
       const response = await searchBooking(values.search);
       const search = response.data.data;
-      console.log('🚀 ~ onSubmit ~ search:', search);
       setData(search);
     },
   });

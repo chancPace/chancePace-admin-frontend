@@ -1,13 +1,18 @@
 import styled from 'styled-components';
 
 const UserListStyled = styled.div`
+  .top {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    margin-bottom: ${({ theme }) => theme.spacing.lg};
+  }
   p {
     font-size: ${({ theme }) => theme.fontSizes.xl};
     font-weight: bold;
   }
   .register {
-    margin: ${({ theme }) => theme.spacing.md};
-    margin-left: 0;
+    margin-right: ${({ theme }) => theme.spacing.md};
   }
 
   .form_wrap {
@@ -26,10 +31,6 @@ const UserListStyled = styled.div`
     display: flex;
     justify-content: space-between;
     margin-bottom: 10px;
-
-    .label {
-      margin-bottom: 10px;
-    }
   }
 
   .modal {

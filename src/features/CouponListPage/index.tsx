@@ -87,10 +87,12 @@ const CouponListPage = () => {
 
   return (
     <CouponListStyled>
-      <p>쿠폰 목록</p>
-      <Button type="primary" className="register" onClick={() => setIsModalOpen(true)}>
-        등록
-      </Button>
+      <div className="top">
+        <p>쿠폰 목록</p>
+        <Button type="primary" className="register" onClick={() => setIsModalOpen(true)}>
+          등록
+        </Button>
+      </div>
       <form onSubmit={coupon.handleSubmit} className="form_wrap">
         <Input placeholder="쿠폰 명으로 검색해 주세요." name="search" onChange={coupon.handleChange} />
         <Button htmlType="submit">조회</Button>
