@@ -1,11 +1,10 @@
 import styled from 'styled-components';
 
 export const LoginStyled = styled.div`
-  margin: auto;
+  margin: 0px auto;
   height: 100vh;
   display: flex;
   align-items: center;
-  position: relative;
   .form {
     background-color: rgba(255, 255, 255, 0.8);
     width: 450px;
@@ -19,11 +18,17 @@ export const LoginStyled = styled.div`
     }
     z-index: 10;
   }
-  .formLogo {
-    position: absolute;
-    left: 50%;
-    top: 90%;
-    transform: translate(-50%, -90%);
-    font-size: ${({ theme }) => theme.fontSizes.big};
+
+.formLogo{
+  text-align: center;
+  width: 100%;
+  .logo{
+    font-size: 20px;
+    font-weight: bolder;
+    margin-bottom: 10px;
   }
+  .title{
+    margin-bottom: 20px;
+  }
+}
 `;

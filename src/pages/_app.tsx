@@ -9,9 +9,23 @@ import { Provider } from 'react-redux';
 import { persistor, store } from '@/utill/redux/store';
 import { PersistGate } from 'redux-persist/integration/react';
 import AppWrapper from '@/layouts/AppWrapper';
+import Cookies from 'js-cookie';
+import LoginPage from '@/features/LoginPage';
+import { useRouter } from 'next/router';
 
 export default function App({ Component, pageProps }: AppProps) {
   const [notPc, setNotPc] = useState(false);
+  const [token, setToken] = useState(false);
+  const router = useRouter();
+
+  useEffect(() => {
+    const getToken = Cookies.get('adminToken');
+    if (getToken) {
+      setToken(true);
+    } else {
+      setToken(false);
+    }
+  }, [router]);
 
   useEffect(() => {
     const handleResize = () => {
@@ -41,7 +55,7 @@ export default function App({ Component, pageProps }: AppProps) {
       <ThemeProvider theme={theme}>
         <Provider store={store}>
           <PersistGate loading={null} persistor={persistor}>
-            {notPc ? <NotPc /> : <AppWrapper Component={Component} pageProps={pageProps} />}
+            {notPc ? <NotPc /> : !token ? <LoginPage /> : <AppWrapper Component={Component} pageProps={pageProps} />}
           </PersistGate>
         </Provider>
       </ThemeProvider>

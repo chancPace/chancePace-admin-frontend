@@ -35,7 +35,7 @@ const LoginPage = () => {
             adminToken: response.token,
           })
         );
-        router.push('/');
+        router.reload();
       }
     } catch (error) {
       const axiosError = error as AxiosError; // error를 AxiosError로 캐스팅
@@ -53,7 +53,7 @@ const LoginPage = () => {
   };
   return (
     <LoginStyled>
-      <p className="formLogo">ChancePace</p>
+      
 
       <Form
         name="signup"
@@ -64,6 +64,10 @@ const LoginPage = () => {
           password: 'password1234!', // 기본값으로 설정할 비밀번호
         }}
       >
+        <div className="formLogo">
+          <div className='logo'>ChancePace</div>
+          <div className='title'>관리자</div>
+        </div>
         <InputField
           name="email"
           label="email"

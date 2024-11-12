@@ -13,7 +13,7 @@ const Header = () => {
   const handleLogout = () => {
     Cookies.remove('adminToken');
     dispatch(logout());
-    router.push('/login');
+    router.reload();
   };
   return (
     <HeaderStyled>
@@ -23,11 +23,7 @@ const Header = () => {
             <Link href="/login">
               <span className="logo">ChancePace</span>
             </Link>
-            <div className="userBar">
-              <Link href="http://localhost:3002/login" passHref>
-                <span>로그인</span>
-              </Link>
-            </div>
+
           </>
         ) : (
           <>
