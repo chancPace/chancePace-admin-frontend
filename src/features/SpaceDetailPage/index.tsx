@@ -149,11 +149,6 @@ const SpaceDetailPage = () => {
       label: '설명',
       children: data?.description,
     },
-    // {
-    //   key: '10',
-    //   label: '멤버쉽 현황',
-    //   children: data?.membership ? <Badge status="processing" text="이용" /> : <Badge status="default" text="미사용" />,
-    // },
   ];
 
   return (
@@ -169,7 +164,6 @@ const SpaceDetailPage = () => {
                 pathname: '/space/spaceadd',
                 query: { spaceId },
               });
-              // setIsModalOpen(true);
             }}
           >
             수정

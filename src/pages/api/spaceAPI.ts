@@ -77,7 +77,7 @@ export const updateSpace = async (spaceData: Space) => {
 
 export const updatesSpace = async (spaceData: FormData, spaceId: string) => {
   try {
-    const token = Cookies.get('token');
+    const token = Cookies.get('admintoken');
     const response = await axios.patch(`${API_URL}/update-space?spaceId=${spaceId}`, spaceData, {
       headers: {
         // 'Content-Type': 'multipart/form-data',
