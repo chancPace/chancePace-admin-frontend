@@ -12,6 +12,7 @@ import AppWrapper from '@/layouts/AppWrapper';
 import Cookies from 'js-cookie';
 import LoginPage from '@/features/LoginPage';
 import { useRouter } from 'next/router';
+import SignupPage from '@/features/SignupPage';
 
 export default function App({ Component, pageProps }: AppProps) {
   const [notPc, setNotPc] = useState(false);
@@ -47,6 +48,15 @@ export default function App({ Component, pageProps }: AppProps) {
       window.removeEventListener('resize', handleResize);
     };
   }, []);
+
+  // 로그인 또는 회원가입 페이지를 렌더링하기 위한 조건 처리
+  const renderAuthPage = () => {
+    if (router.pathname === '/signup') {
+      return <SignupPage />; // 회원가입 페이지로 이동한 경우
+    }
+    return <LoginPage />; // 기본적으로 로그인 페이지
+  };
+
   return (
     <>
       <Head>
@@ -55,7 +65,7 @@ export default function App({ Component, pageProps }: AppProps) {
       <ThemeProvider theme={theme}>
         <Provider store={store}>
           <PersistGate loading={null} persistor={persistor}>
-            {notPc ? <NotPc /> : !token ? <LoginPage /> : <AppWrapper Component={Component} pageProps={pageProps} />}
+            {notPc ? <NotPc /> : !token ? renderAuthPage() : <AppWrapper Component={Component} pageProps={pageProps} />}
           </PersistGate>
         </Provider>
       </ThemeProvider>
