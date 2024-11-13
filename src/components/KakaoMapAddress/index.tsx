@@ -17,13 +17,15 @@ interface IAddr {
 }
 
 interface KakaoMapAddressProps {
+  addValue: string;
+  setAddValue: React.Dispatch<React.SetStateAction<string>>;
   onSelectAddress: (address: string) => void; // 주소 선택 시 호출할 콜백 함수
 }
 
-const KakaoMapAddress = ({ onSelectAddress }: KakaoMapAddressProps) => {
+const KakaoMapAddress = ({ addValue, setAddValue, onSelectAddress }: KakaoMapAddressProps) => {
   const [map, setMap] = useState<any>();
   const [marker, setMarker] = useState<any>();
-  const [addValue, setAddValue] = useState<any>();
+  // const [address, setAddress] = useState<any>();
 
   const [form] = Form.useForm();
 
@@ -99,7 +101,7 @@ const KakaoMapAddress = ({ onSelectAddress }: KakaoMapAddressProps) => {
             marker.setMap(null);
             marker.setPosition(currentPos);
             marker.setMap(map);
-
+            setAddValue(address);
             onSelectAddress(address);
           } else {
             console.error('Geocoding failed:', status);
