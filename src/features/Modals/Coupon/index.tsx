@@ -6,6 +6,7 @@ import { addCoupon, getAllCoupon, sendCoupon, updateCoupon } from '@/pages/api/c
 import { useRouter } from 'next/router';
 import dayjs from 'dayjs';
 import { CouponData } from '@/types';
+import axios from 'axios';
 
 interface CouponProps {
   setIsModalOpen: any;
@@ -77,12 +78,27 @@ const CouponModal = ({ setIsModalOpen, type, data, options, fetchCoupons, coupon
                   userId: options,
                   expirationDate: values.expirationDate,
                 });
-                fetchCoupons();
                 message.success('쿠폰 발급 성공!');
               }
             }
-          } catch (error) {
-            message.error('처리 중 오류가 발생했습니다.');
+          } catch (error: any) {
+            if (error.response) {
+              // 서버에서 에러 응답이 온 경우
+              const { status, data } = error.response;
+              if (status === 400) {
+                // 서버에서 400 오류 (중복 발급 등) 반환한 경우
+                message.error(data.message || '이미 발급된 쿠폰이 있습니다.');
+              } else if (status === 500) {
+                // 서버 오류 발생
+                message.error(data.message || '서버에서 문제가 발생했습니다.');
+              } else {
+                // 그 외의 오류 처리
+                message.error('알 수 없는 오류가 발생했습니다.');
+              }
+            } else {
+              // 서버와의 연결에 실패한 경우 (네트워크 오류 등)
+              message.error('서버와 연결할 수 없습니다.');
+            }
           }
           setIsModalOpen(false);
         },
