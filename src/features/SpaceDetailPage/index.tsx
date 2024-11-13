@@ -5,13 +5,15 @@ import { CloseCircleOutlined, SyncOutlined } from '@ant-design/icons';
 import SpaceDetailStyled from './style';
 import { getOneSpace, updateSpace } from '@/pages/api/spaceAPI';
 import SpaceEdit from '../Modals/SpaceEdit';
-import { Space } from '@/types';
+import { Space, User } from '@/types';
+import { getOneUser, updateOneUser } from '@/pages/api/userApi';
 
 const SpaceDetailPage = () => {
   const router = useRouter();
   const { id } = router.query;
   const spaceId = Number(id);
   const [data, setData] = useState<Space>();
+  const [userData, setUserData] = useState<User>();
   const [isModalOpen, setIsModalOpen] = useState(false);
 
   const fetchSpaceData = async (spaceId: number) => {
@@ -23,6 +25,11 @@ const SpaceDetailPage = () => {
         result.lastLogin = result.lastLogin ? result.lastLogin.split('T')[0] : '';
         result.createdAt = result.createdAt ? result.createdAt.split('T')[0] : '';
         setData(result);
+        const userId = result.userId;
+        if (userId) {
+          const findUser = await getOneUser({ userId });
+          setUserData(findUser?.data?.data);
+        }
       }
     } catch (error) {
       console.log('공간1개', error);
@@ -178,6 +185,9 @@ const SpaceDetailPage = () => {
                 onOk: async () => {
                   const updatedData = { spaceId, spaceStatus: 'AVAILABLE' };
                   updateSpace(updatedData);
+                  if (userData?.role === 'USER') {
+                    updateOneUser({ ...userData, role: 'HOST' });
+                  }
                   await fetchSpaceData(spaceId);
                   router.push('/space/spacelist');
                 },
