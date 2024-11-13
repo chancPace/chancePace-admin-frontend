@@ -98,7 +98,7 @@ const BookingDeatilPage = () => {
       label: '원가',
       children:
         data?.payment?.couponPrice !== null
-          ? `${data?.payment?.paymentPrice + data?.payment?.couponPrice.toLocaleString()}`
+          ? `${(data?.payment?.paymentPrice + data?.payment?.couponPrice).toLocaleString()}`
           : `${data?.payment?.paymentPrice.toLocaleString()}`,
     },
     {

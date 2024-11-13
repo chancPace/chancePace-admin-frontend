@@ -1,15 +1,12 @@
-import { Button, Input, Table } from 'antd';
+import { Button, Input, message, Table } from 'antd';
 import { useFormik } from 'formik';
 import router from 'next/router';
 import { useEffect, useState } from 'react';
-import { CouponData } from '@/types';
 import BookingListStyled from './style';
 import { getAllBooking, searchBooking } from '@/pages/api/bookingApi';
-import { getOneSpace } from '@/pages/api/spaceAPI';
 
 const BookingListPage = () => {
   const [data, setData] = useState<any>([]);
-  // const [isModalOpen, setIsModalOpen] = useState(false);
   const [space, setSpace] = useState<any>();
 
   const fetchBookings = async () => {
@@ -102,9 +99,14 @@ const BookingListPage = () => {
       search: '',
     },
     async onSubmit(values) {
-      const response = await searchBooking(values.search);
-      const search = response.data.data;
-      setData(search);
+      if (values.search === '') {
+        message.info('검색어를 입력하세요');
+        fetchBookings();
+      } else {
+        const response = await searchBooking(values.search);
+        const search = response.data.data;
+        setData(search);
+      }
     },
   });
 
