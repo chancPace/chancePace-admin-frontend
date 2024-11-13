@@ -42,7 +42,7 @@ const LoginPage = () => {
 
       if (axiosError.response && axiosError.response.status === 404) {
         setEmailError('존재하지 않는 회원입니다.');
-        message.error('존해하지 않는 회원입니다.');
+        message.error('존재하지 않는 회원입니다.');
       } else if (axiosError.response && axiosError.response.status === 401) {
         setPasswordError('비밀번호가 틀렸습니다');
         message.error('비밀번호를 확인해주세요.');
@@ -53,8 +53,6 @@ const LoginPage = () => {
   };
   return (
     <LoginStyled>
-      
-
       <Form
         name="signup"
         className="form"
@@ -65,8 +63,8 @@ const LoginPage = () => {
         }}
       >
         <div className="formLogo">
-          <div className='logo'>ChancePace</div>
-          <div className='title'>관리자</div>
+          <div className="logo">ChancePace</div>
+          <div className="title">관리자</div>
         </div>
         <InputField
           name="email"
@@ -96,7 +94,7 @@ const LoginPage = () => {
             <span className="span1">아직 회원이 아니신가요?</span>
           </Link>
           <Link href="/signup" passHref>
-            <span >아이디/비밀번호 찾기</span>
+            <span>아이디/비밀번호 찾기</span>
           </Link>
         </div>
       </Form>

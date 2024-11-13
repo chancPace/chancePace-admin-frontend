@@ -3,12 +3,15 @@ import { logout } from '@/utill/redux/slices/userSlice';
 import Cookies from 'js-cookie';
 import { Button } from 'antd';
 import { NotAdminStyled } from './style';
+import { useRouter } from 'next/router';
 
 const NotAdmin = () => {
+  const router = useRouter();
   const dispatch = useDispatch();
   const handleClick = () => {
     dispatch(logout());
     Cookies.remove('adminToken');
+    router.reload();
   };
 
   return (
