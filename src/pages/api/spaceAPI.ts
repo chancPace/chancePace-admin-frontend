@@ -56,10 +56,8 @@ export const getOneSpace = async (spaceId: any) => {
 
 // 공간 정보 수정 및 삭제
 export const updateSpace = async (spaceData: Space) => {
-  console.log('🚀 ~ updateSpace ~ spaceData:', spaceData);
   try {
     const response = await axios.patch(`${API_URL}update-space`, spaceData);
-    console.log('🚀 ~ updateSpace ~ response:', response);
     return response;
   } catch (error) {
     const axiosError = error as AxiosError;

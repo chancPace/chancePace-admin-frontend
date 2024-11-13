@@ -54,8 +54,8 @@ const HostReqListPage = () => {
     },
     {
       title: '답변 상태',
-      dataIndex: 'inquiyStatus',
-      key: 'inquiyStatus',
+      dataIndex: 'inquiryStatus',
+      key: 'inquiryStatus',
       filters: [
         { text: '완료', value: 'COMPLETED' },
         { text: '미답변', value: 'UNCOMPLETED' },

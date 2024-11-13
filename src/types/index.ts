@@ -119,3 +119,12 @@ export interface OptionType {
   label: string;
   value: number;
 }
+
+export interface HostInquiry {
+  inquiryId: number;
+  memberType: string;
+  inquiryTitle: string;
+  inquiryEmail: string;
+  inquiryContents: string;
+  inquiryStatus: string;
+}

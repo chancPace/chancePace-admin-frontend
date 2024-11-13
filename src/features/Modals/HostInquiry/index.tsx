@@ -1,6 +1,8 @@
 import { useFormik } from 'formik';
-import { Button, Input, Modal, Radio } from 'antd';
+import { Button, Input, message, Modal, Radio } from 'antd';
 import { HostReqModalStyled } from './style';
+import { updateInquiry } from '@/pages/api/hostreqApi';
+import { useRouter } from 'next/router';
 const RadioGroup = Radio.Group;
 const { TextArea } = Input;
 
@@ -10,10 +12,10 @@ interface HostReqProps {
 }
 
 const HostInquiryModal = ({ setIsModalOpen, data }: HostReqProps) => {
-  console.log('🚀 ~ HostInquiryModal ~ data:', data);
+  const router = useRouter();
   const inquiry = useFormik({
     initialValues: {
-      inquiryMemberType: data[0]?.memberType,
+      memberType: data[0]?.memberType,
       inquiryTitle: data[0]?.inquiryTitle,
       inquiryEmail: data[0]?.inquiryEmail,
       inquiryContents: data[0]?.inquiryContents,
@@ -25,7 +27,17 @@ const HostInquiryModal = ({ setIsModalOpen, data }: HostReqProps) => {
         title: ' 답변 완료 상태로 변경하시겠습니까?',
         okText: '확인',
         cancelText: '취소',
-        onOk: async () => {},
+        onOk: async () => {
+          try {
+            const target = { ...values, inquiryId: data[0].id };
+            await updateInquiry(target);
+            message.info('상태가 변경되었습니다.');
+            setIsModalOpen(false);
+            router.reload();
+          } catch (error) {
+            message.error('다시 시도해주세요');
+          }
+        },
       });
     },
   });
@@ -36,9 +48,9 @@ const HostInquiryModal = ({ setIsModalOpen, data }: HostReqProps) => {
         <div>
           <p>회원 상태</p>
           <RadioGroup
-            name="inquiryMemberType"
-            value={inquiry.values.inquiryMemberType}
-            onChange={(e) => inquiry.setFieldValue('inquiryMemberType', e.target.value)}
+            name="memberType"
+            value={inquiry.values.memberType}
+            onChange={(e) => inquiry.setFieldValue('memberType', e.target.value)}
           >
             <Radio value={'MEMBER'}>회원</Radio>
             <Radio value={'NONMEMBER'}>비회원</Radio>

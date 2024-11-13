@@ -35,7 +35,7 @@ const LoginPage = () => {
             adminToken: response.token,
           })
         );
-        router.reload();
+        router.push('/');
       }
     } catch (error) {
       const axiosError = error as AxiosError; // error를 AxiosError로 캐스팅
