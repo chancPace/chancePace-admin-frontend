@@ -128,3 +128,8 @@ export interface HostInquiry {
   inquiryContents: string;
   inquiryStatus: string;
 }
+
+export interface AllowSpace {
+  spaceId: number;
+  spaceStatus: string;
+}

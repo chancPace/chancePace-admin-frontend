@@ -3,7 +3,7 @@ import { Badge, Button, Descriptions, message, Modal, Tag } from 'antd';
 import { useEffect, useState } from 'react';
 import { CloseCircleOutlined, SyncOutlined } from '@ant-design/icons';
 import SpaceDetailStyled from './style';
-import { getOneSpace, updateSpace } from '@/pages/api/spaceAPI';
+import { allowSpace, getOneSpace, updateSpace } from '@/pages/api/spaceAPI';
 import SpaceEdit from '../Modals/SpaceEdit';
 import { Space, User } from '@/types';
 import { getOneUser, updateOneUser } from '@/pages/api/userApi';
@@ -184,7 +184,7 @@ const SpaceDetailPage = () => {
                 cancelText: '취소',
                 onOk: async () => {
                   const updatedData = { spaceId, spaceStatus: 'AVAILABLE' };
-                  updateSpace(updatedData);
+                  allowSpace(updatedData);
                   if (userData?.role === 'USER') {
                     updateOneUser({ ...userData, role: 'HOST' });
                   }

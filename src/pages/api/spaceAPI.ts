@@ -1,4 +1,4 @@
-import { Space } from '@/types';
+import { AllowSpace, Space } from '@/types';
 import { BACK_URL } from '@/utill/url';
 import axios, { AxiosError } from 'axios';
 import Cookies from 'js-cookie'; // 쿠키 라이브러리 추가
@@ -106,5 +106,15 @@ export const searchSpace = async (search: string) => {
       console.log('요청 오류:', axiosError.message);
     }
     throw axiosError;
+  }
+};
+
+export const allowSpace = async (value: AllowSpace) => {
+  try {
+    const response = await axios.patch(`${API_URL}/update-space-status`, value);
+    return response.data;
+  } catch (error) {
+    console.error('공간 수정 실패', error);
+    throw error;
   }
 };
