@@ -46,10 +46,8 @@ export const getOneBooking = async (bookingId: any) => {
 
 // 예약 검색
 export const searchBooking = async (search: string) => {
-  console.log('🚀 ~ searchBooking ~ search:', search);
   try {
     const response = await axios.get(`${API_URL}get-search-booking`, { params: { query: search } });
-    console.log('🚀 ~ searchBooking ~ response:', response);
     return response;
   } catch (error) {
     const axiosError = error as AxiosError;

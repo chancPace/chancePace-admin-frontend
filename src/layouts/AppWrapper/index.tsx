@@ -60,13 +60,6 @@ const AppWrapper = ({ Component, pageProps }: { Component: any; pageProps: any }
         </>
       );
     }
-  } else {
-    return (
-      <>
-        <Header />
-        <Component {...pageProps} />
-      </>
-    );
   }
 };
 export default AppWrapper;

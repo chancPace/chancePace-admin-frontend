@@ -104,10 +104,16 @@ const SideBar = () => {
         },
       ],
     },
-    // {
-    //   key: '/inquiry',
-    //   label: '문의 내역',
-    // },
+    {
+      key: '/inquiry',
+      label: '문의 관리',
+      children: [
+        {
+          key: '/inquiry/hostreq',
+          label: '호스트 신청',
+        },
+      ],
+    },
     // {
     //   key: '/membership',
     //   label: '멤버쉽 관리',
