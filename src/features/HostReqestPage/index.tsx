@@ -26,10 +26,6 @@ const HostReqListPage = () => {
     fetchQuiry();
   }, []);
 
-  const detailPage = (data: number) => {
-    setIsModalOpen(true);
-  };
-
   const columns = [
     {
       title: '제목',
@@ -70,7 +66,7 @@ const HostReqListPage = () => {
       key: 'inquiryContents',
     },
     {
-      title: '문의 일',
+      title: '문의 일자',
       dataIndex: 'createdAt',
       key: 'createdAt',
       render: (data: any) => dayjs(data).format('YYYY-MM-DD'),
@@ -79,7 +75,7 @@ const HostReqListPage = () => {
       title: '상세페이지',
       dataIndex: 'action',
       key: 'action',
-      render: (_: any, record: any) => <a onClick={() => detailPage(record.key)}>상세 보기</a>,
+      render: (_: any, record: any) => <a onClick={() => setIsModalOpen(true)}>상세 보기</a>,
     },
   ];
 
