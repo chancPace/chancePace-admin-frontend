@@ -184,7 +184,7 @@ const SpaceDetailPage = () => {
                 cancelText: '취소',
                 onOk: async () => {
                   const updatedData = { spaceId, spaceStatus: 'AVAILABLE' };
-                  allowSpace(updatedData);
+                  const result = await allowSpace(updatedData);
                   if (userData?.role === 'USER') {
                     updateOneUser({ ...userData, role: 'HOST' });
                   }

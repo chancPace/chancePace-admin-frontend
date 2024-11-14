@@ -33,8 +33,7 @@ const BookingListPage = () => {
       dataIndex: 'space.spaceName',
       key: 'space.spaceName',
       render: (text: any, record: any) => {
-        // 여기서 데이터를 변형하거나 추가적으로 처리할 수 있음
-        return `${record?.space?.spaceName}`; // 예시로 변형된 값 반환
+        return `${record?.space?.spaceName}`;
       },
     },
     {
@@ -42,8 +41,7 @@ const BookingListPage = () => {
       dataIndex: 'user.userName',
       key: 'user.userName',
       render: (text: any, record: any) => {
-        // 여기서 데이터를 변형하거나 추가적으로 처리할 수 있음
-        return `${record?.user?.userName}`; // 예시로 변형된 값 반환
+        return `${record?.user?.userName}`;
       },
     },
     {
