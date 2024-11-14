@@ -50,16 +50,16 @@ const SideBar = () => {
         },
       ],
     },
-    // {
-    //   key: '/review',
-    //   label: '리뷰 관리',
-    //   children: [
-    //     {
-    //       key: '/review/reviewlist',
-    //       label: '리뷰 조회',
-    //     },
-    //   ],
-    // },
+    {
+      key: '/review',
+      label: '리뷰 관리',
+      children: [
+        {
+          key: '/review/reviewlist',
+          label: '리뷰 조회',
+        },
+      ],
+    },
     {
       key: '/sales',
       label: '매출 관리',

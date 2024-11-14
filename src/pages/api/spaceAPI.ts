@@ -1,18 +1,18 @@
 import { AllowSpace, Space } from '@/types';
 import { BACK_URL } from '@/utill/url';
 import axios, { AxiosError } from 'axios';
-import Cookies from 'js-cookie'; // 쿠키 라이브러리 추가
+import Cookies from 'js-cookie';
 
 const API_URL = `${BACK_URL}space/`;
 
 // 공간 등록
 export const addNewSpace = async (spaceData: FormData) => {
   try {
-    const token = Cookies.get('adminToken'); // 쿠키에 저장된 'token' 이름으로 가져옴
+    const token = Cookies.get('adminToken');
     const response = await axios.post(`${API_URL}add-new-space`, spaceData, {
       headers: {
-        'Content-Type': 'multipart/form-data', // FormData 전송을 위한 헤더 설정
-        Authorization: `Bearer ${token}`, // 가져온 토큰을 Authorization 헤더에 추가
+        'Content-Type': 'multipart/form-data',
+        Authorization: `Bearer ${token}`,
       },
     });
     return response.data;
@@ -43,11 +43,9 @@ export const getOneSpace = async (spaceId: any) => {
   } catch (error) {
     const axiosError = error as AxiosError;
     if (axiosError.response) {
-      // 서버가 응답을 보냈지만 오류가 발생한 경우
       console.log('서버 응답:', axiosError.response.data);
       console.log('상태 코드:', axiosError.response.status);
     } else {
-      // 요청을 보내는 중 오류 발생
       console.log('요청 오류:', axiosError.message);
     }
     throw axiosError;
@@ -62,11 +60,9 @@ export const updateSpace = async (spaceData: Space) => {
   } catch (error) {
     const axiosError = error as AxiosError;
     if (axiosError.response) {
-      // 서버가 응답을 보냈지만 오류가 발생한 경우
       console.log('서버 응답:', axiosError.response.data);
       console.log('상태 코드:', axiosError.response.status);
     } else {
-      // 요청을 보내는 중 오류 발생
       console.log('요청 오류:', axiosError.message);
     }
     throw axiosError;
@@ -76,7 +72,7 @@ export const updateSpace = async (spaceData: Space) => {
 export const updatesSpace = async (spaceData: FormData, spaceId: string) => {
   try {
     const token = Cookies.get('admintoken');
-    const response = await axios.patch(`${API_URL}/update-space?spaceId=${spaceId}`, spaceData, {
+    const response = await axios.patch(`${API_URL}update-space?spaceId=${spaceId}`, spaceData, {
       headers: {
         // 'Content-Type': 'multipart/form-data',
         Authorization: `Bearer ${token}`,
@@ -98,20 +94,19 @@ export const searchSpace = async (search: string) => {
   } catch (error) {
     const axiosError = error as AxiosError;
     if (axiosError.response) {
-      // 서버가 응답을 보냈지만 오류가 발생한 경우
       console.log('서버 응답:', axiosError.response.data);
       console.log('상태 코드:', axiosError.response.status);
     } else {
-      // 요청을 보내는 중 오류 발생
       console.log('요청 오류:', axiosError.message);
     }
     throw axiosError;
   }
 };
 
+// 공간 승인
 export const allowSpace = async (value: AllowSpace) => {
   try {
-    const response = await axios.patch(`${API_URL}/update-space-status`, value);
+    const response = await axios.patch(`${API_URL}update-space-status`, value);
     return response.data;
   } catch (error) {
     console.error('공간 수정 실패', error);
