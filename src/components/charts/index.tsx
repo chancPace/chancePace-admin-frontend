@@ -1,4 +1,5 @@
 import { getAllPayment } from '@/pages/api/paymentApi';
+import { DatePicker, message, Table } from 'antd';
 import { useEffect, useState } from 'react';
 import dayjs from 'dayjs';
 import { Chart } from 'react-chartjs-2';
@@ -21,80 +22,94 @@ ChartJS.register(CategoryScale, LinearScale, BarElement, LineElement, PointEleme
 const SalesDayPage = () => {
   const currentMonth = (dayjs().month() + 1).toString();
   const [sales, setSales] = useState<any[]>([]);
-  const [data, setData] = useState();
-  const [selectedDateTime, setSelectedDateTime] = useState<dayjs.Dayjs | null>(dayjs()); // 선택된 연도 또는 월
+  const [data, setData] = useState<any[]>([]);
+  const [selectedDateTime, setSelectedDateTime] = useState<dayjs.Dayjs | null>(dayjs());
   const [selectedMonth, setSelectedMonth] = useState(currentMonth);
+
+  // 월별 날짜를 일별로 나누는 함수 (윤년, 2월, 31일 등 고려)
+  const generateDailyDates = (month: number, year: number) => {
+    const daysInMonth = new Date(year, month, 0).getDate();
+    return Array.from({ length: daysInMonth }, (_, i) => (i + 1).toString());
+  };
 
   // 결제 내역을 가져오는 함수
   const fetchPayments = async () => {
-    const response = await getAllPayment();
-    const result = response?.data?.filter((x: any, i: number) => {
-      return dayjs(x.createdAt).format('YYYY-MM') === dayjs(selectedDateTime).format('YYYY-MM');
-    });
-    setData(result);
-    const dailySales: { [date: string]: { totalPaymentPrice: number; count: number } } = {};
+    try {
+      const response = await getAllPayment();
+      const target = response?.data?.filter(
+        (x: any) => dayjs(x.createdAt).format('YYYY-MM') === dayjs(selectedDateTime).format('YYYY-MM')
+      );
+      const formatData = target.map((x: any) => {
+        const totalAmount = x.paymentPrice + x.couponPrice;
+        const feeAmount = (x.paymentPrice - x.couponPrice) * 0.05;
+        return {
+          ...x,
+          id: x.id,
+          totalAmount,
+          feeAmount,
+        };
+      });
 
-    // 결제 내역을 월별 또는 일별로 처리
-    response.data.forEach((x: any) => {
-      if (typeof x.paymentPrice === 'number' && !isNaN(x.paymentPrice)) {
-        const date = dayjs(x.createdAt); // dayjs로 날짜를 처리
-        const month = date.month() + 1; // month()는 0부터 시작하므로 +1
-        const day = date.date();
-        const formattedDay = `${month < 10 ? `0${month}` : month}-${day < 10 ? `0${day}` : day}`;
-        // 선택된 월과 일자가 일치하는 데이터만 필터링
-        if (month.toString() === selectedMonth) {
-          // 일별 매출 처리
-          dailySales[formattedDay] = dailySales[formattedDay] || { totalPaymentPrice: 0, count: 0 };
-          dailySales[formattedDay].totalPaymentPrice += x.paymentPrice;
-          dailySales[formattedDay].count += 1;
+      const salesData = target.reduce((acc: any, x: any) => {
+        const date = dayjs(x.createdAt);
+        const day = date.date().toString();
+        if (date.month() + 1 === parseInt(selectedMonth)) {
+          const totalAmount = x.paymentPrice + x.couponPrice;
+          const feeAmount = (x.paymentPrice - x.couponPrice) * 0.05; // 수수료 5%
+
+          if (!acc[day]) {
+            acc[day] = {
+              totalPaymentPrice: 0,
+              count: 0,
+              feeAmount: 0,
+            };
+          }
+
+          acc[day].totalPaymentPrice += totalAmount;
+          acc[day].count += 1;
+          acc[day].feeAmount += feeAmount;
         }
-      }
-    });
+        return acc;
+      }, {});
 
-    // 일별 매출 데이터 배열로 변환
-    const salesData = Object.keys(dailySales).map((key) => ({
-      day: key,
-      totalPaymentPrice: dailySales[key].totalPaymentPrice || 0,
-      count: dailySales[key].count || 0,
-    }));
-    setSales(salesData);
-  };
+      const salesArray = Object.keys(salesData).map((key) => ({
+        day: key,
+        ...salesData[key],
+      }));
 
-  // 월별 날짜를 일별로 나누는 함수 (윤년, 2월, 31일 등 고려)
-  const getDaysInMonth = (month: number, year: number) => {
-    return new Date(year, month, 0).getDate();
-  };
-
-  const generateDailyDates = (month: number, year: number) => {
-    const daysInMonth = getDaysInMonth(month, year);
-    const dates: string[] = [];
-    for (let day = 1; day <= daysInMonth; day++) {
-      dates.push(`${month < 10 ? `0${month}` : month}-${day < 10 ? `0${day}` : day}`);
+      setSales(salesArray);
+      setData(formatData);
+    } catch (error) {
+      message.error('결제 데이터를 불러오는 데 실패했습니다.');
     }
-    return dates;
   };
 
   useEffect(() => {
     fetchPayments();
   }, [selectedMonth]);
 
-  // // 차트에 표시할 데이터
+  // 선택된 월의 일별 날짜들
+  const days = generateDailyDates(parseInt(selectedMonth), dayjs().year());
+
+  // 차트에 표시할 데이터 포맷팅
   const formattedSales = sales.reduce((acc, item) => {
-    const formattedDate = dayjs(item.day).format('MM-DD');
-    acc[formattedDate] = { totalPaymentPrice: item.totalPaymentPrice, count: item.count };
+    acc[item.day] = {
+      totalPaymentPrice: item.totalPaymentPrice || 0,
+      count: item.count || 0,
+      feeAmount: item.feeAmount || 0,
+    };
     return acc;
   }, {});
 
-  // 선택된 월의 일별 날짜들
-  const days = generateDailyDates(parseInt(selectedMonth), dayjs().year());
   const totalPaymentPrices = days.map((day) => formattedSales[day]?.totalPaymentPrice || 0);
   const counts = days.map((day) => formattedSales[day]?.count || 0);
+  const feeAmounts = days.map((day) => formattedSales[day]?.feeAmount || 0);
 
   const chartData: ChartData = {
     labels: days,
     datasets: [
       {
-        type: 'bar', // 매출액은 막대그래프
+        type: 'bar',
         label: '매출액',
         data: totalPaymentPrices,
         backgroundColor: 'rgba(75, 192, 192, 0.2)',
@@ -103,13 +118,22 @@ const SalesDayPage = () => {
         yAxisID: 'y-left', // 왼쪽 Y축에 매핑
       },
       {
-        type: 'line', // 매출건수는 선그래프
+        type: 'bar',
+        label: '수수료 금액',
+        data: feeAmounts,
+        backgroundColor: 'rgba(255, 159, 64, 0.2)', // 수수료 색 변경
+        borderColor: 'rgb(255, 159, 64)', // 수수료 색 변경
+        borderWidth: 1,
+        yAxisID: 'y-left',
+      },
+      {
+        type: 'line',
         label: '매출건수',
         data: counts,
-        fill: false, // 선 그래프의 내부 채우지 않음
-        borderColor: 'rgb(255, 99, 132)', // 선의 색상
+        fill: false,
+        borderColor: 'rgb(255, 99, 132)',
         tension: 0.1,
-        yAxisID: 'y-right', // 오른쪽 Y축에 매핑
+        yAxisID: 'y-right',
       },
     ],
   };
@@ -128,7 +152,7 @@ const SalesDayPage = () => {
         position: 'left',
         title: {
           display: true,
-          text: '매출액 (원)', // 왼쪽 Y축 제목
+          text: '매출액 / 수수료 금액 (원)',
         },
         grid: {
           display: true,
@@ -139,16 +163,14 @@ const SalesDayPage = () => {
         position: 'right',
         title: {
           display: true,
-          text: '매출건수', // 오른쪽 Y축 제목
+          text: '매출건수',
         },
         ticks: {
           stepSize: 1,
-          callback: (value: any) => {
-            return `${Math.floor(value)}`; // 숫자를 그대로 문자열로 반환
-          },
+          callback: (value: any) => `${Math.floor(value)}`,
         },
         grid: {
-          display: false, // 오른쪽 Y축 그리드는 숨김
+          display: false,
         },
       },
     },
@@ -160,11 +182,7 @@ const SalesDayPage = () => {
     },
   };
 
-  return (
-    <>
-      <Chart data={chartData} options={chartOptions} type={'bar'} />
-    </>
-  );
+  return <Chart data={chartData} options={chartOptions} type={'bar'} />;
 };
 
 export default SalesDayPage;
