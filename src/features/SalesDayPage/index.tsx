@@ -8,6 +8,7 @@ import {
   CategoryScale,
   LinearScale,
   BarElement,
+  BarController,
   LineElement,
   PointElement,
   Title,
@@ -19,7 +20,17 @@ import {
 import router from 'next/router';
 import ChartStyled from './style';
 
-ChartJS.register(CategoryScale, LinearScale, BarElement, LineElement, PointElement, Title, Tooltip, Legend);
+ChartJS.register(
+  CategoryScale,
+  LinearScale,
+  BarElement,
+  BarController,
+  LineElement,
+  PointElement,
+  Title,
+  Tooltip,
+  Legend
+);
 
 const SalesDayPage = () => {
   const currentMonth = (dayjs().month() + 1).toString();
