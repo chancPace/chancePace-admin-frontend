@@ -34,3 +34,22 @@ export const getReview = async () => {
     throw axiosError;
   }
 };
+
+// 리뷰 상세
+export const getOneReview = async (reviewId: number) => {
+  try {
+    const response = await axios.get(`${API_URL}get-one-review`, {
+      params: { reviewId },
+    });
+    return response.data;
+  } catch (error: any) {
+    const axiosError = error as AxiosError;
+    if (axiosError.response) {
+      console.log('서버 응답:', axiosError.response.data);
+      console.log('상태 코드:', axiosError.response.status);
+    } else {
+      console.log('요청 오류:', axiosError.message);
+    }
+    throw axiosError;
+  }
+};
