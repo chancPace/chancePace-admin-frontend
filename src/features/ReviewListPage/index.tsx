@@ -26,10 +26,7 @@ const ReviewListPage = () => {
         reviewerEmail: x.user?.email, // 작성자 이메일
       };
     });
-    console.log('🚀 ~ transformedReviews ~ transformedReviews:', transformedReviews);
     setData(transformedReviews);
-    // setData(response.data);
-    console.log('🚀 ~ fetchReview ~ data:', data);
   };
 
   useEffect(() => {
@@ -69,7 +66,7 @@ const ReviewListPage = () => {
       render: (createdAt: Date) => dayjs(createdAt).format('YYYY-MM-DD'),
     },
     {
-      title: '상세페이지',
+      title: '상세 페이지',
       dataIndex: 'action',
       key: 'action',
       render: (_: any, record: any) => <a onClick={() => detailPage(record.key)}>상세 보기</a>,

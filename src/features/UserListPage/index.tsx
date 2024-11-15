@@ -48,13 +48,11 @@ const UserListPage = () => {
       title: '이메일',
       dataIndex: 'email',
       key: 'email',
-      sorter: (a?: any, b?: any) => a.email - b.email,
     },
     {
       title: '전화번호',
       dataIndex: 'phoneNumber',
       key: 'phoneNumber',
-      sorter: (a?: any, b?: any) => Number(a.phoneNumber.replace(/-/g, '')) - Number(b.phoneNumber.replace(/-/g, '')),
     },
     {
       title: '계정상태',
@@ -127,7 +125,7 @@ const UserListPage = () => {
       sorter: (a?: any, b?: any) => Number(a.createdAt.replace(/-/g, '')) - Number(b.createdAt.replace(/-/g, '')),
     },
     {
-      title: '상세페이지',
+      title: '상세 페이지',
       dataIndex: 'action',
       key: 'action',
       render: (_: any, record: any) => <a onClick={() => detailPage(record.key)}>상세 보기</a>,
@@ -205,13 +203,7 @@ const UserListPage = () => {
         footer={false}
         className="modal"
       >
-        <CouponModal
-          setIsModalOpen={setIsCouponModalOpen}
-          type={'send'}
-          data={data}
-          options={options}
-          // fetchCoupons={fetchCoupons}
-        />
+        <CouponModal setIsModalOpen={setIsCouponModalOpen} type={'send'} data={data} options={options} />
       </Modal>
 
       <Table columns={columns} dataSource={data} rowSelection={rowSelection} />

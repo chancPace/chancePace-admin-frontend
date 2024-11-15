@@ -133,3 +133,12 @@ export interface AllowSpace {
   spaceId: number;
   spaceStatus: string;
 }
+
+export interface optionProps {
+  isModalOpen: boolean;
+  setIsModalOpen: any;
+  data?: User;
+  type: string;
+  fetchUserData?: any;
+  fetchUsers?: any;
+}

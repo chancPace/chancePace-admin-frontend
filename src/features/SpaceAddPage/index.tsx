@@ -213,12 +213,12 @@ const SpaceAddPage = () => {
         }}
       >
         <Form.Item
-          label="제목"
+          label="공간 명"
           name="spaceName"
           rules={[
             {
               required: true,
-              message: '제목을 입력해 주세요.',
+              message: '공간 명을 입력해 주세요.',
             },
           ]}
         >
@@ -230,7 +230,7 @@ const SpaceAddPage = () => {
           rules={[
             {
               required: true,
-              message: '위치를 입력해 주세요.',
+              message: '주소를 입력해 주세요.',
             },
           ]}
         >

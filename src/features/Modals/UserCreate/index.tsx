@@ -1,20 +1,11 @@
 import { postSignup, updateOneUser } from '@/pages/api/userApi';
-import { User } from '@/types';
+import { optionProps, User } from '@/types';
 import { Button, Input, message, Select } from 'antd';
 import { useFormik } from 'formik';
 import { useState } from 'react';
-
-interface optionProps {
-  isModalOpen: boolean;
-  setIsModalOpen: any;
-  data?: User;
-  type: string;
-  fetchUserData?: any;
-  fetchUsers?: any;
-}
+import { UserModalStyled } from './style';
 
 const UserCreate = ({ isModalOpen, setIsModalOpen, data, type, fetchUserData, fetchUsers }: optionProps) => {
-  //  선택한 옵션 저장
   const [isAdminSelect, setIsAdminSelect] = useState(false);
 
   const authOpt = [
@@ -39,11 +30,9 @@ const UserCreate = ({ isModalOpen, setIsModalOpen, data, type, fetchUserData, fe
     { value: 'Jeju', label: '제주은행' },
   ];
 
-  // 유효성 검사 로직
   const validate = (values: any) => {
     const errors: { [key: string]: string } = {};
 
-    // 이름 검사
     if (!values.userName) {
       errors.userName = '이름은 필수 입력 항목입니다.';
     } else if (values.userName.length < 2) {
@@ -52,14 +41,12 @@ const UserCreate = ({ isModalOpen, setIsModalOpen, data, type, fetchUserData, fe
       errors.userName = '숫자와 영어는 입력하실 수없습니다.';
     }
 
-    // 이메일 검사
     if (!values.email) {
       errors.email = '이메일은 필수 입력 항목입니다.';
     } else if (!/\S+@\S+\.\S+/.test(values.email)) {
       errors.email = '유효한 이메일을 입력해 주세요.';
     }
 
-    // 전화번호 검사 -> 필수는 x, 11자리 숫자
     if (values.phoneNumber && values.phoneNumber.replace(/\D/g, '').length !== 11) {
       errors.phoneNumber = '전화번호는 11자리 숫자만 입력 가능합니다.';
     }
@@ -67,20 +54,20 @@ const UserCreate = ({ isModalOpen, setIsModalOpen, data, type, fetchUserData, fe
   };
 
   const formatPhoneNumber = (phoneNumber: string) => {
-    const cleaned = phoneNumber.replace(/\D/g, ''); // 숫자만 남기기
+    const cleaned = phoneNumber.replace(/\D/g, '');
 
     if (cleaned.length === 11) {
       return cleaned.replace(/^(\d{3})(\d{4})(\d{4})$/, '$1-$2-$3');
     }
 
-    return phoneNumber; // 11자리 숫자가 아니면 원래 값을 반환
+    return phoneNumber;
   };
 
   const userInfo = useFormik({
     initialValues: {
       userName: data?.userName || '',
       email: data?.email || '',
-      password: data?.password || 'password1234!',
+      password: data?.password ? '' : 'password1234!',
       phoneNumber: data?.phoneNumber || '',
       bankAccountName: data?.bankAccountName || '',
       bankAccountOwner: data?.bankAccountOwner || '',
@@ -96,7 +83,6 @@ const UserCreate = ({ isModalOpen, setIsModalOpen, data, type, fetchUserData, fe
         ...values,
         phoneNumber: formattedPhoneNumber,
       };
-      // const updatedData = { ...values, id: data?.id };
       if (type === 'register') {
         postSignup(payload)
           .then((response) => {
@@ -122,8 +108,8 @@ const UserCreate = ({ isModalOpen, setIsModalOpen, data, type, fetchUserData, fe
   });
 
   return (
-    <>
-      <form onSubmit={userInfo.handleSubmit}>
+    <UserModalStyled>
+      <form onSubmit={userInfo.handleSubmit} className="form">
         <div className="inputForm">
           <div>이름</div>
           <Input
@@ -165,7 +151,7 @@ const UserCreate = ({ isModalOpen, setIsModalOpen, data, type, fetchUserData, fe
           <div className="auth">
             <div className="authLabel">권한</div>
             <Select
-              style={{ width: 80 }}
+              className="input"
               options={authOpt}
               defaultValue={'USER'}
               value={userInfo.values.role}
@@ -191,7 +177,8 @@ const UserCreate = ({ isModalOpen, setIsModalOpen, data, type, fetchUserData, fe
         <div className="inputForm">
           <div>은행명</div>
           <Select
-            style={{ width: 100 }}
+            className="input"
+            placeholder="은행을 선택하세요."
             options={bankOpt}
             onChange={(value) => userInfo.setFieldValue('bankAccountName', value)}
             value={userInfo.values.bankAccountName}
@@ -200,7 +187,7 @@ const UserCreate = ({ isModalOpen, setIsModalOpen, data, type, fetchUserData, fe
         <div className="inputForm">
           <div>계좌 소유주</div>
           <Input
-            placeholder="계좌 소유주 입력해 주세요."
+            placeholder="계좌 소유주를 입력하세요."
             name="bankAccountOwner"
             onChange={userInfo.handleChange}
             value={userInfo.values.bankAccountOwner}
@@ -209,7 +196,7 @@ const UserCreate = ({ isModalOpen, setIsModalOpen, data, type, fetchUserData, fe
         <div className="inputForm">
           <div>계좌 번호</div>
           <Input
-            placeholder="계좌 번호 입력해 주세요."
+            placeholder="계좌 번호를 입력하세요."
             name="bankAccountNumber"
             onChange={userInfo.handleChange}
             value={userInfo.values.bankAccountNumber}
@@ -219,7 +206,7 @@ const UserCreate = ({ isModalOpen, setIsModalOpen, data, type, fetchUserData, fe
           <Button htmlType="submit">{type === 'register' ? '등록' : '수정'}</Button>
         </div>
       </form>
-    </>
+    </UserModalStyled>
   );
 };
 export default UserCreate;

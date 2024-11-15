@@ -12,7 +12,7 @@ const SpaceDetailPage = () => {
   const router = useRouter();
   const { id } = router.query;
   const spaceId = Number(id);
-  const [data, setData] = useState<Space>();
+  const [data, setData] = useState<any>();
   const [userData, setUserData] = useState<User>();
   const [isModalOpen, setIsModalOpen] = useState(false);
 
@@ -42,6 +42,7 @@ const SpaceDetailPage = () => {
       fetchSpaceData(spaceId);
     }
   }, [id]);
+  console.log('🚀 ~ SpaceDetailPage ~ data:', data);
 
   const items = [
     {
@@ -156,16 +157,20 @@ const SpaceDetailPage = () => {
       label: '설명',
       children: data?.description,
     },
+    {
+      key: '19',
+      label: '사진',
+      children: <img src={data?.images[0]?.imageUrl} alt="" style={{ width: 200 }}></img>,
+    },
   ];
 
   return (
     <SpaceDetailStyled>
-      <p>공간 정보</p>
-      <div className="buttonWrap">
-        <div className="left">
+      <div className="top">
+        <p>공간 상세 정보</p>
+        <div className="buttonWrap">
           <Button
             htmlType="submit"
-            className="edit"
             onClick={() => {
               router.push({
                 pathname: '/space/spaceadd',
@@ -176,7 +181,6 @@ const SpaceDetailPage = () => {
             수정
           </Button>
           <Button
-            className="delete"
             onClick={() => {
               Modal.confirm({
                 title: '공간을 승인하겠습니까?',
@@ -196,22 +200,8 @@ const SpaceDetailPage = () => {
           >
             승인
           </Button>
-          <Modal
-            width={400}
-            title="공간 정보 수정"
-            open={isModalOpen}
-            onOk={() => setIsModalOpen(false)}
-            onCancel={() => setIsModalOpen(false)}
-            footer={false}
-            className="modal"
-          >
-            <SpaceEdit setIsModalOpen={setIsModalOpen} data={data} spaceId={spaceId} fetchSpaceData={fetchSpaceData} />
-          </Modal>
-        </div>
-        <div className="right">
           {data?.isOpen === true ? (
             <Button
-              className="delete"
               onClick={() => {
                 Modal.confirm({
                   title: (
@@ -237,6 +227,18 @@ const SpaceDetailPage = () => {
           ) : (
             <></>
           )}
+
+          <Modal
+            width={400}
+            title="공간 정보 수정"
+            open={isModalOpen}
+            onOk={() => setIsModalOpen(false)}
+            onCancel={() => setIsModalOpen(false)}
+            footer={false}
+            className="modal"
+          >
+            <SpaceEdit setIsModalOpen={setIsModalOpen} data={data} spaceId={spaceId} fetchSpaceData={fetchSpaceData} />
+          </Modal>
         </div>
       </div>
       <Descriptions bordered items={items} />
