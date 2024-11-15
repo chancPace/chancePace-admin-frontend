@@ -11,6 +11,9 @@ export const AddSpaceStyled = styled.div`
     }
     .ant-form-item-control {
       text-align: left;
+      .ant-input-number {
+        width: 100%;
+      }
     }
     .ant-btn {
       width: 100%;
