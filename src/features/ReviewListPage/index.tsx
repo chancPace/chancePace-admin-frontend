@@ -10,20 +10,19 @@ const ReviewListPage = () => {
 
   const fetchReview = async () => {
     const response = await getAllReview();
-    console.log('🚀 ~ fetchReview ~ response:', response);
     const transformedReviews = response.data.flatMap((x: any) => {
       return {
-        key: x.id, // 유니크한 키값
+        key: x.id,
         reviewComment: x.reviewComment,
         reviewRating: x.reviewRating,
         reviewStatus: x.reviewStatus,
         createdAt: x.createdAt,
-        spaceName: x.space?.spaceName, // spaceName (호스트)
-        spaceLocation: x.space?.spaceLocation, // spaceLocation (위치)
-        spacePrice: x.space?.spacePrice, // 공간 가격
-        spaceAdminName: x.space?.spaceAdminName, // 관리자 이름
-        reviewerName: x.user?.userName, // 작성자 이름
-        reviewerEmail: x.user?.email, // 작성자 이메일
+        spaceName: x.space?.spaceName,
+        spaceLocation: x.space?.spaceLocation,
+        spacePrice: x.space?.spacePrice,
+        spaceAdminName: x.space?.spaceAdminName,
+        reviewerName: x.user?.userName,
+        reviewerEmail: x.user?.email,
       };
     });
     setData(transformedReviews);
@@ -49,21 +48,32 @@ const ReviewListPage = () => {
       key: 'reviewerName',
     },
     {
-      title: '평점',
-      dataIndex: 'reviewRating',
-      key: 'reviewRating',
-      render: (value: number) => <Rate disabled value={value} />,
-    },
-    {
       title: '내용',
       dataIndex: 'reviewComment',
       key: 'reviewComment',
+    },
+    {
+      title: '평점',
+      dataIndex: 'reviewRating',
+      key: 'reviewRating',
+      filters: [
+        { text: '1점', value: 1 },
+        { text: '2점', value: 2 },
+        { text: '3점', value: 3 },
+        { text: '4점', value: 4 },
+        { text: '5점', value: 5 },
+      ],
+      filterSearch: true,
+      onFilter: (value: any, record: any) => Number(record.reviewRating) == value,
+      render: (value: number) => <Rate disabled value={value} />,
+      sorter: (a: any, b: any) => Number(a.reviewRating) - Number(b.reviewRating),
     },
     {
       title: '작성일',
       dataIndex: 'createdAt',
       key: 'createdAt',
       render: (createdAt: Date) => dayjs(createdAt).format('YYYY-MM-DD'),
+      sorter: (a?: any, b?: any) => dayjs(a.createdAt).valueOf() - dayjs(b.createdAt).valueOf(),
     },
     {
       title: '상세 페이지',
