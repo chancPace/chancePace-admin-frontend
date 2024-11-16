@@ -151,7 +151,7 @@ const SpaceCategoryPage = () => {
   return (
     <SpaceCategoryStyled>
       <div className="top">
-        <p>카테고리 조회</p>
+        <p>카테고리 목록</p>
         <div>
           <Button
             className="register"
