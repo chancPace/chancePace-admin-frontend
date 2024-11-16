@@ -13,11 +13,7 @@ const CouponDetailStyled = styled.div`
   }
   .button_wrap {
     display: flex;
-    justify-content: space-between;
-  }
-  .edit {
-    margin: ${({ theme }) => theme.spacing.md};
-    margin-left: 0;
+    gap: 15px;
   }
 `;
 

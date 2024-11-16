@@ -36,34 +36,37 @@ const CouponDetailPage = () => {
       key: '1',
       label: '쿠폰명',
       children: data?.couponName,
+      span: 2,
     },
     {
       key: '2',
       label: '할인 가격',
       children: `${data?.discountPrice?.toLocaleString()}원`,
+      span: 2,
     },
     {
       key: '3',
       label: '생성일',
       children: data?.createdAt,
+      span: 2,
     },
     {
       key: '4',
       label: '상태',
       children: data?.isActive ? <Tag color="blue">활성</Tag> : <Tag color="red">비활성</Tag>,
+      span: 2,
     },
   ];
 
   return (
     <CouponDetailStyled>
       <div className="top">
-        <p>쿠폰 정보</p>
+        <p>쿠폰 상세 정보</p>
         <div>
           {data?.isActive === true ? (
-            <>
+            <div className="button_wrap">
               <Button
                 htmlType="submit"
-                className="edit"
                 onClick={() => {
                   setIsModalOpen(true);
                 }}
@@ -71,7 +74,6 @@ const CouponDetailPage = () => {
                 수정
               </Button>
               <Button
-                className="delete"
                 onClick={() => {
                   Modal.confirm({
                     title: '쿠폰을 삭제하시겠습니까?',
@@ -88,7 +90,7 @@ const CouponDetailPage = () => {
               >
                 삭제
               </Button>
-            </>
+            </div>
           ) : (
             <></>
           )}
