@@ -125,7 +125,7 @@ const SalesYearPage = () => {
 
   // 차트 데이터
   const chartData: ChartData = {
-    labels: months.map((month) => `${selectedYear}-${month}`),
+    labels: months,
     datasets: [
       {
         type: 'bar',
