@@ -8,6 +8,7 @@ import UserListStyled from './style';
 import UserCreate from '../Modals/UserCreate';
 import CouponModal from '../Modals/Coupon';
 import { User } from '@/types';
+import dayjs from 'dayjs';
 
 const UserListPage = () => {
   const [data, setData] = useState([]);
@@ -116,13 +117,13 @@ const UserListPage = () => {
       title: '최근 로그인',
       dataIndex: 'lastLogin',
       key: 'lastLogin',
-      sorter: (a?: any, b?: any) => Number(a.lastLogin.replace(/-/g, '')) - Number(b.lastLogin.replace(/-/g, '')),
+      sorter: (a?: any, b?: any) => dayjs(a.lastLogin).valueOf() - dayjs(b.lastLogin).valueOf(),
     },
     {
       title: '가입일',
       dataIndex: 'createdAt',
       key: 'createdAt',
-      sorter: (a?: any, b?: any) => Number(a.createdAt.replace(/-/g, '')) - Number(b.createdAt.replace(/-/g, '')),
+      sorter: (a?: any, b?: any) => dayjs(a.createdAt).valueOf() - dayjs(b.createdAt).valueOf(),
     },
     {
       title: '상세 페이지',
