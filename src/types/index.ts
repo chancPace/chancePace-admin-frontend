@@ -79,6 +79,7 @@ export interface Space {
   cleanTime?: number;
   spaceStatus?: string; // 공간의 상태 ('AVAILABLE' 또는 'UNAVAILABLE')
   isOpen?: boolean; // 공간이 열려 있는지 여부
+  isDelete?: boolean;
   guidelines?: string[]; // 주의사항 (문자열 배열)
   categoryId?: number;
   Minimum?: number; // 최소 인원
@@ -141,4 +142,10 @@ export interface optionProps {
   type: string;
   fetchUserData?: any;
   fetchUsers?: any;
+}
+
+export interface isSpace {
+  spaceId: string;
+  isOpen?: boolean;
+  isDelete?: boolean;
 }

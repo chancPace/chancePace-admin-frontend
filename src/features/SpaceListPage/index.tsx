@@ -1,4 +1,4 @@
-import { CloseCircleOutlined, MinusCircleOutlined, SyncOutlined } from '@ant-design/icons';
+import { CloseCircleOutlined, SyncOutlined } from '@ant-design/icons';
 import { Button, Input, Table, Tag } from 'antd';
 import { useFormik } from 'formik';
 import router from 'next/router';
@@ -10,7 +10,6 @@ import { Space } from '@/types';
 
 const SpaceListPage = () => {
   const [data, setData] = useState([]);
-  const [selectedRowKeys, setSelectedRowKeys] = useState([]);
 
   const fetchSpace = async () => {
     try {
@@ -53,8 +52,6 @@ const SpaceListPage = () => {
       title: '전화번호',
       dataIndex: 'spaceAdminPhoneNumber',
       key: 'spaceAdminPhoneNumber',
-      sorter: (a?: any, b?: any) =>
-        Number(a?.spaceAdminPhoneNumber?.replace(/-/g, '')) - Number(b?.spaceAdminPhoneNumber?.replace(/-/g, '')),
     },
     {
       title: '관리자 승인',
@@ -108,7 +105,7 @@ const SpaceListPage = () => {
       sorter: (a?: any, b?: any) => Number(a.createdAt.replace(/-/g, '')) - Number(b.createdAt.replace(/-/g, '')),
     },
     {
-      title: '상세페이지',
+      title: '상세 페이지',
       dataIndex: 'action',
       key: 'action',
       render: (_: any, record: any) => <a onClick={() => detailPage(record.key)}>상세 보기</a>,
@@ -129,14 +126,6 @@ const SpaceListPage = () => {
     },
   });
 
-  // 테이블 체크박스
-  const rowSelection = {
-    selectedRowKeys,
-    onChange: (selectedRowKeys: any) => {
-      setSelectedRowKeys(selectedRowKeys);
-    },
-  };
-
   return (
     <SpaceListStyled>
       <div className="top">
@@ -151,7 +140,7 @@ const SpaceListPage = () => {
         <Input placeholder="공간명, 주소, 호스트 명으로 검색해 주세요." name="search" onChange={space.handleChange} />
         <Button htmlType="submit">조회</Button>
       </form>
-      <Table columns={columns} dataSource={data} rowSelection={rowSelection} />
+      <Table columns={columns} dataSource={data} />
     </SpaceListStyled>
   );
 };
