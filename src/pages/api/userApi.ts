@@ -37,22 +37,25 @@ interface ErrorResponseData {
 }
 export const postSignup = async (userData: SignupData) => {
   try {
-    //axios.post(): 첫번째-> url, 두번째 -> 보낼 데이터
     const response = await axios.post(`${API_URL}signup`, userData);
     return response.data;
-  } catch (error) {
-    const axiosError = error as AxiosError<ErrorResponseData>;
-    console.log(error);
-
-    if (axiosError.response) {
-      alert(`서버 오류 발생: ${axiosError.response.data.message}`);
-    } else if (axiosError.request) {
-      alert('서버 응답이 없습니다.');
+  } catch (error: any) {
+    console.error('API 요청 실패: ', error);
+    if (error.response) {
+      const { status } = error.response;
+      switch (status) {
+        case 404:
+          throw new Error('유효하지 않은 관리자 키입니다.');
+        case 400:
+          throw new Error('이미 존재하는 회원입니다.');
+        case 500:
+          throw new Error('서버 오류가 발생했습니다.');
+        default:
+          throw new Error('알 수 없는 오류가 발생했습니다. ');
+      }
     } else {
-      alert('요청 처리 중 오류가 발생했습니다.');
+      throw new Error('네트워크 문제로 요청을 완료할 수 없습니다.');
     }
-
-    throw error; // 오류를 다시 던져서 상위에서 처리하게 할 수 있음
   }
 };
 

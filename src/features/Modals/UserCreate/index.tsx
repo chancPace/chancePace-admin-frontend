@@ -2,11 +2,11 @@ import { postSignup, updateOneUser } from '@/pages/api/userApi';
 import { optionProps, User } from '@/types';
 import { Button, Input, message, Select } from 'antd';
 import { useFormik } from 'formik';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { UserModalStyled } from './style';
 
 const UserCreate = ({ isModalOpen, setIsModalOpen, data, type, fetchUserData, fetchUsers }: optionProps) => {
-  const [isAdminSelect, setIsAdminSelect] = useState(false);
+  const [existingPassword, setExistingPassword] = useState<any>();
 
   const authOpt = [
     { value: 'USER', label: '사용자' },
@@ -63,11 +63,17 @@ const UserCreate = ({ isModalOpen, setIsModalOpen, data, type, fetchUserData, fe
     return phoneNumber;
   };
 
+  useEffect(() => {
+    if (type === 'edit' && data?.password) {
+      setExistingPassword(data.password);
+    }
+  }, [type, data]);
+
   const userInfo = useFormik({
     initialValues: {
       userName: data?.userName || '',
       email: data?.email || '',
-      password: data?.password ? '' : 'password1234!',
+      password: '',
       phoneNumber: data?.phoneNumber || '',
       bankAccountName: data?.bankAccountName || '',
       bankAccountOwner: data?.bankAccountOwner || '',
@@ -84,16 +90,18 @@ const UserCreate = ({ isModalOpen, setIsModalOpen, data, type, fetchUserData, fe
         phoneNumber: formattedPhoneNumber,
       };
       if (type === 'register') {
-        postSignup(payload)
+        postSignup({ ...payload, password: 'password1234!' })
           .then((response) => {
             fetchUsers();
             message.success('등록 성공');
           })
           .catch((error) => {
-            message.error('등록 실패');
+            if (error.message) {
+              message.error(error.message);
+            }
           });
       } else {
-        updateOneUser({ ...payload, id: data?.id })
+        updateOneUser({ ...payload, id: data?.id, password: data?.password || existingPassword })
           .then((response) => {
             fetchUserData();
             message.success('수정 성공');
@@ -138,15 +146,21 @@ const UserCreate = ({ isModalOpen, setIsModalOpen, data, type, fetchUserData, fe
         ) : (
           <></>
         )}
-        <div className="inputForm">
-          <div>비밀번호</div>
-          <Input
-            placeholder="비밀번호 입력해 주세요."
-            name="password"
-            onChange={userInfo.handleChange}
-            value={userInfo.values.password}
-          />
-        </div>
+
+        {type === 'edit' ? (
+          <div className="inputForm">
+            <div>비밀번호</div>
+            <Input
+              placeholder="비밀번호 입력해 주세요."
+              name="password"
+              onChange={userInfo.handleChange}
+              value={userInfo.values.password}
+            />
+          </div>
+        ) : (
+          <></>
+        )}
+
         <div className="selectForm">
           <div className="auth">
             <div className="authLabel">권한</div>

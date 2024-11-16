@@ -131,9 +131,17 @@ const UserDetail = () => {
             <Button
               className="delete"
               onClick={async () => {
-                await updateOneUser({ ...data, accountStatus: 'BLACKLISTED' });
-                message.info('블랙리스트로 변경되었습니다.');
-                fetchUserData();
+                Modal.confirm({
+                  title: '블랙리스트로 변경하시겠습니까?',
+                  okText: '확인',
+                  cancelText: '취소',
+                  onOk: async () => {
+                    message.info('블랙리스트로 변경되었습니다.');
+                    await updateOneUser({ ...data, accountStatus: 'BLACKLISTED' });
+                    fetchUserData();
+                    router.push('/user/userlist');
+                  },
+                });
               }}
             >
               블랙리스트
@@ -155,10 +163,9 @@ const UserDetail = () => {
                   cancelText: '취소',
                   onOk: async () => {
                     message.info('탈퇴되었습니다.');
-                    updateOneUser({ ...data, accountStatus: 'WITHDRAWN' });
+                    await updateOneUser({ ...data, accountStatus: 'WITHDRAWN' });
                     fetchUserData();
-                    // router.push('/user/userlist');
-                    router.reload();
+                    router.push('/user/userlist');
                   },
                 });
               }}
