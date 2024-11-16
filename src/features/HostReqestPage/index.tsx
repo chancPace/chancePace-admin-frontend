@@ -1,6 +1,4 @@
 import { Modal, Table, Tag } from 'antd';
-import { useFormik } from 'formik';
-import router from 'next/router';
 import dayjs from 'dayjs';
 import { useEffect, useState } from 'react';
 import { CouponData } from '@/types';
