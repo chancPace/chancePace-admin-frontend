@@ -70,41 +70,23 @@ const HostReqListPage = () => {
       dataIndex: 'createdAt',
       key: 'createdAt',
       render: (data: any) => dayjs(data).format('YYYY-MM-DD'),
+      sorter: (a?: any, b?: any) => dayjs(a.createdAt).valueOf() - dayjs(b.createdAt).valueOf(),
     },
     {
-      title: '상세페이지',
+      title: '상세 페이지',
       dataIndex: 'action',
       key: 'action',
       render: (_: any, record: any) => <a onClick={() => setIsModalOpen(true)}>상세 보기</a>,
     },
   ];
 
-  // const coupon = useFormik({
-  //   initialValues: {
-  //     search: '',
-  //   },
-  //   async onSubmit(values) {
-  //     const response = await searchCoupon(values.search);
-  //     const select = response.data;
-  //     select.map((x: any, i: number) => {
-  //       x.createdAt = x?.createdAt?.split('T')[0];
-  //     });
-  //     setData(select);
-  //   },
-  // });
-
   return (
     <HostReqListStyled>
       <div className="top">
-        <p>호스트 신청</p>
+        <p>호스트 신청 목록</p>
       </div>
-      {/* <form onSubmit={coupon.handleSubmit} className="form_wrap">
-        <Input placeholder="쿠폰 명으로 검색해 주세요." name="search" onChange={coupon.handleChange} />
-        <Button htmlType="submit">조회</Button>
-      </form> */}
-
       <Modal
-        width={400}
+        width={450}
         title="호스트 신청"
         open={isModalOpen}
         onOk={() => setIsModalOpen(false)}
