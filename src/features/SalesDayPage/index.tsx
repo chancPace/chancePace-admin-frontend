@@ -210,8 +210,8 @@ const SalesDayPage = () => {
       title: '결제일',
       dataIndex: 'createdAt',
       key: 'createdAt',
-      sorter: (a?: any, b?: any) => Number(a.createdAt.replace(/-/g, '')) - Number(b.createdAt.replace(/-/g, '')),
       render: (data: any) => dayjs(data).format('YYYY-MM-DD'),
+      sorter: (a?: any, b?: any) => dayjs(a.createdAt).valueOf() - dayjs(b.createdAt).valueOf(),
     },
     {
       title: '결제 방식',
@@ -219,22 +219,32 @@ const SalesDayPage = () => {
       key: 'paymentMethod',
     },
     {
-      title: '결제금액',
+      title: '매출액',
+      dataIndex: 'totalAmount',
+      key: 'totalAmount',
+      render: (data: any) => `${data?.toLocaleString()}원`,
+      sorter: (a: any, b: any) => a.totalAmount - b.totalAmount,
+    },
+    {
+      title: '결제 금액',
       dataIndex: 'paymentPrice',
       key: 'paymentPrice',
       render: (data: any) => `${data?.toLocaleString()}원`,
+      sorter: (a: any, b: any) => a.paymentPrice - b.paymentPrice,
     },
     {
       title: '쿠폰 사용금액',
       dataIndex: 'couponPrice',
       key: 'couponPrice',
       render: (data: any) => `${data?.toLocaleString()}원`,
+      sorter: (a: any, b: any) => a.couponPrice - b.couponPrice,
     },
     {
       title: '수수료 금액',
       dataIndex: 'feeAmount',
       key: 'feeAmount',
       render: (data: any) => `${data?.toLocaleString()}원`,
+      sorter: (a: any, b: any) => a.feeAmount - b.feeAmount,
     },
     {
       title: '상세페이지',

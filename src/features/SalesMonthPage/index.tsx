@@ -35,22 +35,20 @@ ChartJS.register(
 );
 
 const SalesYearPage = () => {
-  const currentYear = dayjs().year().toString(); // 현재 연도를 가져옵니다.
+  const currentYear = dayjs().year().toString();
   const [sales, setSales] = useState<any[]>([]);
   const [data, setData] = useState<any[]>([]);
-  const [selectedDateTime, setSelectedDateTime] = useState<dayjs.Dayjs | null>(dayjs()); // 선택된 날짜 상태
-  const [selectedYear, setSelectedYear] = useState(currentYear); // 선택된 연도 상태
+  const [selectedDateTime, setSelectedDateTime] = useState<dayjs.Dayjs | null>(dayjs());
+  const [selectedYear, setSelectedYear] = useState(currentYear);
 
   // 연도별 결제 내역을 가져오는 함수
   const fetchPayments = async () => {
     try {
       const response = await getAllPayment();
-      const target = response?.data?.filter(
-        (x: any) => dayjs(x.createdAt).format('YYYY') === selectedYear // 선택된 연도만 필터링
-      );
+      const target = response?.data?.filter((x: any) => dayjs(x.createdAt).format('YYYY') === selectedYear);
       const formatData = target.map((x: any) => {
         const totalAmount = x.paymentPrice + x.couponPrice;
-        const feeAmount = (x.paymentPrice - x.couponPrice) * 0.05; // 수수료는 5%
+        const feeAmount = (x.paymentPrice - x.couponPrice) * 0.05;
         return {
           ...x,
           id: x.id,
@@ -61,8 +59,8 @@ const SalesYearPage = () => {
 
       // 월별로 매출, 수수료 등을 집계
       const salesData = target.reduce((acc: any, x: any) => {
-        const month = dayjs(x.createdAt).month() + 1; // 월 (1~12)
-        const monthStr = month < 10 ? `0${month}` : `${month}`; // 두 자릿수로 포맷
+        const month = dayjs(x.createdAt).month() + 1;
+        const monthStr = month < 10 ? `0${month}` : `${month}`;
         if (dayjs(x.createdAt).year() === parseInt(selectedYear)) {
           const totalAmount = x.paymentPrice + x.couponPrice;
           const feeAmount = (x.paymentPrice - x.couponPrice) * 0.05;
@@ -99,12 +97,12 @@ const SalesYearPage = () => {
   const onChange = (date: dayjs.Dayjs | null) => {
     setSelectedDateTime(date);
     if (date) {
-      setSelectedYear(date.year().toString()); // 선택된 연도로 상태 업데이트
+      setSelectedYear(date.year().toString());
     }
   };
 
   useEffect(() => {
-    fetchPayments(); // 결제 데이터 가져오기
+    fetchPayments();
   }, [selectedYear]);
 
   // 차트에 표시할 데이터 포맷팅
@@ -127,7 +125,7 @@ const SalesYearPage = () => {
 
   // 차트 데이터
   const chartData: ChartData = {
-    labels: months.map((month) => `${selectedYear}-${month}`), // 2024-01 형식으로 표시
+    labels: months.map((month) => `${selectedYear}-${month}`),
     datasets: [
       {
         type: 'bar',
@@ -210,8 +208,8 @@ const SalesYearPage = () => {
       title: '결제일',
       dataIndex: 'createdAt',
       key: 'createdAt',
-      sorter: (a?: any, b?: any) => Number(a.createdAt.replace(/-/g, '')) - Number(b.createdAt.replace(/-/g, '')),
       render: (data: any) => dayjs(data).format('YYYY-MM-DD'),
+      sorter: (a?: any, b?: any) => dayjs(a.createdAt).valueOf() - dayjs(b.createdAt).valueOf(),
     },
     {
       title: '결제 방식',
@@ -219,22 +217,32 @@ const SalesYearPage = () => {
       key: 'paymentMethod',
     },
     {
-      title: '결제금액',
+      title: '매출액',
+      dataIndex: 'totalAmount',
+      key: 'totalAmount',
+      render: (data: any) => `${data?.toLocaleString()}원`,
+      sorter: (a: any, b: any) => a.totalAmount - b.totalAmount,
+    },
+    {
+      title: '결제 금액',
       dataIndex: 'paymentPrice',
       key: 'paymentPrice',
       render: (data: any) => `${data?.toLocaleString()}원`,
+      sorter: (a: any, b: any) => a.paymentPrice - b.paymentPrice,
     },
     {
       title: '쿠폰 사용금액',
       dataIndex: 'couponPrice',
       key: 'couponPrice',
       render: (data: any) => `${data?.toLocaleString()}원`,
+      sorter: (a: any, b: any) => a.couponPrice - b.couponPrice,
     },
     {
       title: '수수료 금액',
       dataIndex: 'feeAmount',
       key: 'feeAmount',
       render: (data: any) => `${data?.toLocaleString()}원`,
+      sorter: (a: any, b: any) => a.feeAmount - b.feeAmount,
     },
     {
       title: '상세페이지',

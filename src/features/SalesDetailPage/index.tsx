@@ -50,17 +50,22 @@ const SalesDetailPage = () => {
     {
       key: '5',
       label: '매출액',
-      children: data?.paymentPrice.toLocaleString() + '원',
+      children: `${(data?.paymentPrice + data?.couponPrice).toLocaleString()}` + '원',
     },
     {
       key: '6',
+      label: '결제 금액',
+      children: data?.paymentPrice.toLocaleString() + '원',
+    },
+    {
+      key: '7',
       label: '쿠폰 사용금액',
       children: data?.couponPrice.toLocaleString() + '원',
     },
     {
-      key: '7',
-      label: '실제 결제 금액',
-      children: `${data?.paymentPrice + data?.couponPrice}`.toLocaleString() + '원',
+      key: '8',
+      label: '수수료 금액',
+      children: `${((data?.paymentPrice - data?.couponPrice) * 0.05).toLocaleString()}` + '원',
     },
     // 결제자 정보
 
