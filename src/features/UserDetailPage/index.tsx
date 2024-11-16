@@ -113,70 +113,72 @@ const UserDetail = () => {
 
   return (
     <UserDetailStyled>
-      <p>회원 정보</p>
-      {data?.accountStatus === 'ACTIVE' ? (
-        <div className="button_wrap">
-          <div>
-            <Button
-              htmlType="submit"
-              className="edit"
-              onClick={() => {
-                setIsModalOpen(true);
-              }}
-            >
-              수정
-            </Button>
+      <div className="top">
+        <p>회원 상세 정보</p>
+        {data?.accountStatus === 'ACTIVE' ? (
+          <div className="button_wrap">
+            <div>
+              <Button
+                htmlType="submit"
+                className="edit"
+                onClick={() => {
+                  setIsModalOpen(true);
+                }}
+              >
+                수정
+              </Button>
+            </div>
+            <div>
+              <Button
+                className="delete"
+                onClick={async () => {
+                  Modal.confirm({
+                    title: '블랙리스트로 변경하시겠습니까?',
+                    okText: '확인',
+                    cancelText: '취소',
+                    onOk: async () => {
+                      message.info('블랙리스트로 변경되었습니다.');
+                      await updateOneUser({ ...data, accountStatus: 'BLACKLISTED' });
+                      fetchUserData();
+                      router.push('/user/userlist');
+                    },
+                  });
+                }}
+              >
+                블랙리스트
+              </Button>
+            </div>
+            <div>
+              <Button
+                className="delete"
+                onClick={() => {
+                  Modal.confirm({
+                    title: (
+                      <>
+                        회원을 탈퇴시키겠습니까?
+                        <br />
+                        탈퇴시켜도 데이터는 사라지지 않습니다.
+                      </>
+                    ),
+                    okText: '확인',
+                    cancelText: '취소',
+                    onOk: async () => {
+                      message.info('탈퇴되었습니다.');
+                      await updateOneUser({ ...data, accountStatus: 'WITHDRAWN' });
+                      fetchUserData();
+                      router.push('/user/userlist');
+                    },
+                  });
+                }}
+              >
+                탈퇴
+              </Button>
+            </div>
           </div>
-          <div>
-            <Button
-              className="delete"
-              onClick={async () => {
-                Modal.confirm({
-                  title: '블랙리스트로 변경하시겠습니까?',
-                  okText: '확인',
-                  cancelText: '취소',
-                  onOk: async () => {
-                    message.info('블랙리스트로 변경되었습니다.');
-                    await updateOneUser({ ...data, accountStatus: 'BLACKLISTED' });
-                    fetchUserData();
-                    router.push('/user/userlist');
-                  },
-                });
-              }}
-            >
-              블랙리스트
-            </Button>
-          </div>
-          <div>
-            <Button
-              className="delete"
-              onClick={() => {
-                Modal.confirm({
-                  title: (
-                    <>
-                      회원을 탈퇴시키겠습니까?
-                      <br />
-                      탈퇴시켜도 데이터는 사라지지 않습니다.
-                    </>
-                  ),
-                  okText: '확인',
-                  cancelText: '취소',
-                  onOk: async () => {
-                    message.info('탈퇴되었습니다.');
-                    await updateOneUser({ ...data, accountStatus: 'WITHDRAWN' });
-                    fetchUserData();
-                    router.push('/user/userlist');
-                  },
-                });
-              }}
-            >
-              탈퇴
-            </Button>
-          </div>
-        </div>
-      ) : (
-        <></>
-      )}
+        ) : (
+          <></>
+        )}
+      </div>
       <Modal
         width={500}
         title="회원 정보 수정"
