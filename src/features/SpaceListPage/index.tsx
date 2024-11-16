@@ -90,6 +90,18 @@ const SpaceListPage = () => {
       render: (isOpen: boolean) => (isOpen ? <Tag color="blue">운영중</Tag> : <Tag color="red">미운영</Tag>),
     },
     {
+      title: '삭제',
+      dataIndex: 'isDelete',
+      key: 'isDelete',
+      filters: [
+        { text: '삭제', value: true },
+        { text: '미삭제', value: false },
+      ],
+      filterSearch: true,
+      onFilter: (value: any, record: any) => record.isDelete === value,
+      render: (isDelete: boolean) => (isDelete ? <Tag color="red">삭제</Tag> : <Tag color="blue">미삭제</Tag>),
+    },
+    {
       title: '등록일',
       dataIndex: 'createdAt',
       key: 'createdAt',

@@ -1,9 +1,9 @@
 import { useRouter } from 'next/router';
-import { Badge, Button, Descriptions, message, Modal, Tag } from 'antd';
+import { Badge, Button, Descriptions, message, Modal, Rate, Tag } from 'antd';
 import { useEffect, useState } from 'react';
 import { CloseCircleOutlined, SyncOutlined } from '@ant-design/icons';
 import SpaceDetailStyled from './style';
-import { allowSpace, getOneSpace, updateSpace } from '@/pages/api/spaceAPI';
+import { allowSpace, getOneSpace, stopSpace, updateSpace } from '@/pages/api/spaceAPI';
 import SpaceEdit from '../Modals/SpaceEdit';
 import { Space, User } from '@/types';
 import { getOneUser, updateOneUser } from '@/pages/api/userApi';
@@ -21,7 +21,6 @@ const SpaceDetailPage = () => {
       const response = await getOneSpace(spaceId);
       const result = response.data.data;
       if (result) {
-        // lastLogin과 createdAt 변환
         result.lastLogin = result.lastLogin ? result.lastLogin.split('T')[0] : '';
         result.createdAt = result.createdAt ? result.createdAt.split('T')[0] : '';
         setData(result);
@@ -42,7 +41,6 @@ const SpaceDetailPage = () => {
       fetchSpaceData(spaceId);
     }
   }, [id]);
-  console.log('🚀 ~ SpaceDetailPage ~ data:', data);
 
   const items = [
     {
@@ -65,7 +63,7 @@ const SpaceDetailPage = () => {
       key: '4',
       label: '주소',
       children: data?.spaceLocation,
-      span: 2,
+      span: 4,
     },
     {
       key: '5',
@@ -78,7 +76,7 @@ const SpaceDetailPage = () => {
           추후 등록!!!!
         </>
       ),
-      span: 2,
+      span: 4,
     },
     {
       key: '6',
@@ -140,7 +138,7 @@ const SpaceDetailPage = () => {
     {
       key: '15',
       label: '평점',
-      children: data?.spaceRating,
+      children: <Rate disabled value={data?.spaceRating} />,
     },
     {
       key: '16',
@@ -168,78 +166,102 @@ const SpaceDetailPage = () => {
     <SpaceDetailStyled>
       <div className="top">
         <p>공간 상세 정보</p>
-        <div className="buttonWrap">
-          <Button
-            htmlType="submit"
-            onClick={() => {
-              router.push({
-                pathname: '/space/spaceadd',
-                query: { spaceId },
-              });
-            }}
-          >
-            수정
-          </Button>
-          <Button
-            onClick={() => {
-              Modal.confirm({
-                title: '공간을 승인하겠습니까?',
-                okText: '확인',
-                cancelText: '취소',
-                onOk: async () => {
-                  const updatedData = { spaceId, spaceStatus: 'AVAILABLE' };
-                  const result = await allowSpace(updatedData);
-                  if (userData?.role === 'USER') {
-                    updateOneUser({ ...userData, role: 'HOST' });
-                  }
-                  await fetchSpaceData(spaceId);
-                  router.push('/space/spacelist');
-                },
-              });
-            }}
-          >
-            승인
-          </Button>
-          {data?.isOpen === true ? (
+        {data?.isDelete ? (
+          <></>
+        ) : (
+          <div className="buttonWrap">
+            <Button
+              htmlType="submit"
+              onClick={() => {
+                router.push({
+                  pathname: '/space/spaceadd',
+                  query: { spaceId },
+                });
+              }}
+            >
+              수정
+            </Button>
             <Button
               onClick={() => {
                 Modal.confirm({
-                  title: (
-                    <>
-                      공간을 삭제하시겠습니까?
-                      <br />
-                      삭제해도 데이터는 사라지지 않습니다.
-                    </>
-                  ),
+                  title: '공간을 승인하겠습니까?',
                   okText: '확인',
                   cancelText: '취소',
                   onOk: async () => {
-                    message.info('삭제되었습니다.');
-                    const updatedData = { spaceId, isOpen: false };
-                    updateSpace(updatedData);
+                    await allowSpace({ spaceId, spaceStatus: 'AVAILABLE' });
+                    message.info('승인 완료');
+                    // const updatedData = { spaceId, spaceStatus: 'AVAILABLE' };
+                    await fetchSpaceData(spaceId);
                     router.push('/space/spacelist');
                   },
                 });
               }}
             >
-              삭제
+              승인
             </Button>
-          ) : (
-            <></>
-          )}
+            <Button
+              className="delete"
+              onClick={() => {
+                Modal.confirm({
+                  title: data?.isOpen === true ? '공간을 중단하시겠습니까?' : '공간을 재오픈하시겠습니까?',
+                  okText: '확인',
+                  cancelText: '취소',
+                  onOk: async () => {
+                    message.info(data?.isOpen === true ? '중단되었습니다.' : '재오픈되었습니다.');
+                    await stopSpace({ spaceId: String(spaceId), isOpen: !data?.isOpen });
+                    router.push('/space/spacelist');
+                  },
+                });
+              }}
+            >
+              {data?.isOpen === true ? '미운영' : '운영'}
+            </Button>
+            {data?.isDelete === false ? (
+              <Button
+                onClick={() => {
+                  Modal.confirm({
+                    title: (
+                      <>
+                        공간을 삭제하시겠습니까?
+                        <br />
+                        삭제해도 데이터는 사라지지 않습니다.
+                      </>
+                    ),
+                    okText: '확인',
+                    cancelText: '취소',
+                    onOk: async () => {
+                      message.info('삭제되었습니다.');
+                      const updatedData = { spaceId, isDelete: true };
+                      updateSpace(updatedData);
+                      router.push('/space/spacelist');
+                    },
+                  });
+                }}
+              >
+                삭제
+              </Button>
+            ) : (
+              <></>
+            )}
 
-          <Modal
-            width={400}
-            title="공간 정보 수정"
-            open={isModalOpen}
-            onOk={() => setIsModalOpen(false)}
-            onCancel={() => setIsModalOpen(false)}
-            footer={false}
-            className="modal"
-          >
-            <SpaceEdit setIsModalOpen={setIsModalOpen} data={data} spaceId={spaceId} fetchSpaceData={fetchSpaceData} />
-          </Modal>
-        </div>
+            <Modal
+              width={400}
+              title="공간 정보 수정"
+              open={isModalOpen}
+              onOk={() => setIsModalOpen(false)}
+              onCancel={() => setIsModalOpen(false)}
+              footer={false}
+              className="modal"
+            >
+              <SpaceEdit
+                setIsModalOpen={setIsModalOpen}
+                data={data}
+                spaceId={spaceId}
+                fetchSpaceData={fetchSpaceData}
+              />
+            </Modal>
+          </div>
+        )}
       </div>
       <Descriptions bordered items={items} />
     </SpaceDetailStyled>

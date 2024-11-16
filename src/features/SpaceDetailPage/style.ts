@@ -4,11 +4,11 @@ const SpaceDetailStyled = styled.div`
   .top {
     display: flex;
     justify-content: space-between;
-    margin: ${({ theme }) => theme.spacing.md};
-  }
-  p {
-    font-size: ${({ theme }) => theme.fontSizes.xl};
-    font-weight: bold;
+    margin-bottom: ${({ theme }) => theme.spacing.md};
+    p {
+      font-size: ${({ theme }) => theme.fontSizes.xl};
+      font-weight: bold;
+    }
   }
   .buttonWrap {
     display: flex;
