@@ -2,8 +2,7 @@ import styled from 'styled-components';
 
 const BookingDetailStyled = styled.div`
   p {
-    margin: ${({ theme }) => theme.spacing.md};
-    margin-left: 0;
+    margin-bottom: ${({ theme }) => theme.spacing.md};
     font-size: ${({ theme }) => theme.fontSizes.xl};
     font-weight: bold;
   }

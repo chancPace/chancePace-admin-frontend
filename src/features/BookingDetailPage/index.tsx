@@ -48,68 +48,61 @@ const BookingDeatilPage = () => {
       children: data?.space?.spaceName,
     },
     {
-      key: '3',
+      key: '5',
       label: '공간 관리자명',
       children: data?.space?.spaceAdminName,
     },
     {
-      key: '3',
+      key: '6',
       label: '공간 관리자 전화번호',
       children: data?.space?.spaceAdminPhoneNumber,
     },
     {
-      key: '3',
+      key: '7',
       label: '공간 주소',
       children: data?.space?.spaceLocation,
       span: 3,
     },
     {
-      key: '4',
+      key: '8',
       label: '예약 일',
       children: data?.startDate,
     },
     {
-      key: '5',
+      key: '9',
       label: '이용 시간(체크인 ~ 체크아웃)',
       children: `${data?.startTime}시 ~ ${data?.endTime}시`,
     },
+    // 결제 정보
     {
-      key: '6',
-      label: '예약 인원 수',
-      children: '예약 인원 수',
-    },
-    {
-      key: '7',
+      key: '10',
       label: '결제방식',
       children: data?.payment?.paymentMethod,
     },
     {
-      key: '7',
+      key: '11',
       label: '신용 / 체크',
       children: data?.payment?.cardType !== 'UNKNOWN' ? `${data?.payment?.cardType}` : '-',
     },
     {
-      key: '7',
+      key: '12',
       label: '카드번호',
       children: data?.payment?.cardNumber !== 'UNKNOWN' ? `${data?.payment?.cardNumber}` : '-',
     },
     {
-      key: '7',
+      key: '13',
       label: '원가',
-      children:
-        data?.payment?.couponPrice !== null
-          ? `${(data?.payment?.paymentPrice + data?.payment?.couponPrice).toLocaleString()}`
-          : `${data?.payment?.paymentPrice.toLocaleString()}`,
+      children: `${(data?.payment?.paymentPrice + data?.payment?.couponPrice).toLocaleString()}` + '원',
     },
     {
-      key: '7',
+      key: '14',
       label: '결제 금액',
-      children: data?.payment?.paymentPrice.toLocaleString(),
+      children: data?.payment?.paymentPrice.toLocaleString() + '원',
     },
     {
-      key: '7',
+      key: '15',
       label: '쿠폰 사용 금액',
-      children: data?.payment?.couponPrice === null ? '-' : `${data?.payment?.couponPrice.toLocaleString()}`,
+      children: data?.payment?.couponPrice === null ? '-' : `${data?.payment?.couponPrice.toLocaleString()}` + '원',
     },
   ];
 

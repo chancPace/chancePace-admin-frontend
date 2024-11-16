@@ -4,6 +4,7 @@ import router from 'next/router';
 import { useEffect, useState } from 'react';
 import BookingListStyled from './style';
 import { getAllBooking, searchBooking } from '@/pages/api/bookingApi';
+import dayjs from 'dayjs';
 
 const BookingListPage = () => {
   const [data, setData] = useState<any>([]);
@@ -32,60 +33,35 @@ const BookingListPage = () => {
       title: '예약 공간명',
       dataIndex: 'space.spaceName',
       key: 'space.spaceName',
-      render: (text: any, record: any) => {
-        return `${record?.space?.spaceName}`;
-      },
+      render: (text: any, record: any) => record?.space?.spaceName,
     },
     {
       title: '예약자 성함',
       dataIndex: 'user.userName',
       key: 'user.userName',
-      render: (text: any, record: any) => {
-        return `${record?.user?.userName}`;
-      },
+      render: (text: any, record: any) => record?.user?.userName,
     },
     {
       title: '예약 일',
       dataIndex: 'startDate',
       key: 'startDate',
-      sorter: (a: any, b: any) => {
-        const dateA = new Date(a?.startDate);
-        const dateB = new Date(b?.startDate);
-        return dateA.getTime() - dateB.getTime();
-      },
+      render: (date: any) => dayjs(date).format('YYYY-MM-DD'),
+      sorter: (a?: any, b?: any) => dayjs(a.startDate).valueOf() - dayjs(b.startDate).valueOf(),
     },
     {
       title: '체크인 시간',
       dataIndex: 'startTime',
       key: 'startTime',
-      // sorter: (a?: any, b?: any) => a?.startTime - b?.startTime,
-      render: (text: any) => {
-        if (text !== undefined && text !== null) {
-          return `${text}시`;
-        }
-        return '';
-      },
+      render: (text: any) => (text !== undefined && text !== null ? `${text}시` : ''),
     },
     {
       title: '체크아웃 시간',
       dataIndex: 'endTime',
       key: 'endTime',
-      // sorter: (a?: any, b?: any) => a?.endTime - b?.endTime,
-      render: (text: any) => {
-        if (text !== undefined && text !== null) {
-          return `${text}시`;
-        }
-        return '';
-      },
+      render: (text: any) => (text !== undefined && text !== null ? `${text}시` : ''),
     },
-    // {
-    //   title: '인원',
-    //   dataIndex: 'discountPrice',
-    //   key: 'discountPrice',
-    //   sorter: (a?: any, b?: any) => a?.discountPrice - b?.discountPrice,
-    // },
     {
-      title: '상세페이지',
+      title: '상세 페이지',
       dataIndex: 'action',
       key: 'action',
       render: (_: any, record: any) => <a onClick={() => detailPage(record.key)}>상세 보기</a>,
