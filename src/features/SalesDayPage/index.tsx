@@ -1,5 +1,5 @@
 import { getAllPayment } from '@/pages/api/paymentApi';
-import { DatePicker, message, Table } from 'antd';
+import { DatePicker, message, Table, Tag } from 'antd';
 import { useEffect, useState } from 'react';
 import dayjs from 'dayjs';
 import { Chart } from 'react-chartjs-2';
@@ -51,10 +51,15 @@ const SalesDayPage = () => {
   const fetchPayments = async () => {
     try {
       const response = await getAllPayment();
-      const target = response?.data?.filter(
+      const allData = response?.data?.filter(
         (x: any) => dayjs(x.createdAt).format('YYYY-MM') === dayjs(selectedDateTime).format('YYYY-MM')
       );
-      const formatData = target.map((x: any) => {
+      const target = response?.data?.filter(
+        (x: any) =>
+          x.paymentStatus !== 'REFUNDED' &&
+          dayjs(x.createdAt).format('YYYY-MM') === dayjs(selectedDateTime).format('YYYY-MM')
+      );
+      const formatData = allData.map((x: any) => {
         const totalAmount = x.paymentPrice + x.couponPrice;
         const feeAmount = (x.paymentPrice - x.couponPrice) * 0.05;
         return {
@@ -245,6 +250,17 @@ const SalesDayPage = () => {
       key: 'feeAmount',
       render: (data: any) => `${data?.toLocaleString()}원`,
       sorter: (a: any, b: any) => a.feeAmount - b.feeAmount,
+    },
+    {
+      title: '결제 상태',
+      dataIndex: 'paymentStatus',
+      filters: [
+        { text: '결제 완료', value: 'COMPLETED' },
+        { text: '결제 취소', value: 'REFUNDED' },
+      ],
+      onFilter: (value: any, record: any) => record.paymentStatus == value,
+      render: (paymentStatus: string) =>
+        paymentStatus === 'COMPLETED' ? <Tag color="blue">결제 완료</Tag> : <Tag color="red">결제취소</Tag>,
     },
     {
       title: '상세페이지',

@@ -50,7 +50,9 @@ const SalesDayPage = () => {
     try {
       const response = await getAllPayment();
       const target = response?.data?.filter(
-        (x: any) => dayjs(x.createdAt).format('YYYY-MM') === dayjs(selectedDateTime).format('YYYY-MM')
+        (x: any) =>
+          x.paymentStatus !== 'REFUNDED' &&
+          dayjs(x.createdAt).format('YYYY-MM') === dayjs(selectedDateTime).format('YYYY-MM')
       );
       const formatData = target.map((x: any) => {
         const totalAmount = x.paymentPrice + x.couponPrice;

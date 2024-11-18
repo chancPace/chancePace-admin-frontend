@@ -1,4 +1,3 @@
-import { CouponData } from '@/types';
 import { BACK_URL } from '@/utill/url';
 import axios, { AxiosError } from 'axios';
 
@@ -25,7 +24,6 @@ export const getAllPayment = async () => {
 
 // 특정 결제 조회
 export const getOnePayment = async (paymentId: number) => {
-  console.log('🚀 ~ getOnePayment ~ paymentId:', paymentId);
   try {
     const response = await axios.get(`${API_URL}get-one-payment`, { params: { paymentId } });
     return response.data;
@@ -40,5 +38,18 @@ export const getOnePayment = async (paymentId: number) => {
       console.log('요청 오류:', axiosError.message);
     }
     throw axiosError;
+  }
+};
+
+export const Refund = async (bookingId: number, cancelReason: string) => {
+  try {
+    const response = await axios.post(`${API_URL}refund`, {
+      bookingId,
+      cancelReason,
+    });
+    return response.data;
+  } catch (error) {
+    console.error('취소실패', error);
+    throw error;
   }
 };
