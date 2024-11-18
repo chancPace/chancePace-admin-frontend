@@ -101,8 +101,8 @@ const UserCreate = ({ setIsModalOpen, data, type, fetchUserData, fetchUsers }: o
             }
           });
       } else {
-        const updatedPassword = values.password ? values.password : null;
-        updateOneUser({ ...payload, id: data?.id, password: updatedPassword })
+        const updatedPassword = values.password;
+        const a = updateOneUser({ ...payload, id: data?.id, password: updatedPassword })
           .then((response) => {
             fetchUserData();
             message.success('수정 성공');
