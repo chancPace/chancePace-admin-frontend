@@ -66,11 +66,11 @@ const SideBar = () => {
       children: [
         {
           key: '/sales/month',
-          label: '월별 매출 조회',
+          label: '연도별 월 매출 조회',
         },
         {
           key: '/sales/day',
-          label: '일별 매출 조회',
+          label: '월별 일 매출 조회',
         },
       ],
     },
@@ -114,14 +114,6 @@ const SideBar = () => {
         },
       ],
     },
-    // {
-    //   key: '/membership',
-    //   label: '멤버쉽 관리',
-    // },
-    // {
-    //   key: '/statistics',
-    //   label: '이용 통계',
-    // },
   ]);
 
   return (
