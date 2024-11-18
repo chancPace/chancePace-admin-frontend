@@ -21,35 +21,6 @@ const initialState: UserState = {
   },
 };
 
-// const userSlice = createSlice({
-//   name: 'user',
-//   initialState,
-//   reducers: {
-//     setUser: (state, action: PayloadAction<UserInfo>) => {
-//       if (state.userInfo) {
-//         state.userInfo.email = action.payload.email;
-//         state.userInfo.name = action.payload.name;
-//         state.userInfo.role = action.payload.role;
-//       }
-//     },
-//     clearUser: (state) => {
-//       if (state.userInfo) {
-//         state.userInfo.email = null;
-//         state.userInfo.name = null;
-//         state.userInfo.role = null;
-//         state.userInfo.token = ''; // token 초기화
-//       }
-//     },
-//     loginSuccess: (state, action: PayloadAction<UserInfo>) => {
-//       state.isLoggedIn = true;
-//       state.userInfo = action.payload;
-//     },
-//     logout: (state) => {
-//       state.isLoggedIn = false;
-//       state.userInfo = null;
-//     },
-//   },
-// });
 const userSlice = createSlice({
   name: 'user',
   initialState,
