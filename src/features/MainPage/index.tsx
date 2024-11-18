@@ -4,10 +4,14 @@ import { useEffect, useState } from 'react';
 import { getAllSpace } from '@/pages/api/spaceAPI';
 import { getAllUser } from '@/pages/api/userApi';
 import dayjs from 'dayjs';
+import utc from 'dayjs/plugin/utc';
+import timezone from 'dayjs/plugin/timezone';
 import { getAllBooking } from '@/pages/api/bookingApi';
 import { getAllPayment } from '@/pages/api/paymentApi';
 import { CarryOutOutlined, CreditCardOutlined, HomeOutlined, UserOutlined } from '@ant-design/icons';
 import { useRouter } from 'next/router';
+dayjs.extend(utc); // UTC 플러그인 확장
+dayjs.extend(timezone); // timezone 플러그인 사용
 
 const MainPage = () => {
   const [spaceAllow, SetSpaceAllow] = useState();
@@ -23,19 +27,27 @@ const MainPage = () => {
     const payments = await getAllPayment();
 
     const visit = user?.data?.data?.filter((x: any, i: number) => {
-      return dayjs(x?.lastLogin).format('YYYY-MM-DD') === dayjs().format('YYYY-MM-DD');
+      return (
+        dayjs(x?.lastLogin).tz('Asia/Seoul').format('YYYY-MM-DD') === dayjs().tz('Asia/Seoul').format('YYYY-MM-DD')
+      );
     });
     const allow = space?.data?.filter((x: any, i: number) => {
       return x.spaceStatus === 'UNAVAILABLE';
     });
     const todaybooking = booking?.data?.filter((x: any, i: number) => {
-      return x?.startDate === dayjs().format('YYYY-MM-DD');
+      return (
+        dayjs(x?.startDate).tz('Asia/Seoul').format('YYYY-MM-DD') === dayjs().tz('Asia/Seoul').format('YYYY-MM-DD')
+      );
     });
     const todaypayment = payments?.data?.filter((x: any, i: number) => {
       return (
-        x.paymentStatus !== 'REFUNDED' && dayjs(x?.createdAt).format('YYYY-MM-DD') === dayjs().format('YYYY-MM-DD')
+        x.paymentStatus !== 'REFUNDED' &&
+        dayjs(x?.createdAt).tz('Asia/Seoul').format('YYYY-MM-DD') === dayjs().tz('Asia/Seoul').format('YYYY-MM-DD')
       );
     });
+    console.log('🚀 ~ visit ~ visit:', visit);
+    console.log('🚀 ~ todaybooking ~ todaybooking:', todaybooking);
+    console.log('🚀 ~ todaypayment ~ todaypayment:', todaypayment);
 
     setVisitor(visit.length);
     SetSpaceAllow(allow.length);
