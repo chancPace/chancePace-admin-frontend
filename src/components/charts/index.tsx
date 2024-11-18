@@ -2,6 +2,8 @@ import { getAllPayment } from '@/pages/api/paymentApi';
 import { DatePicker, message, Table } from 'antd';
 import { useEffect, useState } from 'react';
 import dayjs from 'dayjs';
+import utc from 'dayjs/plugin/utc';
+import timezone from 'dayjs/plugin/timezone';
 import { Chart } from 'react-chartjs-2';
 import {
   Chart as ChartJS,
@@ -31,6 +33,8 @@ ChartJS.register(
   Tooltip,
   Legend
 );
+dayjs.extend(utc); // UTC 플러그인 확장
+dayjs.extend(timezone); // timezone 플러그인 사용
 
 const SalesDayPage = () => {
   const currentMonth = (dayjs().month() + 1).toString();
@@ -52,11 +56,12 @@ const SalesDayPage = () => {
       const target = response?.data?.filter(
         (x: any) =>
           x.paymentStatus !== 'REFUNDED' &&
-          dayjs(x.createdAt).format('YYYY-MM') === dayjs(selectedDateTime).format('YYYY-MM')
+          dayjs(x.createdAt).tz('Asia/Seoul').format('YYYY-MM') ===
+            dayjs(selectedDateTime).tz('Asia/Seoul').format('YYYY-MM')
       );
       const formatData = target.map((x: any) => {
         const totalAmount = x.paymentPrice + x.couponPrice;
-        const feeAmount = (x.paymentPrice - x.couponPrice) * 0.05;
+        const feeAmount = x.paymentPrice * 0.05;
         return {
           ...x,
           id: x.id,
@@ -70,7 +75,7 @@ const SalesDayPage = () => {
         const day = date.date().toString();
         if (date.month() + 1 === parseInt(selectedMonth)) {
           const totalAmount = x.paymentPrice + x.couponPrice;
-          const feeAmount = (x.paymentPrice - x.couponPrice) * 0.05; // 수수료 5%
+          const feeAmount = x.paymentPrice * 0.05; // 수수료 5%
 
           if (!acc[day]) {
             acc[day] = {

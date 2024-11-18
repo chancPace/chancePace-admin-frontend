@@ -61,7 +61,7 @@ const SalesDayPage = () => {
       );
       const formatData = allData.map((x: any) => {
         const totalAmount = x.paymentPrice + x.couponPrice;
-        const feeAmount = (x.paymentPrice - x.couponPrice) * 0.05;
+        const feeAmount = x.paymentPrice * 0.05;
         return {
           ...x,
           id: x.id,
@@ -75,7 +75,7 @@ const SalesDayPage = () => {
         const day = date.date().toString();
         if (date.month() + 1 === parseInt(selectedMonth)) {
           const totalAmount = x.paymentPrice + x.couponPrice;
-          const feeAmount = (x.paymentPrice - x.couponPrice) * 0.05; // 수수료 5%
+          const feeAmount = x.paymentPrice * 0.05; // 수수료 5%
 
           if (!acc[day]) {
             acc[day] = {

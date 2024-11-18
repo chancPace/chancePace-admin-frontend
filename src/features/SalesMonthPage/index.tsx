@@ -51,7 +51,7 @@ const SalesYearPage = () => {
       );
       const formatData = allData.map((x: any) => {
         const totalAmount = x.paymentPrice + x.couponPrice;
-        const feeAmount = (x.paymentPrice - x.couponPrice) * 0.05;
+        const feeAmount = x.paymentPrice * 0.05;
         return {
           ...x,
           id: x.id,
@@ -66,7 +66,7 @@ const SalesYearPage = () => {
         const monthStr = month < 10 ? `0${month}` : `${month}`;
         if (dayjs(x.createdAt).year() === parseInt(selectedYear)) {
           const totalAmount = x.paymentPrice + x.couponPrice;
-          const feeAmount = (x.paymentPrice - x.couponPrice) * 0.05;
+          const feeAmount = x.paymentPrice * 0.05;
 
           if (!acc[monthStr]) {
             acc[monthStr] = {
