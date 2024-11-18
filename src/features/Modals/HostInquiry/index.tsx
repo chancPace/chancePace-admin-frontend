@@ -19,6 +19,8 @@ const HostInquiryModal = ({ setIsModalOpen, data }: HostReqProps) => {
     inquiryTitle: '',
     inquiryEmail: '',
     inquiryContents: '',
+    inquiryName: '',
+    inquiryPhoneNumber: '',
     inquiryStatus: '',
   });
 
@@ -29,6 +31,8 @@ const HostInquiryModal = ({ setIsModalOpen, data }: HostReqProps) => {
         inquiryTitle: data?.inquiryTitle,
         inquiryEmail: data?.inquiryEmail,
         inquiryContents: data?.inquiryContents,
+        inquiryName: data?.inquiryName,
+        inquiryPhoneNumber: data?.inquiryPhoneNumber,
         inquiryStatus: data?.inquiryStatus,
       });
     }
@@ -90,6 +94,14 @@ const HostInquiryModal = ({ setIsModalOpen, data }: HostReqProps) => {
         <div>
           <p>이메일</p>
           <Input name="inquiryEmail" value={inquiry.values.inquiryEmail} />
+        </div>
+        <div>
+          <p>성함</p>
+          <Input name="inquiryName" value={inquiry.values.inquiryName} />
+        </div>
+        <div>
+          <p>전화번호</p>
+          <Input name="inquiryPhoneNumber" value={inquiry.values.inquiryPhoneNumber} />
         </div>
         <div>
           <p>문의 내용</p>

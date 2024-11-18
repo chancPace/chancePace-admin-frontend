@@ -42,6 +42,19 @@ const HostReqListPage = () => {
       key: 'inquiryEmail',
     },
     {
+      title: '성함',
+      dataIndex: 'inquiryName',
+      key: 'inquiryName',
+    },
+    {
+      title: '전화번호',
+      dataIndex: 'inquiryPhoneNumber',
+      key: 'inquiryPhoneNumber',
+      render: (inquiryPhoneNumber: string) => {
+        return inquiryPhoneNumber?.replace(/^(\d{3})(\d{4})(\d{4})$/, '$1-$2-$3');
+      },
+    },
+    {
       title: '내용',
       dataIndex: 'inquiryContents',
       key: 'inquiryContents',
