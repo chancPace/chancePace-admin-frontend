@@ -92,9 +92,6 @@ const LoginPage = () => {
           <Link href="/signup" passHref>
             <span className="span1">아직 회원이 아니신가요?</span>
           </Link>
-          <Link href="/signup" passHref>
-            <span>아이디/비밀번호 찾기</span>
-          </Link>
         </div>
       </Form>
     </LoginStyled>
