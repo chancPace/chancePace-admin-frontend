@@ -56,7 +56,7 @@ const CategoryCreate = ({ options, selectID, selectData, setIsModalOpen }: optio
   useEffect(() => {
     if (selectID !== 0 && selectData) {
       category.setFieldValue('categoryName', selectData?.categoryName);
-      setSelect(String(selectData?.pId || '없음'));
+      setSelect(String(selectData?.pId || null));
     } else {
       category.setFieldValue('categoryName', '');
       setSelect(null); // 선택 초기화

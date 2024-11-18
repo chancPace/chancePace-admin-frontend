@@ -1,11 +1,11 @@
 import { postSignup, updateOneUser } from '@/pages/api/userApi';
-import { optionProps, User } from '@/types';
+import { optionProps } from '@/types';
 import { Button, Input, message, Select } from 'antd';
 import { useFormik } from 'formik';
 import { useEffect, useState } from 'react';
 import { UserModalStyled } from './style';
 
-const UserCreate = ({ isModalOpen, setIsModalOpen, data, type, fetchUserData, fetchUsers }: optionProps) => {
+const UserCreate = ({ setIsModalOpen, data, type, fetchUserData, fetchUsers }: optionProps) => {
   const [existingPassword, setExistingPassword] = useState<any>();
 
   const authOpt = [
@@ -101,7 +101,8 @@ const UserCreate = ({ isModalOpen, setIsModalOpen, data, type, fetchUserData, fe
             }
           });
       } else {
-        updateOneUser({ ...payload, id: data?.id, password: data?.password || existingPassword })
+        const updatedPassword = values.password ? values.password : null;
+        updateOneUser({ ...payload, id: data?.id, password: updatedPassword })
           .then((response) => {
             fetchUserData();
             message.success('수정 성공');
