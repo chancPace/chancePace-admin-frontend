@@ -1,12 +1,12 @@
 import { useRouter } from 'next/router';
-import { Badge, Button, Descriptions, message, Modal, Rate, Tag } from 'antd';
+import { Button, Descriptions, message, Modal, Rate, Tag } from 'antd';
 import { useEffect, useState } from 'react';
 import { CloseCircleOutlined, SyncOutlined } from '@ant-design/icons';
 import SpaceDetailStyled from './style';
 import { allowSpace, getOneSpace, stopSpace, updateSpace } from '@/pages/api/spaceAPI';
 import SpaceEdit from '../Modals/SpaceEdit';
-import { Space, User } from '@/types';
-import { getOneUser, updateOneUser } from '@/pages/api/userApi';
+import { User } from '@/types';
+import { getOneUser } from '@/pages/api/userApi';
 
 const SpaceDetailPage = () => {
   const router = useRouter();
@@ -70,10 +70,15 @@ const SpaceDetailPage = () => {
       label: '계좌 정보',
       children: (
         <>
-          {/* <span style={{ display: 'inline-block', marginRight: 30 }}>{data?.bankAccountName}</span>
-          <span style={{ display: 'inline-block', marginRight: 30 }}> {data?.bankAccountNumber}</span>
-          <span style={{ display: 'inline-block' }}>{data?.bankAccountOwner}</span> */}
-          추후 등록!!!!
+          <span style={{ display: 'inline-block', marginRight: 30 }}>
+            소유주 명 : {data?.bankAccountOwner ? data?.bankAccountOwner : '-'}
+          </span>
+          <span style={{ display: 'inline-block', marginRight: 30 }}>
+            은행명 : {data?.bankAccountName ? data?.bankAccountName : '-'}
+          </span>
+          <span style={{ display: 'inline-block', marginRight: 30 }}>
+            계좌 번호 : {data?.bankAccountNumber ? data?.bankAccountNumber : '-'}
+          </span>
         </>
       ),
       span: 4,
@@ -190,7 +195,6 @@ const SpaceDetailPage = () => {
                   onOk: async () => {
                     await allowSpace({ spaceId, spaceStatus: 'AVAILABLE' });
                     message.info('승인 완료');
-                    // const updatedData = { spaceId, spaceStatus: 'AVAILABLE' };
                     await fetchSpaceData(spaceId);
                     router.push('/space/spacelist');
                   },
@@ -232,7 +236,8 @@ const SpaceDetailPage = () => {
                     onOk: async () => {
                       message.info('삭제되었습니다.');
                       const updatedData = { spaceId, isDelete: true };
-                      updateSpace(updatedData);
+                      await updateSpace(updatedData);
+                      await stopSpace({ spaceId: String(spaceId), isOpen: false });
                       router.push('/space/spacelist');
                     },
                   });
