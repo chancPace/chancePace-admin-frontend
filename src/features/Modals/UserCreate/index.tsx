@@ -322,6 +322,19 @@ const UserCreate = ({ isModalOpen, setIsModalOpen, data, type, fetchUserData, fe
     if (values.phoneNumber && values.phoneNumber.replace(/\D/g, '').length !== 11) {
       errors.phoneNumber = '전화번호는 11자리 숫자만 입력 가능합니다.';
     }
+
+    if (type === 'edit' && values.password.length !== 0) {
+      if (values.password.length < 10 || values.password.length > 15) {
+        errors.password = '비밀번호는 10 ~ 15자리 이어야 합니다.';
+      } else if (!/[a-zA-Z]/.test(values.password)) {
+        errors.password = '비밀번호에는 최소한 하나의 영문자가 포함되어야 합니다.';
+      } else if (!/[0-9]/.test(values.password)) {
+        errors.password = '비밀번호에는 최소한 하나의 숫자가 포함되어야 합니다.';
+      } else if (!/[!@#$%^&*]/.test(values.password)) {
+        errors.password = '비밀번호에는 최소한 하나의 특수문자가 포함되어야 합니다.';
+      }
+    }
+
     return errors;
   };
 
@@ -438,6 +451,9 @@ const UserCreate = ({ isModalOpen, setIsModalOpen, data, type, fetchUserData, fe
               onChange={userInfo.handleChange}
               value={userInfo.values.password}
             />
+            {userInfo.errors.password && userInfo.touched.password && (
+              <div style={{ color: 'red' }}>{userInfo.errors.password}</div>
+            )}
           </div>
         ) : (
           <></>
