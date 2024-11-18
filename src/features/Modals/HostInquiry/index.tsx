@@ -3,6 +3,7 @@ import { Button, Input, message, Modal, Radio } from 'antd';
 import { HostReqModalStyled } from './style';
 import { updateInquiry } from '@/pages/api/hostreqApi';
 import { useRouter } from 'next/router';
+import { useEffect, useState } from 'react';
 const RadioGroup = Radio.Group;
 const { TextArea } = Input;
 
@@ -13,15 +14,30 @@ interface HostReqProps {
 
 const HostInquiryModal = ({ setIsModalOpen, data }: HostReqProps) => {
   const router = useRouter();
-  const inquiry = useFormik({
-    initialValues: {
-      memberType: data[0]?.memberType,
-      inquiryTitle: data[0]?.inquiryTitle,
-      inquiryEmail: data[0]?.inquiryEmail,
-      inquiryContents: data[0]?.inquiryContents,
-      inquiryStatus: data[0]?.inquiryStatus,
-    },
+  const [initialValues, setInitialValues] = useState({
+    memberType: '',
+    inquiryTitle: '',
+    inquiryEmail: '',
+    inquiryContents: '',
+    inquiryStatus: '',
+  });
 
+  useEffect(() => {
+    if (data) {
+      setInitialValues({
+        memberType: data?.memberType,
+        inquiryTitle: data?.inquiryTitle,
+        inquiryEmail: data?.inquiryEmail,
+        inquiryContents: data?.inquiryContents,
+        inquiryStatus: data?.inquiryStatus,
+      });
+    }
+  }, [data]);
+
+  const inquiry = useFormik({
+    initialValues,
+    //initialValues가 변경될때 초기화
+    enableReinitialize: true,
     onSubmit: (values) => {
       Modal.confirm({
         title: ' 답변 완료 상태로 변경하시겠습니까?',
@@ -29,7 +45,7 @@ const HostInquiryModal = ({ setIsModalOpen, data }: HostReqProps) => {
         cancelText: '취소',
         onOk: async () => {
           try {
-            const target = { ...values, inquiryId: data[0].id };
+            const target = { ...values, inquiryId: data.id };
             await updateInquiry(target);
             message.info('상태가 변경되었습니다.');
             setIsModalOpen(false);

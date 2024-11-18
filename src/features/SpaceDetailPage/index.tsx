@@ -42,7 +42,7 @@ const SpaceDetailPage = () => {
     }
   }, [id]);
 
-  const items = [
+  const items: any = [
     {
       key: '1',
       label: '공간명',

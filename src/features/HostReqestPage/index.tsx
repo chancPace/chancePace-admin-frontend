@@ -8,6 +8,7 @@ import { getAllInquiry } from '@/pages/api/hostreqApi';
 
 const HostReqListPage = () => {
   const [data, setData] = useState([]);
+  const [oneData, setOneData] = useState();
   const [isModalOpen, setIsModalOpen] = useState(false);
 
   const fetchQuiry = async () => {
@@ -24,7 +25,12 @@ const HostReqListPage = () => {
     fetchQuiry();
   }, []);
 
-  const columns = [
+  const handleDetail = (data: any) => {
+    setIsModalOpen(true);
+    setOneData(data);
+  };
+
+  const columns: any = [
     {
       title: '제목',
       dataIndex: 'inquiryTitle',
@@ -74,7 +80,7 @@ const HostReqListPage = () => {
       title: '상세 페이지',
       dataIndex: 'action',
       key: 'action',
-      render: (_: any, record: any) => <a onClick={() => setIsModalOpen(true)}>상세 보기</a>,
+      render: (_: any, record: any) => <a onClick={() => handleDetail(record)}>상세 보기</a>,
     },
   ];
 
@@ -92,7 +98,7 @@ const HostReqListPage = () => {
         footer={false}
         className="modal"
       >
-        <HostInquiryModal setIsModalOpen={setIsModalOpen} data={data} />
+        <HostInquiryModal setIsModalOpen={setIsModalOpen} data={oneData} />
       </Modal>
       <Table columns={columns} dataSource={data} />
     </HostReqListStyled>
