@@ -36,6 +36,11 @@ const HostReqListPage = () => {
       key: 'inquiryEmail',
     },
     {
+      title: '내용',
+      dataIndex: 'inquiryContents',
+      key: 'inquiryContents',
+    },
+    {
       title: '회원 / 비회원',
       dataIndex: 'memberType',
       key: 'memberType',
@@ -57,11 +62,6 @@ const HostReqListPage = () => {
       onFilter: (value: any, record: any) => record.inquiyStatus === value,
       render: (status: string) =>
         status === 'COMPLETED' ? <Tag color="blue">완료</Tag> : <Tag color="red">미완료</Tag>,
-    },
-    {
-      title: '내용',
-      dataIndex: 'inquiryContents',
-      key: 'inquiryContents',
     },
     {
       title: '문의 일자',
