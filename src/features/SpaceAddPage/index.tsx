@@ -170,11 +170,22 @@ const SpaceAddPage = () => {
     fetchSpaceData();
   }, [spaceId, form]);
 
+  const formatPhoneNumber = (phoneNumber: string) => {
+    const cleaned = phoneNumber.replace(/\D/g, '');
+
+    if (cleaned.length === 11) {
+      return cleaned.replace(/^(\d{3})(\d{4})(\d{4})$/, '$1-$2-$3');
+    }
+
+    return phoneNumber;
+  };
+
   const handleUser = (value: any) => {
     const targetUser = user?.find((x: any) => x.userName === value);
     const phoneNumber = targetUser?.phoneNumber;
     if (phoneNumber) {
-      form.setFieldsValue({ spaceAdminPhoneNumber: phoneNumber });
+      const formattedPhoneNumber = formatPhoneNumber(phoneNumber);
+      form.setFieldsValue({ spaceAdminPhoneNumber: formattedPhoneNumber });
     } else {
       form.setFieldsValue({ spaceAdminPhoneNumber: '' });
     }
