@@ -149,3 +149,16 @@ export interface isSpace {
   isOpen?: boolean;
   isDelete?: boolean;
 }
+
+export interface Review {
+  id: number;
+  reviewComment: string;
+  reviewRating: number | null;
+  reviewStatus: string;
+  spaceId: number;
+  createdAt: string;
+  updatedAt: string;
+  user?: {
+    userName: string;
+  };
+}

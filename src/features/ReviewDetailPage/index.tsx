@@ -1,9 +1,9 @@
 import { useRouter } from 'next/router';
-import { Descriptions } from 'antd';
+import { Button, Descriptions, message, Modal, Rate } from 'antd';
 import { useEffect, useState } from 'react';
 import dayjs from 'dayjs';
 import ReviewDetailStyle from './style';
-import { getOneReview } from '@/pages/api/reviewApi';
+import { getOneReview, updateRatingBySpace, updateReview } from '@/pages/api/reviewApi';
 
 const ReviewDetailPage = () => {
   const router = useRouter();
@@ -50,7 +50,7 @@ const ReviewDetailPage = () => {
     {
       key: '5',
       label: '별점',
-      children: data?.reviewRating,
+      children: <Rate disabled value={data?.reviewRating} />,
     },
     {
       key: '6',
@@ -58,10 +58,47 @@ const ReviewDetailPage = () => {
       children: `${dayjs(data?.createdAt).format('YYYY-MM-DD')}`,
     },
   ];
-
+  const handleDeleteClick = async () => {
+    const reviewData = {
+      reviewId,
+      reviewComment: data.reviewComment,
+      reviewRating: null,
+      reviewStatus: 'UNAVAILABLE',
+    };
+    try {
+      const result = await updateReview(reviewId, reviewData);
+      if (result) {
+        message.success('리뷰가 성공적으로 삭제되었습니다.');
+        const updateResult = await updateRatingBySpace(data.spaceId);
+        router.push('/review/reviewlist');
+      }
+    } catch (error) {
+      message.error('리뷰 삭제에 실패했습니다.');
+    }
+  };
   return (
     <ReviewDetailStyle>
-      <p>리뷰 상세 정보</p>
+      <div className="top">
+        <p>리뷰 상세 정보</p>
+        {data?.reviewStatus === 'AVAILABLE' ? (
+          <Button
+            onClick={() => {
+              Modal.confirm({
+                title: '리뷰를 삭제하겠습니까?',
+                okText: '확인',
+                cancelText: '취소',
+                onOk: () => {
+                  handleDeleteClick();
+                },
+              });
+            }}
+          >
+            삭제
+          </Button>
+        ) : (
+          <></>
+        )}
+      </div>
       <Descriptions bordered items={items} />
     </ReviewDetailStyle>
   );

@@ -1,7 +1,7 @@
-import { getAllReview, getReview } from '@/pages/api/reviewApi';
+import { getAllReview } from '@/pages/api/reviewApi';
 import ReviewListStyle from './style';
 import { useEffect, useState } from 'react';
-import { Rate, Table } from 'antd';
+import { Rate, Table, Tag } from 'antd';
 import router from 'next/router';
 import dayjs from 'dayjs';
 
@@ -31,10 +31,6 @@ const ReviewListPage = () => {
   useEffect(() => {
     fetchReview();
   }, []);
-
-  const detailPage = (data: number) => {
-    router.push(`/review/reviewlist/reviewdetail/${data}`);
-  };
 
   const columns = [
     {
@@ -69,6 +65,17 @@ const ReviewListPage = () => {
       sorter: (a: any, b: any) => Number(a.reviewRating) - Number(b.reviewRating),
     },
     {
+      title: '리뷰 상태',
+      dataIndex: 'reviewStatus',
+      filters: [
+        { text: '미삭제', value: 'AVAILABLE' },
+        { text: '삭제', value: 'UNAVAILABLE' },
+      ],
+      onFilter: (value: any, record: any) => record.reviewStatus == value,
+      render: (reviewStatus: string) =>
+        reviewStatus === 'AVAILABLE' ? <Tag color="blue">미삭제</Tag> : <Tag color="red">삭제</Tag>,
+    },
+    {
       title: '작성일',
       dataIndex: 'createdAt',
       key: 'createdAt',
@@ -79,7 +86,9 @@ const ReviewListPage = () => {
       title: '상세 페이지',
       dataIndex: 'action',
       key: 'action',
-      render: (_: any, record: any) => <a onClick={() => detailPage(record.key)}>상세 보기</a>,
+      render: (_: any, record: any) => (
+        <a onClick={() => router.push(`/review/reviewlist/reviewdetail/${record.key}`)}>상세 보기</a>
+      ),
     },
   ];
 
