@@ -39,7 +39,7 @@ const BookingDeatilPage = () => {
     {
       key: '3',
       label: '예약자 전화번호',
-      children: data?.user?.phoneNumber,
+      children: `${data?.user?.phoneNumber?.replace(/^(\d{3})(\d{4})(\d{4})$/, '$1-$2-$3')}`,
     },
     // 예약 공간
     {
@@ -55,7 +55,7 @@ const BookingDeatilPage = () => {
     {
       key: '6',
       label: '공간 관리자 전화번호',
-      children: data?.space?.spaceAdminPhoneNumber,
+      children: `${data?.space?.spaceAdminPhoneNumber?.replace(/^(\d{3})(\d{4})(\d{4})$/, '$1-$2-$3')}`,
     },
     {
       key: '7',

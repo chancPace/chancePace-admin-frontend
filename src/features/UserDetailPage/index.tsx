@@ -45,16 +45,22 @@ const UserDetail = () => {
     {
       key: '3',
       label: '전화번호',
-      children: data?.phoneNumber,
+      children: `${data?.phoneNumber?.replace(/^(\d{3})(\d{4})(\d{4})$/, '$1-$2-$3')}`,
     },
     {
       key: '5',
       label: '계좌 정보',
       children: (
         <>
-          <span style={{ display: 'inline-block', marginRight: 30 }}>{data?.bankAccountName}</span>
-          <span style={{ display: 'inline-block', marginRight: 30 }}> {data?.bankAccountNumber}</span>
-          <span style={{ display: 'inline-block' }}>{data?.bankAccountOwner}</span>
+          <span style={{ display: 'inline-block', marginRight: 30 }}>
+            소유주 명 : {data?.bankAccountOwner ? data?.bankAccountOwner : '-'}
+          </span>
+          <span style={{ display: 'inline-block', marginRight: 30 }}>
+            은행명 : {data?.bankAccountName ? data?.bankAccountName : '-'}
+          </span>
+          <span style={{ display: 'inline-block', marginRight: 30 }}>
+            계좌 번호 : {data?.bankAccountNumber ? data?.bankAccountNumber : '-'}
+          </span>
         </>
       ),
       span: 3,

@@ -1,5 +1,5 @@
 import { CloseCircleOutlined, SyncOutlined } from '@ant-design/icons';
-import { Button, Input, Table, Tag } from 'antd';
+import { Button, Input, message, Table, Tag } from 'antd';
 import { useFormik } from 'formik';
 import router from 'next/router';
 import { useEffect, useState } from 'react';
@@ -52,6 +52,9 @@ const SpaceListPage = () => {
       title: '전화번호',
       dataIndex: 'spaceAdminPhoneNumber',
       key: 'spaceAdminPhoneNumber',
+      render: (spaceAdminPhoneNumber: string) => {
+        return spaceAdminPhoneNumber.replace(/^(\d{3})(\d{4})(\d{4})$/, '$1-$2-$3');
+      },
     },
     {
       title: '관리자 승인',
@@ -117,12 +120,16 @@ const SpaceListPage = () => {
       search: '',
     },
     async onSubmit(values) {
-      const response = await searchSpace(values.search);
-      const select = response.data.data;
-      select.map((x: Space, i: number) => {
-        x.createdAt = x?.createdAt?.split('T')[0];
-      });
-      setData(select);
+      if (values.search === '') {
+        message.info('검색어를 입력하세요');
+      } else {
+        const response = await searchSpace(values.search);
+        const select = response.data.data;
+        select.map((x: Space, i: number) => {
+          x.createdAt = x?.createdAt?.split('T')[0];
+        });
+        setData(select);
+      }
     },
   });
 
