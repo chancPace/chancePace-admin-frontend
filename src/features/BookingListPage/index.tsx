@@ -1,4 +1,4 @@
-import { Button, Input, message, Table } from 'antd';
+import { Button, Input, message, Table, Tag } from 'antd';
 import { useFormik } from 'formik';
 import router from 'next/router';
 import { useEffect, useState } from 'react';
@@ -8,13 +8,14 @@ import dayjs from 'dayjs';
 
 const BookingListPage = () => {
   const [data, setData] = useState<any>([]);
-  const [space, setSpace] = useState<any>();
 
   const fetchBookings = async () => {
     try {
       const response = await getAllBooking();
       const result = response.data;
-      const dataWithKeys = result.map((item: any) => ({ ...item, key: item.id }));
+      const dataWithKeys = result.map((item: any) => {
+        return { ...item, key: item.id };
+      });
       setData(dataWithKeys);
     } catch (error) {
       console.error('오류!!:', error);
@@ -23,10 +24,6 @@ const BookingListPage = () => {
   useEffect(() => {
     fetchBookings();
   }, []);
-
-  const detailPage = (data: number) => {
-    router.push(`/booking/bookinglist/bookingdetail/${data}`);
-  };
 
   const columns = [
     {
@@ -61,10 +58,23 @@ const BookingListPage = () => {
       render: (text: any) => (text !== undefined && text !== null ? `${text}시` : ''),
     },
     {
+      title: '예약 상태',
+      dataIndex: 'bookingStatus',
+      filters: [
+        { text: '예약 완료', value: 'COMPLETED' },
+        { text: '예약취소', value: 'CANCELLED' },
+      ],
+      onFilter: (value: any, record: any) => record.bookingStatus == value,
+      render: (bookingStatus: string) =>
+        bookingStatus === 'COMPLETED' ? <Tag color="blue">예약 완료</Tag> : <Tag color="red">예약 취소</Tag>,
+    },
+    {
       title: '상세 페이지',
       dataIndex: 'action',
       key: 'action',
-      render: (_: any, record: any) => <a onClick={() => detailPage(record.key)}>상세 보기</a>,
+      render: (_: any, record: any) => (
+        <a onClick={() => router.push(`/booking/bookinglist/bookingdetail/${record.key}`)}>상세 보기</a>
+      ),
     },
   ];
 

@@ -1,9 +1,9 @@
 import { useRouter } from 'next/router';
-import { Badge, Button, Descriptions, Modal } from 'antd';
+import { Badge, Button, Descriptions, message, Modal, Tag } from 'antd';
 import { useEffect, useState } from 'react';
-import { CouponData } from '@/types';
 import BookingDetailStyled from './style';
 import { getOneBooking } from '@/pages/api/bookingApi';
+import { Refund } from '@/pages/api/paymentApi';
 
 const BookingDeatilPage = () => {
   const router = useRouter();
@@ -73,6 +73,12 @@ const BookingDeatilPage = () => {
       label: '이용 시간(체크인 ~ 체크아웃)',
       children: `${data?.startTime}시 ~ ${data?.endTime}시`,
     },
+    {
+      key: '9',
+      label: '예약 상태',
+      children:
+        data?.bookingStatus === 'COMPLETED' ? <Tag color="blue">예약 완료</Tag> : <Tag color="red">예약 취소</Tag>,
+    },
     // 결제 정보
     {
       key: '10',
@@ -108,7 +114,35 @@ const BookingDeatilPage = () => {
 
   return (
     <BookingDetailStyled>
-      <p>예약 상세 정보</p>
+      <div className="top">
+        <p>예약 상세조회</p>
+        {data?.bookingStatus === 'COMPLETED' ? (
+          <Button
+            onClick={() => {
+              Modal.confirm({
+                title: '예약을 취소하시겠습니까?',
+                okText: '확인',
+                cancelText: '취소',
+                onOk: async () => {
+                  try {
+                    const cancelReason = '고객 요청에 따른 취소';
+                    await Refund(Number(bookingId), cancelReason);
+                    message.success('예약이 취소되었습니다');
+                    router.push('/booking/bookinglist');
+                  } catch (error) {
+                    message.error('예약 취소 실패');
+                    console.error('예약취소실패', error);
+                  }
+                },
+              });
+            }}
+          >
+            취소
+          </Button>
+        ) : (
+          <></>
+        )}
+      </div>
       <Descriptions bordered items={items} />
     </BookingDetailStyled>
   );

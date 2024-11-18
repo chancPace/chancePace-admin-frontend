@@ -1,10 +1,14 @@
 import styled from 'styled-components';
 
 const BookingDetailStyled = styled.div`
-  p {
+  .top {
+    display: flex;
+    justify-content: space-between;
     margin-bottom: ${({ theme }) => theme.spacing.md};
-    font-size: ${({ theme }) => theme.fontSizes.xl};
-    font-weight: bold;
+    p {
+      font-size: ${({ theme }) => theme.fontSizes.xl};
+      font-weight: bold;
+    }
   }
 `;
 
