@@ -1,6 +1,5 @@
 import { MainStyled } from './style';
 import Charts from '@/components/charts';
-import personIcon from '@/assets/img/personIcon.png';
 import { useEffect, useState } from 'react';
 import { getAllSpace } from '@/pages/api/spaceAPI';
 import { getAllUser } from '@/pages/api/userApi';
@@ -8,7 +7,7 @@ import dayjs from 'dayjs';
 import { getAllBooking } from '@/pages/api/bookingApi';
 import { getAllPayment } from '@/pages/api/paymentApi';
 import { CarryOutOutlined, CreditCardOutlined, HomeOutlined, UserOutlined } from '@ant-design/icons';
-import { Router, useRouter } from 'next/router';
+import { useRouter } from 'next/router';
 
 const MainPage = () => {
   const [spaceAllow, SetSpaceAllow] = useState();
@@ -33,7 +32,9 @@ const MainPage = () => {
       return x?.startDate === dayjs().format('YYYY-MM-DD');
     });
     const todaypayment = payments?.data?.filter((x: any, i: number) => {
-      return dayjs(x?.createdAt).format('YYYY-MM-DD') === dayjs().format('YYYY-MM-DD');
+      return (
+        x.paymentStatus !== 'REFUNDED' && dayjs(x?.createdAt).format('YYYY-MM-DD') === dayjs().format('YYYY-MM-DD')
+      );
     });
 
     setVisitor(visit.length);
