@@ -35,10 +35,6 @@ const UserListPage = () => {
     fetchUsers();
   }, []);
 
-  const detailPage = (data: number) => {
-    router.push(`/user/userlist/userdetail/${data}`);
-  };
-
   const columns = [
     {
       title: '성함',
@@ -129,7 +125,9 @@ const UserListPage = () => {
       title: '상세 페이지',
       dataIndex: 'action',
       key: 'action',
-      render: (_: any, record: any) => <a onClick={() => detailPage(record.key)}>상세 보기</a>,
+      render: (_: any, record: any) => (
+        <a onClick={() => router.push(`/user/userlist/userdetail/${record.id}`)}>상세 보기</a>
+      ),
     },
   ];
 
@@ -183,7 +181,7 @@ const UserListPage = () => {
         width={400}
         title="회원 등록"
         open={isModalOpen}
-        onOk={() => setIsModalOpen(false)}
+        onOk={() => setIsModalOpen(true)}
         onCancel={() => setIsModalOpen(false)}
         footer={false}
         className="modal"
@@ -199,7 +197,7 @@ const UserListPage = () => {
         width={400}
         title="쿠폰 전송"
         open={isCouponModalOpen}
-        onOk={() => setIsCouponModalOpen(false)}
+        onOk={() => setIsCouponModalOpen(true)}
         onCancel={() => setIsCouponModalOpen(false)}
         footer={false}
         className="modal"
