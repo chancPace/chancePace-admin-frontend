@@ -137,9 +137,63 @@ const SpaceAddPage = () => {
     }
   };
 
+  // //수정 해당 공간의 데이터 불러오기
+  // useEffect(() => {
+  //   // 수정할 공간의 데이터 불러오기
+  //   const fetchSpaceData = async () => {
+  //     if (spaceId) {
+  //       try {
+  //         const id = Array.isArray(spaceId) ? spaceId[0] : spaceId; // spaceId가 배열일 경우 첫 번째 요소를 사용
+  //         const response = await getOneSpace(id);
+  //         const spaceData = response.data.data;
+  //         // 기존 이미지가 있는 경우 fileList에 추가
+  //         const existingFiles =
+  //           spaceData.images?.map((image: { imageUrl: string }) => ({
+  //             url: decodeUrl(image.imageUrl) || '', // 이미지 URL이 없을 경우 빈 문자열로 처리
+  //             status: 'done', // 업로드된 이미지로 간주
+  //           })) || [];
+
+  //         form.setFieldsValue({
+  //           ...form.getFieldsValue(), // 기존 폼의 값들
+  //           ...spaceData, // 서버에서 가져온 데이터로 덮어쓰기
+  //           spaceStatus: spaceData.spaceStatus || 'UNAVAILABLE',
+  //           spaceLocation: addValue || '',
+  //         });
+  //         setAddValue(spaceData.spaceLocation);
+  //         handleSelectAddress(spaceData.spaceLocation);
+  //         setFileList(existingFiles);
+  //       } catch (error) {
+  //         message.error('공간 정보를 불러오는 데 실패했습니다.');
+  //       }
+  //     }
+  //   };
+  //   fetchSpaceData();
+  // }, [spaceId, form]);
+  const fetchFileFromUrl = async (url: string): Promise<UploadFile<any>> => {
+    try {
+      const response = await fetch(url);
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
+      }
+      const blob = await response.blob();
+      const fileName = url.split('/').pop() || 'image.jpg';
+      const file = new File([blob], fileName, { type: blob.type });
+
+      return {
+        uid: url,
+        name: fileName,
+        status: 'done',
+        url: url,
+        originFileObj: file,
+      } as UploadFile<any>;
+    } catch (error) {
+      console.error('Failed to fetch file:', error);
+      throw error;
+    }
+  };
+
   //수정 해당 공간의 데이터 불러오기
   useEffect(() => {
-    // 수정할 공간의 데이터 불러오기
     const fetchSpaceData = async () => {
       if (spaceId) {
         try {
@@ -147,18 +201,16 @@ const SpaceAddPage = () => {
           const response = await getOneSpace(id);
           const spaceData = response.data.data;
           // 기존 이미지가 있는 경우 fileList에 추가
-          const existingFiles =
-            spaceData.images?.map((image: { imageUrl: string }) => ({
-              url: decodeUrl(image.imageUrl) || '', // 이미지 URL이 없을 경우 빈 문자열로 처리
-              status: 'done', // 업로드된 이미지로 간주
-            })) || [];
-
+          const existingFiles = await Promise.all(
+            spaceData.images?.map(async (image: { imageUrl: string }) => {
+              return fetchFileFromUrl(image.imageUrl);
+            }) || []
+          );
           form.setFieldsValue({
-            ...form.getFieldsValue(), // 기존 폼의 값들
-            ...spaceData, // 서버에서 가져온 데이터로 덮어쓰기
-            spaceStatus: spaceData.spaceStatus || 'UNAVAILABLE',
-            spaceLocation: addValue || '',
+            ...spaceData,
+            spaceLocation: spaceData.spaceLocation,
           });
+
           setAddValue(spaceData.spaceLocation);
           handleSelectAddress(spaceData.spaceLocation);
           setFileList(existingFiles);
@@ -277,11 +329,30 @@ const SpaceAddPage = () => {
               required: true,
               message: '가격을 입력해 주세요',
             },
+            {
+              type: 'number',
+              min: 1,
+              message: '가격은 1원 이상이여햐 합니다.',
+            },
           ]}
         >
           <InputNumber placeholder="시간당 이용금액을 작성해 주세요" />
         </Form.Item>
-        <Form.Item label="할인금액" name="discount">
+        <Form.Item
+          label="할인금액"
+          name="discount"
+          rules={[
+            ({ getFieldValue }) => ({
+              validator(_, value) {
+                const price = getFieldValue('spacePrice');
+                if (value !== undefined && value > price) {
+                  return Promise.reject(new Error('할인금액은 가격 이하이어야 합니다.'));
+                }
+                return Promise.resolve();
+              },
+            }),
+          ]}
+        >
           <InputNumber placeholder="할인금액을 작성해 주세요" />
         </Form.Item>
         <Form.Item label="인당 추가요금" name="addPrice">
@@ -431,9 +502,14 @@ const SpaceAddPage = () => {
         <Form.Item
           label="관리자 이름"
           name="spaceAdminName"
-          rules={[{ required: true, message: '관리자 이름을 입력해주세요' }]}
+          rules={[
+            { required: true, message: '관리자 이름을 입력해주세요' },
+            {
+              pattern: /^[^0-9]*$/, // 숫자가 포함되지 않도록 하는 정규식
+              message: '이름에는 숫자가 포함될 수 없습니다.',
+            },
+          ]}
         >
-          {/* <Input placeholder="공간 관리자를 작성해 주세요" /> */}
           <Select
             placeholder="관리자 이름을 입력하세요"
             allowClear
@@ -444,7 +520,13 @@ const SpaceAddPage = () => {
         <Form.Item
           label="관리자 전화번호"
           name="spaceAdminPhoneNumber"
-          rules={[{ required: true, message: '전화번호를 입력해주세요(-포함)' }]}
+          rules={[
+            { required: true, message: '전화번호를 입력해주세요' },
+            {
+              pattern: /^[0-9]{11}$/,
+              message: '전화번호는 11자리 숫자여야 합니다.',
+            },
+          ]}
         >
           <Input placeholder="공간 관리자 연락처를 작성해 주세요" />
         </Form.Item>
