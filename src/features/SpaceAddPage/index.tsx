@@ -16,7 +16,6 @@ const SpaceAddPage = () => {
   const { spaceId } = router.query;
   const [categories, setCategories] = useState<Category[]>([]);
   const [fileList, setFileList] = useState<UploadFile[]>([]);
-  console.log('🚀 ~ SpaceAddPage ~ fileList:', fileList);
   const [startHour, setStartHour] = useState<number | null>(null);
   const [fileError, setFileError] = useState<string | null>(null); // 파일 오류 메시지 상태 추가
   const [user, setUser] = useState<any>();
@@ -192,38 +191,6 @@ const SpaceAddPage = () => {
     };
     fetchSpaceData();
   }, [spaceId, form]);
-
-  //수정 해당 공간의 데이터 불러오기 기존
-  // useEffect(() => {
-  //   const fetchSpaceData = async () => {
-  //     if (spaceId) {
-  //       try {
-  //         const id = Array.isArray(spaceId) ? spaceId[0] : spaceId; // spaceId가 배열일 경우 첫 번째 요소를 사용
-  //         const response = await getOneSpace(id);
-  //         const spaceData = response.data.data;
-  //         // 기존 이미지가 있는 경우 fileList에 추가
-  //         const existingFiles =
-  //           spaceData.images?.map((image: { imageUrl: string }) => ({
-  //             url: decodeUrl(image.imageUrl) || '', // 이미지 URL이 없을 경우 빈 문자열로 처리
-  //             status: 'done', // 업로드된 이미지로 간주
-  //           })) || [];
-
-  //         form.setFieldsValue({
-  //           ...form.getFieldsValue(), // 기존 폼의 값들
-  //           ...spaceData, // 서버에서 가져온 데이터로 덮어쓰기
-  //           spaceStatus: spaceData.spaceStatus || 'UNAVAILABLE',
-  //           spaceLocation: addValue || '',
-  //         });
-  //         setAddValue(spaceData.spaceLocation);
-  //         handleSelectAddress(spaceData.spaceLocation);
-  //         setFileList(existingFiles);
-  //       } catch (error) {
-  //         message.error('공간 정보를 불러오는 데 실패했습니다.');
-  //       }
-  //     }
-  //   };
-  //   fetchSpaceData();
-  // }, [spaceId, form]);
 
   const formatPhoneNumber = (phoneNumber: string) => {
     const cleaned = phoneNumber.replace(/\D/g, '');
