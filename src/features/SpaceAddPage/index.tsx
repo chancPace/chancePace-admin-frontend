@@ -49,7 +49,8 @@ const SpaceAddPage = () => {
       try {
         const response = await getAllUser();
         setUser(response.data.data);
-        const users = response?.data?.data?.map((x: any, i: number) => ({
+        const Host = response.data.data.filter((x: any) => x.role === 'HOST');
+        const users = Host.map((x: any, i: number) => ({
           label: x.userName,
           value: x.userName,
         }));
@@ -160,30 +161,6 @@ const SpaceAddPage = () => {
       return null;
     }
   };
-  // const fetchFileFromUrl = async (url: string): Promise<UploadFile<any>> => {
-  //   try {
-  //     const absoluteUrl = new URL(url, window.location.href).href; // 상대경로를 절대경로로 변환
-  //     console.log('Fetching file from URL:', absoluteUrl);
-  //     const response = await fetch(absoluteUrl);
-  //     if (!response.ok) {
-  //       throw new Error(`HTTP error! status: ${response.status}`);
-  //     }
-  //     const blob = await response.blob();
-  //     const fileName = url.split('/').pop() || 'image.jpg';
-  //     const file = new File([blob], fileName, { type: blob.type });
-
-  //     return {
-  //       uid: url,
-  //       name: fileName,
-  //       status: 'done',
-  //       url: absoluteUrl,
-  //       originFileObj: file,
-  //     } as UploadFile<any>;
-  //   } catch (error) {
-  //     console.error('Failed to fetch file:', error);
-  //     throw error;
-  //   }
-  // };
 
   // 수정 해당 공간의 데이터 불러오기
   useEffect(() => {
@@ -218,36 +195,6 @@ const SpaceAddPage = () => {
     };
     fetchSpaceData();
   }, [spaceId, form]);
-  // const fetchSpaceData = async () => {
-  //   try {
-  //     const response = await getOneSpace(spaceId);
-  //     const spaceData = response.data.data;
-  //     // 기존 이미지 불러오기 등의 로직
-  //     const existingFiles = await Promise.all(
-  //       spaceData.images?.map(async (image: { imageUrl: string }) => {
-  //         return fetchFileFromUrl(image.imageUrl);
-  //       })
-  //     );
-  //     form.setFieldsValue({
-  //       ...spaceData,
-  //       spaceLocation: spaceData.spaceLocation,
-  //       spaceAdminPhoneNumber: formatPhoneNumber(spaceData.spaceAdminPhoneNumber),
-  //     });
-
-  //     setAddValue(spaceData.spaceLocation);
-  //     handleSelectAddress(spaceData.spaceLocation);
-  //     setFileList(existingFiles);
-  //   } catch (error) {
-  //     message.error('공간 정보를 불러오는 데 실패했습니다.');
-  //   }
-  // };
-
-  // useEffect(() => {
-  //   if (spaceId) {
-  //     console.log('🚀 ~ useEffect ~ spaceId:', spaceId);
-  //     fetchSpaceData();
-  //   }
-  // }, [spaceId]);
 
   const formatPhoneNumber = (phoneNumber: string) => {
     const cleaned = phoneNumber.replace(/\D/g, '');
@@ -267,6 +214,7 @@ const SpaceAddPage = () => {
       form.setFieldsValue({ spaceAdminPhoneNumber: formattedPhoneNumber });
     } else {
       form.setFieldsValue({ spaceAdminPhoneNumber: '' });
+      message.info('해당하는 회원의 전화번호가 없습니다.');
     }
   };
 
@@ -550,8 +498,18 @@ const SpaceAddPage = () => {
           rules={[
             { required: true, message: '전화번호를 입력해주세요' },
             {
-              pattern: /^[0-9]{11}$/,
-              message: '전화번호는 11자리 숫자여야 합니다.',
+              validator: (_, value) => {
+                const cleanedValue = value.replace(/[^0-9-]/g, ''); // 숫자와 하이픈만 허용
+
+                // 두 가지 형식을 검증하는 정규식
+                const isValidPhone = /^(?:\d{3}-\d{4}-\d{4}|\d{11})$/.test(cleanedValue);
+
+                if (isValidPhone) {
+                  return Promise.resolve();
+                }
+
+                return Promise.reject(new Error('전화번호는 01012345678 또는 010-1234-5678 형식이어야 합니다.'));
+              },
             },
           ]}
         >
