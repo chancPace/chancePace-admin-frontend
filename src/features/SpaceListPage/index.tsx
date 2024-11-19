@@ -28,10 +28,6 @@ const SpaceListPage = () => {
     fetchSpace();
   }, []);
 
-  const detailPage = (data: number) => {
-    router.push(`/space/spacelist/spacedetail/${data}`);
-  };
-
   const columns = [
     {
       title: '공간명',
@@ -124,6 +120,7 @@ const SpaceListPage = () => {
     async onSubmit(values) {
       if (values.search === '') {
         message.info('검색어를 입력하세요');
+        fetchSpace();
       } else {
         const response = await searchSpace(values.search);
         const select = response.data.data;
@@ -146,7 +143,7 @@ const SpaceListPage = () => {
         </Link>
       </div>
       <form onSubmit={space.handleSubmit} className="form_wrap">
-        <Input placeholder="공간명, 주소, 호스트 명으로 검색해 주세요." name="search" onChange={space.handleChange} />
+        <Input placeholder="공간명, 주소로 검색해 주세요." name="search" onChange={space.handleChange} />
         <Button htmlType="submit">조회</Button>
       </form>
       <Table columns={columns} dataSource={data} />
