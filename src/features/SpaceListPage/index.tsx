@@ -111,7 +111,9 @@ const SpaceListPage = () => {
       title: '상세 페이지',
       dataIndex: 'action',
       key: 'action',
-      render: (_: any, record: any) => <a onClick={() => detailPage(record.key)}>상세 보기</a>,
+      render: (_: any, record: any) => (
+        <a onClick={() => router.push(`/space/spacelist/spacedetail/${record.id}`)}>상세 보기</a>
+      ),
     },
   ];
 
