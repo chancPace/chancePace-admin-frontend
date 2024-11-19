@@ -129,10 +129,8 @@ export const getOneUser = async ({ userId }: oneUserData) => {
 };
 
 export const updateOneUser = async (userData: User) => {
-  console.log("🚀 ~ updateOneUser ~ userData:", userData)
   try {
     const response = await axios.patch(`${API_URL}update-user`, userData);
-    console.log("🚀 ~ updateOneUser ~ response:", response)
     return response;
   } catch (error) {
     const axiosError = error as AxiosError;
