@@ -138,7 +138,7 @@ const SpaceAddPage = () => {
   };
 
   // 기존 이미지 불러오는 로직 수정
-  const fetchFileFromUrl = async (url: string): Promise<UploadFile<any>> => {
+  const fetchFileFromUrl = async (url: string): Promise<UploadFile<any> | null> => {
     try {
       const response = await fetch(url);
       if (!response.ok) {
@@ -157,11 +157,35 @@ const SpaceAddPage = () => {
       } as UploadFile<any>;
     } catch (error) {
       console.error('Failed to fetch file:', error);
-      throw error;
+      return null;
     }
   };
+  // const fetchFileFromUrl = async (url: string): Promise<UploadFile<any>> => {
+  //   try {
+  //     const absoluteUrl = new URL(url, window.location.href).href; // 상대경로를 절대경로로 변환
+  //     console.log('Fetching file from URL:', absoluteUrl);
+  //     const response = await fetch(absoluteUrl);
+  //     if (!response.ok) {
+  //       throw new Error(`HTTP error! status: ${response.status}`);
+  //     }
+  //     const blob = await response.blob();
+  //     const fileName = url.split('/').pop() || 'image.jpg';
+  //     const file = new File([blob], fileName, { type: blob.type });
 
-  //수정 해당 공간의 데이터 불러오기
+  //     return {
+  //       uid: url,
+  //       name: fileName,
+  //       status: 'done',
+  //       url: absoluteUrl,
+  //       originFileObj: file,
+  //     } as UploadFile<any>;
+  //   } catch (error) {
+  //     console.error('Failed to fetch file:', error);
+  //     throw error;
+  //   }
+  // };
+
+  // 수정 해당 공간의 데이터 불러오기
   useEffect(() => {
     const fetchSpaceData = async () => {
       if (spaceId) {
@@ -170,11 +194,14 @@ const SpaceAddPage = () => {
           const response = await getOneSpace(id);
           const spaceData = response.data.data;
           // 기존 이미지가 있는 경우 fileList에 추가
-          const existingFiles = await Promise.all(
-            spaceData.images?.map(async (image: { imageUrl: string }) => {
-              return fetchFileFromUrl(image.imageUrl);
-            }) || []
-          );
+          const existingFiles = (
+            await Promise.all(
+              spaceData.images?.map((image: { imageUrl: string }) => {
+                return fetchFileFromUrl(image.imageUrl);
+              }) || []
+            )
+          ).filter((file) => file !== null);
+
           form.setFieldsValue({
             ...spaceData,
             spaceLocation: spaceData.spaceLocation,
@@ -183,7 +210,7 @@ const SpaceAddPage = () => {
 
           setAddValue(spaceData.spaceLocation);
           handleSelectAddress(spaceData.spaceLocation);
-          setFileList(existingFiles);
+          setFileList(existingFiles as UploadFile<any>[]);
         } catch (error) {
           message.error('공간 정보를 불러오는 데 실패했습니다.');
         }
@@ -191,6 +218,36 @@ const SpaceAddPage = () => {
     };
     fetchSpaceData();
   }, [spaceId, form]);
+  // const fetchSpaceData = async () => {
+  //   try {
+  //     const response = await getOneSpace(spaceId);
+  //     const spaceData = response.data.data;
+  //     // 기존 이미지 불러오기 등의 로직
+  //     const existingFiles = await Promise.all(
+  //       spaceData.images?.map(async (image: { imageUrl: string }) => {
+  //         return fetchFileFromUrl(image.imageUrl);
+  //       })
+  //     );
+  //     form.setFieldsValue({
+  //       ...spaceData,
+  //       spaceLocation: spaceData.spaceLocation,
+  //       spaceAdminPhoneNumber: formatPhoneNumber(spaceData.spaceAdminPhoneNumber),
+  //     });
+
+  //     setAddValue(spaceData.spaceLocation);
+  //     handleSelectAddress(spaceData.spaceLocation);
+  //     setFileList(existingFiles);
+  //   } catch (error) {
+  //     message.error('공간 정보를 불러오는 데 실패했습니다.');
+  //   }
+  // };
+
+  // useEffect(() => {
+  //   if (spaceId) {
+  //     console.log('🚀 ~ useEffect ~ spaceId:', spaceId);
+  //     fetchSpaceData();
+  //   }
+  // }, [spaceId]);
 
   const formatPhoneNumber = (phoneNumber: string) => {
     const cleaned = phoneNumber.replace(/\D/g, '');
