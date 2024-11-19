@@ -71,13 +71,13 @@ const SpaceDetailPage = () => {
       children: (
         <>
           <span style={{ display: 'inline-block', marginRight: 30 }}>
-            소유주 명 : {data?.bankAccountOwner ? data?.bankAccountOwner : '-'}
+            소유주 명 : {userData?.bankAccountOwner ? userData?.bankAccountOwner : '-'}
           </span>
           <span style={{ display: 'inline-block', marginRight: 30 }}>
-            은행명 : {data?.bankAccountName ? data?.bankAccountName : '-'}
+            은행명 : {userData?.bankAccountName ? userData?.bankAccountName : '-'}
           </span>
           <span style={{ display: 'inline-block', marginRight: 30 }}>
-            계좌 번호 : {data?.bankAccountNumber ? data?.bankAccountNumber : '-'}
+            계좌 번호 : {userData?.bankAccountNumber ? userData?.bankAccountNumber : '-'}
           </span>
         </>
       ),
