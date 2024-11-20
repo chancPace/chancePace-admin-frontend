@@ -47,7 +47,7 @@ const SignupPage = () => {
 
   return (
     <SignupFormStyled>
-      <p className="formLogo">ChancePace</p>
+      <p className="formLogo">CHAN'SPACE</p>
       <Form
         name="signup"
         className="form"
