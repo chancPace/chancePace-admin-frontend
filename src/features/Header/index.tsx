@@ -21,14 +21,14 @@ const Header = () => {
         {!isLoggedIn ? (
           <>
             <Link href="/login">
-              <span className="logo">ChancePace</span>
+              <span className="logo">CHAN'SPACE</span>
+              <img src="logo" alt="" />
             </Link>
-
           </>
         ) : (
           <>
             <Link href="/">
-              <span className="logo">ChancePace</span>
+              <span className="logo">CHAN'SPACE</span>
             </Link>
             <div className="useBar">
               <p onClick={handleLogout}>로그아웃</p>

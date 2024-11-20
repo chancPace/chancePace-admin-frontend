@@ -60,7 +60,7 @@ export default function App({ Component, pageProps }: AppProps) {
   return (
     <>
       <Head>
-        <title>🛠ChancePaceAdmin</title>
+        <title>CHAN'SPACE ADMIN</title>
       </Head>
       <ThemeProvider theme={theme}>
         <Provider store={store}>
