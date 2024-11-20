@@ -45,9 +45,6 @@ const MainPage = () => {
         dayjs(x?.createdAt).tz('Asia/Seoul').format('YYYY-MM-DD') === dayjs().tz('Asia/Seoul').format('YYYY-MM-DD')
       );
     });
-    console.log('🚀 ~ visit ~ visit:', visit);
-    console.log('🚀 ~ todaybooking ~ todaybooking:', todaybooking);
-    console.log('🚀 ~ todaypayment ~ todaypayment:', todaypayment);
 
     setVisitor(visit.length);
     SetSpaceAllow(allow.length);

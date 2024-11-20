@@ -45,7 +45,7 @@ const UserDetail = () => {
     {
       key: '3',
       label: '전화번호',
-      children: `${data?.phoneNumber?.replace(/^(\d{3})(\d{4})(\d{4})$/, '$1-$2-$3')}`,
+      children: `${data?.phoneNumber ? data?.phoneNumber?.replace(/^(\d{3})(\d{4})(\d{4})$/, '$1-$2-$3') : '-'}`,
     },
     {
       key: '5',
